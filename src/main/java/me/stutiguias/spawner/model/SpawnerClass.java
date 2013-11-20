@@ -1,4 +1,4 @@
-package me.stutiguias.spawner.init;
+package me.stutiguias.spawner.model;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -8,8 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 
-public class SpawnerClass
-  implements Serializable
+public class SpawnerClass  implements Serializable
 {
   private Double z;
   private Double y;

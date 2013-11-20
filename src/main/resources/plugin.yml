@@ -1,0 +1,16 @@
+name: "TimeSpawner"
+version: 1.0
+author: "TheProbleemm"
+main: "theprobleemm.timespawner.Spawner"
+commands:
+  setmob:
+    description: "§bCreates a MobSpawner"
+    usage: "§4Use: §b/setmob SpawnName TypeMob Quantity time"
+  confmob:
+    description: "§bConfigures a MOB already created."
+    usage: "§4Use: §b/spawnconf SpawnName TypeMob Quantity Time"
+  delmob:
+    description: "§bDeletes a spawner."
+    usage: "§4Use: §b/delspawn NameOfSpawner"
+  spawners:
+    description: "§bList of spawners"

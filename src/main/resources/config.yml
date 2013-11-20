@@ -1,0 +1,6 @@
+#No join messages
+NoJoinMsgs: true
+#No leave messages
+NoLeaveMsgs: true
+#No kick messages
+NoKickMsgs: true

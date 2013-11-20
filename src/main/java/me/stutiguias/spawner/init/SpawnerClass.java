@@ -1,4 +1,4 @@
-package theprobleemm.timespawner;
+package me.stutiguias.spawner.init;
 
 import java.io.Serializable;
 import java.util.HashSet;

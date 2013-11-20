@@ -1,4 +1,4 @@
-package theprobleemm.timespawner;
+package me.stutiguias.spawner.init;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,18 +12,12 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -33,21 +27,23 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Spawner extends JavaPlugin
-        implements Listener {
-
+public class Spawner extends JavaPlugin implements Listener {
+    
+    public String prefix = "[Spawner] ";
+    public static final Logger logger = Logger.getLogger("Minecraft");
+    
     File dat = new File("./plugins/TimeSpawner/spawns.db");
     File CfgFile;
     FileConfiguration Cfg;
-    private String nome = "[TimeSpawner] ";
-    public List<SpawnerClass> mobList;
+    
+    public static List<SpawnerClass> mobList;
 
     @Override
     public void onEnable() {
         if (!getName().equals("TimeSpawner")) {
             setEnabled(false);
         }
-        this.mobList = new ArrayList();
+        mobList = new ArrayList();
         checkCfg();
         try {
             Load();
@@ -185,172 +181,6 @@ public class Spawner extends JavaPlugin
                 Spawner.this.mobList.add(mobs);
             }
         }, mbs.getTime().intValue() * 20L);
-    }
-
-    @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (cmd.getName().toLowerCase().equalsIgnoreCase("setmob")) {
-            if (!sender.isOp()) {
-                sender.sendMessage(this.nome + ChatColor.RED + "You do not have permission");
-                return true;
-            }
-            if (args.length < 4) {
-                return false;
-            }
-            String name = args[0];
-            for (SpawnerClass mbs : this.mobList) {
-                if (mbs.getName().equals(name)) {
-                    sender.sendMessage(this.nome + ChatColor.RED + "this name is already in use.");
-                    getServer().dispatchCommand(sender, "spawners");
-                    return true;
-                }
-            }
-            Integer quantd = null;
-            Integer tempo = null;
-            EntityType type = null;
-            try {
-                type = EntityType.valueOf(args[1].toUpperCase());
-            } catch (Exception ex) {
-                sender.sendMessage(this.nome + ChatColor.RED + "Type of mob not found.");
-                return true;
-            }
-            try {
-                tempo = Integer.valueOf(Integer.parseInt(args[3]));
-            } catch (NumberFormatException ex) {
-                sender.sendMessage(this.nome + ChatColor.RED + "The time not is number.");
-                return true;
-            }
-            try {
-                quantd = Integer.valueOf(Integer.parseInt(args[2]));
-            } catch (NumberFormatException ex) {
-                sender.sendMessage(this.nome + ChatColor.RED + "The quantity not is number");
-                return true;
-            }
-
-            SpawnerClass mobs = new SpawnerClass(name.toLowerCase(), ((Player) sender).getLocation(), type, quantd, tempo);
-
-            this.mobList.add(mobs);
-
-            Spawn(mobs);
-            sender.sendMessage(this.nome + ChatColor.AQUA + "Mob Spawner successfully added.");
-            return true;
-        }
-        if (cmd.getName().toLowerCase().equalsIgnoreCase("spawnconf")) {
-            if (!sender.isOp()) {
-                sender.sendMessage(this.nome + ChatColor.RED + "You do not have permission");
-                return true;
-            }
-            if (args.length < 4) {
-                return false;
-            }
-            String name = args[0];
-            Integer quantd = null;
-            Integer tempo = null;
-            SpawnerClass mobs = null;
-            EntityType type = null;
-            try {
-                tempo = Integer.valueOf(Integer.parseInt(args[3]));
-            } catch (NumberFormatException ex) {
-                sender.sendMessage(this.nome + ChatColor.RED + "The time not is number.");
-                return true;
-            }
-            try {
-                type = EntityType.valueOf(args[1].toUpperCase());
-            } catch (Exception ex) {
-                sender.sendMessage(this.nome + ChatColor.RED + "Type of mob not found.");
-                return true;
-            }
-            try {
-                quantd = Integer.valueOf(Integer.parseInt(args[2]));
-            } catch (NumberFormatException ex) {
-                sender.sendMessage(this.nome + ChatColor.RED + "The quantity not is number.");
-                return true;
-            }
-            for (SpawnerClass mbs : this.mobList) {
-                if (mbs.getName().startsWith(name)) {
-                    mobs = mbs;
-                    this.mobList.remove(mbs);
-                    break;
-                }
-            }
-            if (mobs == null) {
-                sender.sendMessage(this.nome + ChatColor.RED + "Mob Spawner not found.");
-                return true;
-            }
-            UUID id;
-            Iterator it;
-            mobs.cleanMobs();
-            mobs.setLocation(((Player) sender).getLocation());
-            mobs.setType(type);
-            mobs.setQuantd(quantd);
-            mobs.setTime(tempo);
-            this.mobList.add(mobs);
-            Spawn(mobs);
-            for (Iterator i$ = mobs.getMobs().iterator(); i$.hasNext();) {
-                id = (UUID) i$.next();
-                for (it = ((Player) sender).getLocation().getWorld().getLivingEntities().iterator(); it.hasNext();) {
-                    LivingEntity ent = (LivingEntity) it.next();
-                    if (ent.getUniqueId().equals(id)) {
-                        ent.remove();
-                    }
-                }
-            }
-
-            sender.sendMessage(this.nome + ChatColor.AQUA + "Mob Spawner modified Successfully.");
-            return true;
-        }
-        if (cmd.getName().toLowerCase().equalsIgnoreCase("delspawn")) {
-            if (!sender.isOp()) {
-                sender.sendMessage(this.nome + ChatColor.RED + "You do not have permission");
-                return true;
-            }
-            if (args.length < 1) {
-                return false;
-            }
-            String name = args[0];
-            SpawnerClass mobs = null;
-            for (SpawnerClass mbs : this.mobList) {
-                if (mbs.getName().startsWith(name)) {
-                    mobs = mbs;
-                    this.mobList.remove(mbs);
-                    break;
-                }
-            }
-            if (mobs == null) {
-                sender.sendMessage(this.nome + ChatColor.RED + "Mob Spawner not found.");
-                return true;
-            }
-            UUID id;
-            Iterator it;
-            mobs.cleanMobs();
-            for (Iterator i$ = mobs.getMobs().iterator(); i$.hasNext();) {
-                id = (UUID) i$.next();
-                for (it = ((Player) sender).getLocation().getWorld().getLivingEntities().iterator(); it.hasNext();) {
-                    LivingEntity ent = (LivingEntity) it.next();
-                    if (ent.getUniqueId().equals(id)) {
-                        ent.remove();
-                    }
-                }
-            }
-            sender.sendMessage(this.nome + ChatColor.AQUA + "Mob Spawner removed successfully.");
-            return true;
-        }
-        if (cmd.getName().equalsIgnoreCase("spawners")) {
-            if (!sender.isOp()) {
-                sender.sendMessage(this.nome + ChatColor.RED + "You do not have permission");
-                return true;
-            }
-            if (this.mobList.isEmpty()) {
-                sender.sendMessage(this.nome + ChatColor.AQUA + "Has no set spawn.");
-                return true;
-            }
-            sender.sendMessage(this.nome + ChatColor.AQUA + "List of Spawners:");
-            for (SpawnerClass mobs : this.mobList) {
-                sender.sendMessage("  " + ChatColor.AQUA + "- " + mobs.getName());
-            }
-            return true;
-        }
-        return true;
     }
 
     private void checkCfg() {

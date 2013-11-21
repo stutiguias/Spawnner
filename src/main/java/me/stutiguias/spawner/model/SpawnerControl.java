@@ -8,7 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 
-public class SpawnerClass  implements Serializable
+public class SpawnerControl  implements Serializable
 {
   private Double z;
   private Double y;
@@ -18,11 +18,11 @@ public class SpawnerClass  implements Serializable
   private String world;
   private Set<UUID> moblist;
   private String type;
-  private Integer quantd;
-  private Integer tempo;
+  private Integer qtd;
+  private Integer time;
   private String name;
 
-  public SpawnerClass(String name, Location location, EntityType type, Integer quantd, Integer tempo)
+  public SpawnerControl(String name, Location location, EntityType type, Integer quantd, Integer tempo)
   {
     this.moblist = new HashSet();
     this.name = name;
@@ -33,8 +33,8 @@ public class SpawnerClass  implements Serializable
     this.yaw = Float.valueOf(location.getYaw());
     this.world = location.getWorld().getName();
     this.type = type.getName();
-    this.quantd = quantd;
-    this.tempo = tempo;
+    this.qtd = quantd;
+    this.time = tempo;
   }
 
   public Location getLocation() {
@@ -50,7 +50,7 @@ public class SpawnerClass  implements Serializable
   }
 
   public Integer getQuantd() {
-    return this.quantd;
+    return this.qtd;
   }
   public void addMob(UUID id) {
     this.moblist.add(id);
@@ -70,7 +70,7 @@ public class SpawnerClass  implements Serializable
   }
 
   public void setQuantd(Integer quantd) {
-    this.quantd = quantd;
+    this.qtd = quantd;
   }
 
   public void setType(EntityType type) {
@@ -90,9 +90,9 @@ public class SpawnerClass  implements Serializable
   }
 
   public void setTime(Integer tempo) {
-    this.tempo = tempo;
+    this.time = tempo;
   }
   public Integer getTime() {
-    return this.tempo;
+    return this.time;
   }
 }

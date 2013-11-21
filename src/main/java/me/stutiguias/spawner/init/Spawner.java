@@ -1,7 +1,6 @@
 package me.stutiguias.spawner.init;
 
-import me.stutiguias.spawner.model.SpawnerClass;
-import java.io.IOException;
+import me.stutiguias.spawner.model.SpawnerControl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -22,16 +21,12 @@ public class Spawner extends JavaPlugin {
     
     private final MobListener mobListener = new MobListener(this);
     
-    public static List<SpawnerClass> mobList;
+    public static List<SpawnerControl> spawnerList;
 
     @Override
     public void onEnable() {
-        mobList = new ArrayList();
-        try {
-            Load();
-        } catch (IOException ex) {
-            Logger.getLogger(Spawner.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        spawnerList = new ArrayList();
+        Load();
         ReloadMobs();
         
         getCommand("sp").setExecutor(new SpawnerCommands(this));
@@ -46,40 +41,38 @@ public class Spawner extends JavaPlugin {
         Save();
     }
 
-    private void Load() throws IOException {
-        
-            getLogger().log(Level.INFO, "Nothing to load.");
-            getLogger().log(Level.INFO, "Loading Spawns...");
-            getLogger().log(Level.INFO, "Spawns loaded with sucess.");
-
+    private void Load(){
+        getLogger().log(Level.INFO, "Nothing to load.");
+        getLogger().log(Level.INFO, "Loading Spawns...");
+        getLogger().log(Level.INFO, "Spawns loaded with sucess.");
     }
 
     private void Save() {
-        if (mobList.isEmpty()) {
+        if (spawnerList.isEmpty()) {
             getLogger().log(Level.INFO, "Nothing to save.");
             return;
         }
-            getLogger().log(Level.INFO, "Salving Spawns...");
-            getLogger().log(Level.INFO, "Spawns Save with sucess.");
+        getLogger().log(Level.INFO, "Salving Spawns...");
+        getLogger().log(Level.INFO, "Spawns Save with sucess.");
 
     }
 
-    public void Spawn(SpawnerClass mbs) {
+    public void Spawn(SpawnerControl mbs) {
         Bukkit.getScheduler().runTaskLaterAsynchronously(this,new SpawnWork(mbs),mbs.getTime().intValue() * 20L);
     }
 
     private void ReloadMobs() {
-        SpawnerClass mobs;
+        SpawnerControl spawnner;
         Iterator it;
-        for (Iterator i = mobList.iterator(); i.hasNext();) {
-            mobs = (SpawnerClass) i.next();
-            for (it = mobs.getLocation().getWorld().getLivingEntities().iterator(); it.hasNext();) {
+        for (Iterator i = spawnerList.iterator(); i.hasNext();) {
+            spawnner = (SpawnerControl) i.next();
+            for (it = spawnner.getLocation().getWorld().getLivingEntities().iterator(); it.hasNext();) {
                 LivingEntity ent = (LivingEntity) it.next();
-                if (mobs.containsMob(ent.getUniqueId())) {
-                    mobs.removeMob(ent.getUniqueId());
+                if (spawnner.containsMob(ent.getUniqueId())) {
+                    spawnner.removeMob(ent.getUniqueId());
                     ent.remove();
-                    if (!mobs.hasMobs()) {
-                        Spawn(mobs);
+                    if (!spawnner.hasMobs()) {
+                        Spawn(spawnner);
                         break;
                     }
                 }

@@ -5,8 +5,8 @@
 package me.stutiguias.spawner.listener;
 
 import me.stutiguias.spawner.init.Spawner;
-import static me.stutiguias.spawner.init.Spawner.mobList;
-import me.stutiguias.spawner.model.SpawnerClass;
+import static me.stutiguias.spawner.init.Spawner.spawnerList;
+import me.stutiguias.spawner.model.SpawnerControl;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -26,10 +26,10 @@ public class MobListener implements Listener {
     
     @EventHandler
     public void MobDeath(EntityDeathEvent event) {
-        if (mobList.isEmpty()) {
+        if (spawnerList.isEmpty()) {
             return;
         }
-        for (SpawnerClass mobs : mobList) {
+        for (SpawnerControl mobs : spawnerList) {
             if (mobs.containsMob(event.getEntity().getUniqueId())) {
                 mobs.removeMob(event.getEntity().getUniqueId());
                 if (!mobs.hasMobs()) {

@@ -5,7 +5,7 @@
 package me.stutiguias.spawner.task;
 
 import me.stutiguias.spawner.init.Spawner;
-import me.stutiguias.spawner.model.SpawnerClass;
+import me.stutiguias.spawner.model.SpawnerControl;
 import org.bukkit.entity.LivingEntity;
 
 /**
@@ -14,21 +14,21 @@ import org.bukkit.entity.LivingEntity;
  */
 public class SpawnWork implements Runnable {
 
-    private SpawnerClass mbs;
+    private SpawnerControl Spawnner;
     
-    public SpawnWork(SpawnerClass mbs) {
-        this.mbs = mbs;
+    public SpawnWork(SpawnerControl spanner) {
+        this.Spawnner = spanner;
     }
     
     @Override
     public void run() {
-         SpawnerClass mobs = mbs;
-         for (int i = 1; i <= mobs.getQuantd().intValue(); i++) {
-             LivingEntity ent = mobs.getLocation().getWorld().spawnCreature(mobs.getLocation(), mobs.getType());
-             mobs.addMob(ent.getUniqueId());
+         SpawnerControl spanner = Spawnner;
+         for (int i = 1; i <= spanner.getQuantd().intValue(); i++) {
+             LivingEntity ent = spanner.getLocation().getWorld().spawnCreature(spanner.getLocation(), spanner.getType());
+             spanner.addMob(ent.getUniqueId());
          }
-         Spawner.mobList.remove(mbs);
-         Spawner.mobList.add(mobs);
+         Spawner.spawnerList.remove(Spawnner);
+         Spawner.spawnerList.add(spanner);
     }
     
 }

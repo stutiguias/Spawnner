@@ -1,8 +1,13 @@
 Spawnner
 ========
 
-Personal Plugin Develop base on TimeSpanners
+What is it?
 
-I don't make this code, but i will update and fix starting on commit date 20/11/2013 because of request !
+Always wanted to spawn a number sure mobs at a time/place determined by you. Then this plugin is for you This plugin will spawn MOB's on determined time and amount defined by you.
+Example: If you want to spawn 15 zombies on a determined location each 60 seconds. Don't forget, plugin will just start the time count after all previously mobs are dead.
 
-if you r author of TimeSpanner feel free to contact me.
+Permissions
+- Only OPs (For the time being)
+
+Video tutorial
+One video from video tutorial. LINK: http://www.youtube.com/watch?v=-OQwoFh4o7c

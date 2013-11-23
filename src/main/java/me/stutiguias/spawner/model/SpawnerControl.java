@@ -32,7 +32,7 @@ public class SpawnerControl  implements Serializable
     this.pitch = Float.valueOf(location.getPitch());
     this.yaw = Float.valueOf(location.getYaw());
     this.world = location.getWorld().getName();
-    this.type = type.getName();
+    this.type = type.name();
     this.qtd = quantd;
     this.time = tempo;
   }

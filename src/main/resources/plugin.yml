@@ -1,4 +1,4 @@
-name: "Spawner"
+name: "TimeSpawner"
 version: 0.1
 author: "Stutiguias,TheProbleemm"
 main: "me.stutiguias.spawner.init.Spawner"

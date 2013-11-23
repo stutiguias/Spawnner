@@ -1,5 +1,6 @@
 package me.stutiguias.spawner.init;
 
+import java.io.File;
 import me.stutiguias.spawner.model.SpawnerControl;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -8,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.stutiguias.spawner.commands.SpawnerCommands;
 import me.stutiguias.spawner.listener.MobListener;
+import me.stutiguias.spawner.model.SpawnerProfile;
 import me.stutiguias.spawner.task.SpawnWork;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
@@ -16,8 +18,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Spawner extends JavaPlugin {
     
-    public String prefix = "[Spawner] ";
+    public String prefix = "[TimeSpawner] ";
     public static final Logger logger = Logger.getLogger("Minecraft");
+    
+    public static final String PluginDir = "plugins" + File.separator + "TimeSpawner";
+    public static String PluginPlayerDir = PluginDir + File.separator + "spawners";
     
     private final MobListener mobListener = new MobListener(this);
     
@@ -25,6 +30,18 @@ public class Spawner extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        
+        File dir = getDataFolder();
+        if (!dir.exists()) {
+          dir.mkdirs();
+        }
+        
+        File fuserdata = new File(PluginPlayerDir);
+        if (!fuserdata.exists()) {
+            logger.log(Level.WARNING, "{0} Spawners folder does not exist. Creating 'spawners' Folder", new Object[]{prefix});
+            fuserdata.mkdirs();
+        }
+        
         spawnerList = new ArrayList();
         Load();
         ReloadMobs();
@@ -38,45 +55,40 @@ public class Spawner extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        Save();
+
     }
 
     private void Load(){
-        getLogger().log(Level.INFO, "Nothing to load.");
         getLogger().log(Level.INFO, "Loading Spawns...");
-        getLogger().log(Level.INFO, "Spawns loaded with sucess.");
-    }
+        File folder = new File(PluginPlayerDir);
+        File[] listOfFiles = folder.listFiles();
 
-    private void Save() {
-        if (spawnerList.isEmpty()) {
-            getLogger().log(Level.INFO, "Nothing to save.");
-            return;
+        for (int i = 0; i < listOfFiles.length; i++) {
+          if (listOfFiles[i].isFile()) {
+              getLogger().log(Level.INFO, "Loading Spawner {0}", listOfFiles[i].getName());
+              spawnerList.add(new SpawnerProfile(this).LoadSpawnerControl(listOfFiles[i].getName()));
+          }
         }
-        getLogger().log(Level.INFO, "Salving Spawns...");
-        getLogger().log(Level.INFO, "Spawns Save with sucess.");
-
+        getLogger().log(Level.INFO, "Spawns loaded with sucess.");
     }
 
     public void Spawn(SpawnerControl mbs) {
         Bukkit.getScheduler().runTaskLaterAsynchronously(this,new SpawnWork(mbs),mbs.getTime().intValue() * 20L);
     }
-
+    
+    // TODO : Better Handle Reload - First Save Exist Mobs ( TODO )
     private void ReloadMobs() {
-        SpawnerControl spawnner;
-        Iterator it;
-        for (Iterator i = spawnerList.iterator(); i.hasNext();) {
-            spawnner = (SpawnerControl) i.next();
-            for (it = spawnner.getLocation().getWorld().getLivingEntities().iterator(); it.hasNext();) {
-                LivingEntity ent = (LivingEntity) it.next();
-                if (spawnner.containsMob(ent.getUniqueId())) {
-                    spawnner.removeMob(ent.getUniqueId());
-                    ent.remove();
-                    if (!spawnner.hasMobs()) {
-                        Spawn(spawnner);
-                        break;
-                    }
-                }
-            }
+        for (SpawnerControl spawnner : spawnerList) {
+           // for (LivingEntity ent : spawnner.getLocation().getWorld().getLivingEntities()) {
+                //if (!spawnner.containsMob(ent.getUniqueId())) continue;
+                //spawnner.removeMob(ent.getUniqueId());
+                //ent.remove();
+                //if (!spawnner.hasMobs()) {
+                    Spawn(spawnner);
+                    //break;
+                //}
+           // }
         }
     }
+    
 }

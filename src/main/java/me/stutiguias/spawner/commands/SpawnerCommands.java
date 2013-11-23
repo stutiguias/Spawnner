@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.UUID;
 import me.stutiguias.spawner.init.Spawner;
 import me.stutiguias.spawner.model.SpawnerControl;
+import me.stutiguias.spawner.model.SpawnerProfile;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -87,6 +88,7 @@ public class SpawnerCommands implements CommandExecutor {
                 return true;
             }
         }
+        
         Integer quantd;
         Integer tempo;
         EntityType type;
@@ -109,11 +111,12 @@ public class SpawnerCommands implements CommandExecutor {
             return true;
         }
 
-        SpawnerControl spanner = new SpawnerControl(name.toLowerCase(), ((Player) sender).getLocation(), type, quantd, tempo);
+        SpawnerProfile spawnerProfile = new SpawnerProfile(plugin, 
+                new SpawnerControl(name.toLowerCase(), ((Player) sender).getLocation(), type, quantd, tempo));
+        
+        Spawner.spawnerList.add(spawnerProfile.spawner);
 
-        Spawner.spawnerList.add(spanner);
-
-        plugin.Spawn(spanner);
+        plugin.Spawn(spawnerProfile.spawner);
         
         FormatMsgAqua("Mob Spawner successfully added.");
         return true;

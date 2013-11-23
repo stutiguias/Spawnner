@@ -1,6 +1,7 @@
 package me.stutiguias.spawner.init;
 
 import java.io.File;
+import java.io.IOException;
 import me.stutiguias.spawner.model.SpawnerControl;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,6 +13,7 @@ import me.stutiguias.spawner.listener.MobListener;
 import me.stutiguias.spawner.model.SpawnerProfile;
 import me.stutiguias.spawner.task.SpawnWork;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,6 +30,10 @@ public class Spawner extends JavaPlugin {
     
     public static List<SpawnerControl> spawnerList;
 
+    private ConfigAccessor config;
+    
+    public boolean ShowDebug;
+    
     @Override
     public void onEnable() {
         
@@ -70,10 +76,21 @@ public class Spawner extends JavaPlugin {
           }
         }
         getLogger().log(Level.INFO, "Spawns loaded with sucess.");
+        
+        try {
+            config = new ConfigAccessor(this, "config.yml");
+            config.setupConfig();
+            FileConfiguration fc = config.getConfig();   
+            
+            ShowDebug = fc.getBoolean("ShowDebug");
+            
+        }catch(IOException ex){
+            getLogger().log(Level.WARNING, "Erro Loading Config");
+        }
     }
 
-    public void Spawn(SpawnerControl mbs) {
-        Bukkit.getScheduler().runTaskLaterAsynchronously(this,new SpawnWork(mbs),mbs.getTime().intValue() * 20L);
+    public void Spawn(SpawnerControl spawnner) {
+        Bukkit.getScheduler().runTaskLaterAsynchronously(this,new SpawnWork(this,spawnner),spawnner.getTime().intValue() * 20L);
     }
     
     // TODO : Better Handle Reload - First Save Exist Mobs ( TODO )

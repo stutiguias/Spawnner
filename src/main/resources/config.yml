@@ -1,0 +1,2 @@
+# if true all debug msg will show on console
+ShowDebug: false

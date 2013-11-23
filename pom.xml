@@ -3,8 +3,8 @@
   <groupId>me.stutiguias</groupId>
   <artifactId>Spawnner</artifactId>
   <version>0.1</version>
-  <name>Spawnner</name>
-  <description>Spawnner</description>
+  <name>TimeSpawnner</name>
+  <description>TimeSpawnner</description>
   
   <repositories>
     <!-- Bukkit -->

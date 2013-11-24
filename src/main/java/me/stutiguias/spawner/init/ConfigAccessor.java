@@ -24,7 +24,7 @@ public class ConfigAccessor {
 
     public ConfigAccessor(JavaPlugin plugin, String fileName) {
         if (!plugin.isInitialized()) {
-            throw new IllegalArgumentException("plugin must be initiaized");
+            throw new IllegalArgumentException("plugin must be initialized");
         }
         this.plugin = plugin;
         this.fileName = fileName;

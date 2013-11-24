@@ -56,7 +56,10 @@ public class SpawnerCommands implements CommandExecutor {
             case "setmob" :
                 return SetMob();
             case "spawnconf":
-                return SpawnConfig();
+                // TODO : Working on Spawconfig
+                //return SpawnConfig();
+                SendFormatMessage("&6Not working on 0.1");
+                return true;
             case "delspawn":
                 return DelSpawn();
             case "spawners":
@@ -83,7 +86,7 @@ public class SpawnerCommands implements CommandExecutor {
         SendFormatMessage(MsgHr);
         SendFormatMessage(" &7Admin ");
         SendFormatMessage("&6/sp setmob <spawnerName> <typeMob> <quantity> <time>");
-        SendFormatMessage("&6/sp spawnconf <spawnerName> <typeMob> <quantity> <time>");
+        //SendFormatMessage("&6/sp spawnconf <spawnerName> <typeMob> <quantity> <time>");
         SendFormatMessage("&6/sp delspawn <spawnerName>");
         SendFormatMessage("&6/sp spawners");
         SendFormatMessage("&6/sp reload");

@@ -95,20 +95,24 @@ public class SpawnerCommands implements CommandExecutor {
     public boolean Spawners() {
 
         if (Spawner.spawnerList.isEmpty()) {
-            FormatMsgAqua("Has no set spawn.");
+            SendFormatMessage("&6Has no set spawn.");
             return true;
         }
-        FormatMsgAqua("List of Spawners:");
+        SendFormatMessage(MsgHr);
+        SendFormatMessage("&7List of Spawners");
+        SendFormatMessage(MsgHr);
         for (SpawnerControl mobs : Spawner.spawnerList) {
-            FormatMsgAqua("- " + mobs.getName());
+            SendFormatMessage("&6" + mobs.getName());
         }
+        SendFormatMessage(MsgHr);
         return true;
     }
     
     public boolean SetMob() {
 
         if (args.length < 5) {
-            return false;
+            FormatMsgRed("Wrong arguments on command setmob");
+            return true;
         }
         
         String name = args[1];
@@ -124,18 +128,21 @@ public class SpawnerCommands implements CommandExecutor {
         Integer quantd;
         Integer tempo;
         EntityType type;
+        
         try {
             type = EntityType.valueOf(args[2].toUpperCase());
         } catch (Exception ex) {
             FormatMsgRed("Type of mob not found.");
             return true;
         }
+        
         try {
             tempo = Integer.valueOf(Integer.parseInt(args[4]));
         } catch (NumberFormatException ex) {
             FormatMsgRed("The time not is number.");
             return true;
         }
+        
         try {
             quantd = Integer.valueOf(Integer.parseInt(args[3]));
         } catch (NumberFormatException ex) {
@@ -143,20 +150,19 @@ public class SpawnerCommands implements CommandExecutor {
             return true;
         }
 
-        SpawnerProfile spawnerProfile = new SpawnerProfile(plugin, 
-                new SpawnerControl(name.toLowerCase(), ((Player) sender).getLocation(), type, quantd, tempo));
+        SpawnerProfile spawnerProfile = new SpawnerProfile(plugin, new SpawnerControl(name.toLowerCase(), ((Player) sender).getLocation(), type, quantd, tempo));
         
         Spawner.spawnerList.add(spawnerProfile.spawner);
 
         plugin.Spawn(spawnerProfile.spawner);
         
-        FormatMsgAqua("Mob Spawner successfully added.");
+        SendFormatMessage("&6Mob Spawner successfully added.");
         return true;
     }
     
     public boolean SpawnConfig() {
         
-         if (args.length < 4) {
+         if (args.length < 5) {
              return false;
          }
          String name = args[0];
@@ -222,44 +228,43 @@ public class SpawnerCommands implements CommandExecutor {
     
     public boolean DelSpawn() {
         
-        if (args.length < 1) {
-            return false;
-        }
-        String name = args[0];
-        SpawnerControl mobs = null;
-        for (SpawnerControl mbs : Spawner.spawnerList) {
-            if (mbs.getName().startsWith(name)) {
-                mobs = mbs;
-                Spawner.spawnerList.remove(mbs);
-                break;
-            }
-        }
-        if (mobs == null) {
-            FormatMsgRed("Mob Spawner not found.");
+        if (args.length < 2) {
+            FormatMsgRed("Wrong arguments on command delspawn");
             return true;
         }
-        UUID id;
-        Iterator it;
-        mobs.cleanMobs();
-        for (Iterator i$ = mobs.getMobs().iterator(); i$.hasNext();) {
-            id = (UUID) i$.next();
-            for (it = ((Player) sender).getLocation().getWorld().getLivingEntities().iterator(); it.hasNext();) {
-                LivingEntity ent = (LivingEntity) it.next();
-                if (ent.getUniqueId().equals(id)) {
+        
+        String name = args[1];
+
+        for (SpawnerControl spawnerControl : Spawner.spawnerList) {
+            if (!spawnerControl.getName().equalsIgnoreCase(name)) continue;
+            
+            Spawner.spawnerList.remove(spawnerControl);
+
+            for (LivingEntity ent : spawnerControl.getLocation().getWorld().getLivingEntities()) {
+               for (UUID id : spawnerControl.getMobs()) {
+                    if (!ent.getUniqueId().equals(id))continue;
                     ent.remove();
-                }
+               }
             }
+            
+            spawnerControl.cleanMobs();
+            
+            new SpawnerProfile(plugin).RemoveSpawnerControl(name);
+            
+            SendFormatMessage("&6Mob Spawner removed successfully.");
+            return true;
         }
-        FormatMsgRed("Mob Spawner removed successfully.");
+ 
+        FormatMsgRed("Mob Spawner not found.");
         return true;
     }
     
     public void FormatMsgRed(String msg) {
-        sender.sendMessage(plugin.prefix + ChatColor.RED + msg);
+        sender.sendMessage(ChatColor.RED + msg);
     }
     
     public void FormatMsgAqua(String msg) {
-        sender.sendMessage(plugin.prefix + ChatColor.AQUA + msg);
+        sender.sendMessage(ChatColor.AQUA + msg);
     }
     
     public void SendFormatMessage(String msg) {

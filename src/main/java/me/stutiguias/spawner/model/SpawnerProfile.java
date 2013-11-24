@@ -11,7 +11,6 @@ import java.util.logging.Level;
 import me.stutiguias.spawner.init.Spawner;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
@@ -52,6 +51,11 @@ public class SpawnerProfile {
         Integer time = SpawnerYML.getInt("Time");
         String name = Filename.replace(".yml","");
         return new SpawnerControl(name, location ,type ,qtd ,time );
+    }
+    
+    public boolean RemoveSpawnerControl(String name) {
+        configplayerfile = new File(Spawner.PluginPlayerDir + File.separator + name + ".yml");
+        return configplayerfile.delete();
     }
     
     private void initLoadYML() {

@@ -38,6 +38,12 @@ public class SpawnerCommands implements CommandExecutor {
         if (sender.getName().equalsIgnoreCase("CONSOLE")) return true;
         if (!(sender instanceof Player)) return false;
         
+        // TODO : Implement Permission
+        if (!sender.isOp()) {
+            FormatMsgRed("You do not have permission");
+            return true;
+        }
+        
         this.sender = sender;
         this.args = args;
         
@@ -45,6 +51,8 @@ public class SpawnerCommands implements CommandExecutor {
         
         switch(args[0].toLowerCase())
         {
+            case "reload":
+                return Reload();
             case "setmob" :
                 return SetMob();
             case "spawnconf":
@@ -59,6 +67,13 @@ public class SpawnerCommands implements CommandExecutor {
                 return Help();
         }       
     }
+        
+    public boolean Reload() {
+        sender.sendMessage("&6Reloading!");
+        plugin.OnReload();
+        sender.sendMessage("&6Reload Done!");    
+        return true;
+    }
     
     public boolean Help() {
         SendFormatMessage(MsgHr);
@@ -70,16 +85,14 @@ public class SpawnerCommands implements CommandExecutor {
         SendFormatMessage("&6/sp spawnconf <spawnerName> <typeMob> <quantity> <time>");
         SendFormatMessage("&6/sp delspawn <spawnerName>");
         SendFormatMessage("&6/sp spawners");
+        SendFormatMessage("&6/sp reload");
         SendFormatMessage(MsgHr);
         
         return true;
     }
     
     public boolean Spawners() {
-        if (!sender.isOp()) {
-            FormatMsgRed("You do not have permission");
-            return true;
-        }
+
         if (Spawner.spawnerList.isEmpty()) {
             FormatMsgAqua("Has no set spawn.");
             return true;
@@ -92,12 +105,7 @@ public class SpawnerCommands implements CommandExecutor {
     }
     
     public boolean SetMob() {
-        
-        if (!sender.isOp()) {
-            FormatMsgRed("You do not have permission");
-            return true;
-        }
-        
+
         if (args.length < 5) {
             return false;
         }
@@ -146,10 +154,7 @@ public class SpawnerCommands implements CommandExecutor {
     }
     
     public boolean SpawnConfig() {
-        if (!sender.isOp()) {
-             FormatMsgRed("You do not have permission");
-             return true;
-         }
+        
          if (args.length < 4) {
              return false;
          }
@@ -215,10 +220,7 @@ public class SpawnerCommands implements CommandExecutor {
     }
     
     public boolean DelSpawn() {
-        if (!sender.isOp()) {
-            FormatMsgRed("You do not have permission");
-            return true;
-        }
+        
         if (args.length < 1) {
             return false;
         }

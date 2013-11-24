@@ -64,7 +64,13 @@ public class Spawner extends JavaPlugin {
     public void onDisable() {
 
     }
-
+    
+    public void OnReload() {
+        config.reloadConfig();
+        getServer().getPluginManager().disablePlugin(this);
+        getServer().getPluginManager().enablePlugin(this);
+    }
+    
     private void Load(){
         getLogger().log(Level.INFO, "Loading Spawns...");
         File folder = new File(PluginPlayerDir);

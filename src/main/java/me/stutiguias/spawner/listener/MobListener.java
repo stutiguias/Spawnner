@@ -26,9 +26,7 @@ public class MobListener implements Listener {
     
     @EventHandler
     public void MobDeath(EntityDeathEvent event) {
-        if (spawnerList.isEmpty()) {
-            return;
-        }
+        if (spawnerList.isEmpty()) return;
         for (SpawnerControl mobs : spawnerList) {
             if (mobs.containsMob(event.getEntity().getUniqueId())) {
                 mobs.removeMob(event.getEntity().getUniqueId());

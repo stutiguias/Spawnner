@@ -113,7 +113,7 @@ public class SpawnerCommands implements CommandExecutor {
     
     public boolean SetMob() {
 
-        if (args.length < 5) {
+        if (args.length < 4) {
             FormatMsgRed("Wrong arguments on command setmob");
             return true;
         }

@@ -26,6 +26,7 @@ public class SpawnerCommands implements CommandExecutor {
     private Spawner plugin;
     private CommandSender sender;
     private String[] args;
+    private String MsgHr = "&e-----------------------------------------------------";
     
     public SpawnerCommands(Spawner plugin) {
         this.plugin = plugin;
@@ -34,8 +35,13 @@ public class SpawnerCommands implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         
+        if (sender.getName().equalsIgnoreCase("CONSOLE")) return true;
+        if (!(sender instanceof Player)) return false;
+        
         this.sender = sender;
         this.args = args;
+        
+        if (args.length == 0) return Help();
         
         switch(args[0].toLowerCase())
         {
@@ -47,9 +53,26 @@ public class SpawnerCommands implements CommandExecutor {
                 return DelSpawn();
             case "spawners":
                 return Spawners();
-        }
-        return false;
+            case "?":
+            case "help":
+            default:
+                return Help();
+        }       
+    }
+    
+    public boolean Help() {
+        SendFormatMessage(MsgHr);
+        SendFormatMessage(" &7TimeSpawner ");
         
+        SendFormatMessage(MsgHr);
+        SendFormatMessage(" &7Admin MCPK ");
+        SendFormatMessage("&6/sp setmob <spawnerName> <typeMob> <quantity> <time>");
+        SendFormatMessage("&6/sp spawnconf <spawnerName> <typeMob> <quantity> <time>");
+        SendFormatMessage("&6/sp delspawn <spawnerName>");
+        SendFormatMessage("&6/sp spawners");
+        SendFormatMessage(MsgHr);
+        
+        return true;
     }
     
     public boolean Spawners() {
@@ -235,4 +258,9 @@ public class SpawnerCommands implements CommandExecutor {
     public void FormatMsgAqua(String msg) {
         sender.sendMessage(plugin.prefix + ChatColor.AQUA + msg);
     }
+    
+    public void SendFormatMessage(String msg) {
+        sender.sendMessage(plugin.parseColor(msg));
+    }
+    
 }

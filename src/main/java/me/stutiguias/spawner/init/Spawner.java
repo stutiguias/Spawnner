@@ -13,6 +13,7 @@ import me.stutiguias.spawner.listener.MobListener;
 import me.stutiguias.spawner.model.SpawnerProfile;
 import me.stutiguias.spawner.task.SpawnWork;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.PluginManager;
@@ -108,4 +109,10 @@ public class Spawner extends JavaPlugin {
         }
     }
     
+    public String parseColor(String message) {
+         for (ChatColor color : ChatColor.values()) {
+            message = message.replaceAll(String.format("&%c", color.getChar()), color.toString());
+        }
+        return message;
+    }
 }

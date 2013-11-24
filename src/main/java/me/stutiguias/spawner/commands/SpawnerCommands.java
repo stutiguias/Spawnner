@@ -76,11 +76,12 @@ public class SpawnerCommands implements CommandExecutor {
     }
     
     public boolean Help() {
+        
         SendFormatMessage(MsgHr);
         SendFormatMessage(" &7TimeSpawner ");
         
         SendFormatMessage(MsgHr);
-        SendFormatMessage(" &7Admin MCPK ");
+        SendFormatMessage(" &7Admin ");
         SendFormatMessage("&6/sp setmob <spawnerName> <typeMob> <quantity> <time>");
         SendFormatMessage("&6/sp spawnconf <spawnerName> <typeMob> <quantity> <time>");
         SendFormatMessage("&6/sp delspawn <spawnerName>");

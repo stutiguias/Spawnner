@@ -9,8 +9,6 @@ import me.stutiguias.spawner.init.Spawner;
 import me.stutiguias.spawner.model.SpawnerControl;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.scheduler.BukkitTask;
 
 /**
  *
@@ -20,6 +18,7 @@ public class SpawnWork implements Runnable {
 
     private SpawnerControl Spawnner;
     private Spawner plugin;
+    private MakeEntity makeEntity;
     
     public SpawnWork(Spawner plugin,SpawnerControl spanner) {
         this.Spawnner = spanner;
@@ -30,10 +29,10 @@ public class SpawnWork implements Runnable {
     public void run() {
         try {
             SpawnerControl spawner = Spawnner;
+            makeEntity = new MakeEntity(spawner);
             
             for (int i = 1; i <= spawner.getQuantd().intValue(); i++) {
-                Entity ent = spawner.getLocation().getWorld().spawnEntity(spawner.getLocation(), spawner.getType());
-                spawner.addMob(ent.getUniqueId());
+                Bukkit.getScheduler().runTask(plugin,makeEntity);
             }
             
             if(plugin.ShowDebug) {
@@ -41,7 +40,7 @@ public class SpawnWork implements Runnable {
             }
             
             Spawner.SpawnerList.remove(Spawnner);
-            Spawner.SpawnerList.add(spawner);
+            Spawner.SpawnerList.add(makeEntity.spawnerControl);
             
         }catch(Exception ex){
             ex.printStackTrace();

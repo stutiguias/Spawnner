@@ -48,7 +48,6 @@ public class Spawner extends JavaPlugin {
         }
         
         SpawnerList = new ArrayList();
-        SpawnerTasks = 0;
         
         Load();
         ReloadMobs();

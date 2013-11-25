@@ -21,7 +21,21 @@ public class SpawnerControl  implements Serializable
   private Integer qtd;
   private Integer time;
   private String name;
-
+  
+  private Location locationx;
+  private Location locationy;
+  
+  public SpawnerControl(String name, Location locationx,Location locationy, EntityType type, Integer quantd, Integer tempo)
+  {
+    this.moblist = new HashSet();
+    this.name = name;
+    this.locationx = locationx;
+    this.locationy = locationy;
+    this.type = type.name();
+    this.qtd = quantd;
+    this.time = tempo;
+  }
+  
   public SpawnerControl(String name, Location location, EntityType type, Integer quantd, Integer tempo)
   {
     this.moblist = new HashSet();
@@ -41,6 +55,14 @@ public class SpawnerControl  implements Serializable
     return new Location(Bukkit.getWorld(this.world), this.x.doubleValue(), this.y.doubleValue(), this.z.doubleValue(), this.yaw.floatValue(), this.pitch.floatValue());
   }
 
+  public Location getLocationX() {
+    return locationx;
+  }
+  
+  public Location getLocationY() {
+    return locationy;
+  }
+  
   public Set<UUID> getMobs() {
     return this.moblist;
   }

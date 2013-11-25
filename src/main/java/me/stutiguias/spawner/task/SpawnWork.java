@@ -16,30 +16,29 @@ import org.bukkit.entity.Entity;
  */
 public class SpawnWork implements Runnable {
 
-    private SpawnerControl Spawnner;
+    private SpawnerControl spawnerControl;
     private Spawner plugin;
     private MakeEntity makeEntity;
     
-    public SpawnWork(Spawner plugin,SpawnerControl spanner) {
-        this.Spawnner = spanner;
+    public SpawnWork(Spawner plugin,SpawnerControl spawner) {
+        this.spawnerControl = spawner;
         this.plugin = plugin;
     }
     
     @Override
     public void run() {
         try {
-            SpawnerControl spawner = Spawnner;
-            makeEntity = new MakeEntity(spawner);
+            makeEntity = new MakeEntity(spawnerControl);
             
-            for (int i = 1; i <= spawner.getQuantd().intValue(); i++) {
+            for (int i = 1; i <= spawnerControl.getQuantd().intValue(); i++) {
                 Bukkit.getScheduler().runTask(plugin,makeEntity);
             }
             
             if(plugin.ShowDebug) {
-                Spawner.logger.log(Level.INFO, "Spawning {0}", spawner.getName());
+                Spawner.logger.log(Level.INFO, "Spawning {0}", spawnerControl.getName());
             }
             
-            Spawner.SpawnerList.remove(Spawnner);
+            Spawner.SpawnerList.remove(spawnerControl);
             Spawner.SpawnerList.add(makeEntity.spawnerControl);
             
         }catch(Exception ex){

@@ -5,10 +5,13 @@ import java.io.IOException;
 import me.stutiguias.spawner.model.SpawnerControl;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.stutiguias.spawner.commands.SpawnerCommands;
 import me.stutiguias.spawner.listener.MobListener;
+import me.stutiguias.spawner.listener.PlayerListener;
+import me.stutiguias.spawner.model.SpawnerAreaCreating;
 import me.stutiguias.spawner.model.SpawnerProfile;
 import me.stutiguias.spawner.task.SpawnWork;
 import org.bukkit.Bukkit;
@@ -26,9 +29,13 @@ public class Spawner extends JavaPlugin {
     public static String PluginPlayerDir = PluginDir + File.separator + "spawners";
     
     private final MobListener mobListener = new MobListener(this);
+    private final PlayerListener playerListener = new PlayerListener(this);
     
     public static List<SpawnerControl> SpawnerList;
-            
+    public static List<SpawnerAreaCreating> SpawnerCreating;
+    
+    public static Random r = new Random();  
+    
     private ConfigAccessor config;
     
     public boolean ShowDebug;
@@ -48,6 +55,7 @@ public class Spawner extends JavaPlugin {
         }
         
         SpawnerList = new ArrayList();
+        SpawnerCreating = new ArrayList();
         
         Load();
         ReloadMobs();
@@ -56,6 +64,7 @@ public class Spawner extends JavaPlugin {
         
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(mobListener, this);
+        pm.registerEvents(playerListener, this);
         
     }
 

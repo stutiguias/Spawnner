@@ -38,19 +38,52 @@ public class SpawnerProfile {
     public SpawnerControl LoadSpawnerControl(String Filename) {
         configplayerfile = new File(Spawner.PluginPlayerDir + File.separator + Filename);
         SpawnerYML = new YamlConfiguration();
-        initLoadYML();
-        Double x = SpawnerYML.getDouble("Location.x");
-        Double y = SpawnerYML.getDouble("Location.y");
-        Double z = SpawnerYML.getDouble("Location.z");
-        Double pitch = SpawnerYML.getDouble("Location.pitch");
-        Double yaw = SpawnerYML.getDouble("Location.yaw");
-        String world = SpawnerYML.getString("Location.world");
-        Location location = new Location(Bukkit.getWorld(world), x, y, z, yaw.floatValue(), pitch.floatValue());
+        initLoadYML();  
+        Location location = null;
+        Location locationx = null;
+        Location locationy = null;
+        Double x;
+        Double y;
+        Double z;
+        Double pitch;
+        Double yaw;
+        String world;
+            
+        if(SpawnerYML.isSet("Location.x")) {
+            x = SpawnerYML.getDouble("Location.x");
+            y = SpawnerYML.getDouble("Location.y");
+            z = SpawnerYML.getDouble("Location.z");
+            pitch = SpawnerYML.getDouble("Location.pitch");
+            yaw = SpawnerYML.getDouble("Location.yaw");
+            world = SpawnerYML.getString("Location.world");
+            location = new Location(Bukkit.getWorld(world), x, y, z, yaw.floatValue(), pitch.floatValue());
+        }else{
+            
+            x = SpawnerYML.getDouble("LocationX.x");		
+            y = SpawnerYML.getDouble("LocationX.y");
+            z = SpawnerYML.getDouble("LocationX.z");
+            pitch = SpawnerYML.getDouble("LocationX.pitch");
+            yaw = SpawnerYML.getDouble("LocationX.yaw");
+            world = SpawnerYML.getString("LocationX.world");
+            locationx = new Location(Bukkit.getWorld(world), x, y, z, yaw.floatValue(), pitch.floatValue());
+
+            x = SpawnerYML.getDouble("LocationY.x");		
+            y = SpawnerYML.getDouble("LocationY.y");
+            z = SpawnerYML.getDouble("LocationY.z");
+            pitch = SpawnerYML.getDouble("LocationY.pitch");
+            yaw = SpawnerYML.getDouble("LocationY.yaw");
+            world = SpawnerYML.getString("LocationY.world");
+            locationy = new Location(Bukkit.getWorld(world), x, y, z, yaw.floatValue(), pitch.floatValue());
+        }
+        
         EntityType type = EntityType.valueOf(SpawnerYML.getString("Type"));
         Integer qtd = SpawnerYML.getInt("Qtd");
         Integer time = SpawnerYML.getInt("Time");
         String name = Filename.replace(".yml","");
-        return new SpawnerControl(name, location ,type ,qtd ,time );
+        if(location != null)
+            return new SpawnerControl(name, location ,type ,qtd ,time );
+        else
+            return new SpawnerControl(name, locationx,locationy ,type ,qtd ,time );
     }
     
     public boolean RemoveSpawnerControl(String name) {
@@ -91,12 +124,30 @@ public class SpawnerProfile {
 
          if (havetocreate) {
              Spawner.logger.log(Level.INFO, "{0} Creating profile for {1}!", new Object[]{plugin.prefix, spawner.getName() });
-             SpawnerYML.set("Location.x",spawner.getLocation().getX());		
-             SpawnerYML.set("Location.y",spawner.getLocation().getY());
-             SpawnerYML.set("Location.z",spawner.getLocation().getZ());
-             SpawnerYML.set("Location.pitch",spawner.getLocation().getPitch());
-             SpawnerYML.set("Location.yaw",spawner.getLocation().getYaw());
-             SpawnerYML.set("Location.world",spawner.getLocation().getWorld().getName());
+             
+             if(spawner.getLocationX() == null) {
+                SpawnerYML.set("Location.x",spawner.getLocation().getX());		
+                SpawnerYML.set("Location.y",spawner.getLocation().getY());
+                SpawnerYML.set("Location.z",spawner.getLocation().getZ());
+                SpawnerYML.set("Location.pitch",spawner.getLocation().getPitch());
+                SpawnerYML.set("Location.yaw",spawner.getLocation().getYaw());
+                SpawnerYML.set("Location.world",spawner.getLocation().getWorld().getName());
+             }else{
+                SpawnerYML.set("LocationX.x",spawner.getLocationX().getX());		
+                SpawnerYML.set("LocationX.y",spawner.getLocationX().getY());
+                SpawnerYML.set("LocationX.z",spawner.getLocationX().getZ());
+                SpawnerYML.set("LocationX.pitch",spawner.getLocationX().getPitch());
+                SpawnerYML.set("LocationX.yaw",spawner.getLocationX().getYaw());
+                SpawnerYML.set("LocationX.world",spawner.getLocationX().getWorld().getName());
+                
+                SpawnerYML.set("LocationY.x",spawner.getLocationY().getX());		
+                SpawnerYML.set("LocationY.y",spawner.getLocationY().getY());
+                SpawnerYML.set("LocationY.z",spawner.getLocationY().getZ());
+                SpawnerYML.set("LocationY.pitch",spawner.getLocationY().getPitch());
+                SpawnerYML.set("LocationY.yaw",spawner.getLocationY().getYaw());
+                SpawnerYML.set("LocationY.world",spawner.getLocationY().getWorld().getName());
+             }
+             
              SpawnerYML.set("Type",spawner.getType().name());
              SpawnerYML.set("Qtd",spawner.getQuantd());
              SpawnerYML.set("Time",spawner.getTime());

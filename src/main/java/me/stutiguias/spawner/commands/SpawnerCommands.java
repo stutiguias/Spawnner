@@ -7,15 +7,21 @@ package me.stutiguias.spawner.commands;
 import java.util.Iterator;
 import java.util.UUID;
 import me.stutiguias.spawner.init.Spawner;
+import me.stutiguias.spawner.model.SpawnerAreaCreating;
 import me.stutiguias.spawner.model.SpawnerControl;
 import me.stutiguias.spawner.model.SpawnerProfile;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  *
@@ -53,8 +59,10 @@ public class SpawnerCommands implements CommandExecutor {
         {
             case "reload":
                 return Reload();
-            case "setmob" :
-                return SetMob();
+            case "wand":
+                return Wand();
+            case "setspawn" :
+                return SetSpawn();
             case "spawnconf":
                 // TODO : Working on Spawconfig
                 //return SpawnConfig();
@@ -69,6 +77,18 @@ public class SpawnerCommands implements CommandExecutor {
             default:
                 return Help();
         }       
+    }
+    
+    public boolean Wand() {
+        Player player = (Player)sender;
+        ItemStack itemStack = new ItemStack(Material.STICK,1);
+        
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName("TimeSpawner Wand");
+        itemStack.setItemMeta(itemMeta);
+        
+        player.setItemInHand(itemStack);
+        return true;
     }
         
     public boolean Reload() {
@@ -111,7 +131,7 @@ public class SpawnerCommands implements CommandExecutor {
         return true;
     }
     
-    public boolean SetMob() {
+    public boolean SetSpawn() {
 
         if (args.length < 4) {
             FormatMsgRed("Wrong arguments on command setmob");
@@ -153,7 +173,25 @@ public class SpawnerCommands implements CommandExecutor {
             return true;
         }
 
-        SpawnerProfile spawnerProfile = new SpawnerProfile(plugin, new SpawnerControl(name.toLowerCase(), ((Player) sender).getLocation(), type, quantd, tempo));
+        Location locationx = null;
+        Location locationy = null;
+        
+        for(SpawnerAreaCreating spawnerAreaCreating:Spawner.SpawnerCreating) {
+            if(!spawnerAreaCreating.player.equals((Player)sender)) continue;
+            
+            if(spawnerAreaCreating.select.equals("Left"))
+                locationx = spawnerAreaCreating.location;
+            
+            if(spawnerAreaCreating.select.equals("Right"))
+                locationy = spawnerAreaCreating.location;            
+        }
+        
+        SpawnerProfile spawnerProfile;
+        if(locationx != null && locationy != null) {
+            spawnerProfile = new SpawnerProfile(plugin, new SpawnerControl(name.toLowerCase(),locationx,locationy, type, quantd, tempo));
+        }else{
+            spawnerProfile = new SpawnerProfile(plugin, new SpawnerControl(name.toLowerCase(), ((Player) sender).getLocation(), type, quantd, tempo));
+        }
         
         Spawner.SpawnerList.add(spawnerProfile.spawner);
 
@@ -242,8 +280,14 @@ public class SpawnerCommands implements CommandExecutor {
             if (!spawnerControl.getName().equalsIgnoreCase(name)) continue;
             
             Spawner.SpawnerList.remove(spawnerControl);
-
-            for (LivingEntity ent : spawnerControl.getLocation().getWorld().getLivingEntities()) {
+            
+            Location location;
+            if(spawnerControl.getLocationX() != null)
+                location = spawnerControl.getLocationX();
+            else 
+                location = spawnerControl.getLocation();
+            
+            for (LivingEntity ent : location.getWorld().getLivingEntities()) {
                for (UUID id : spawnerControl.getMobs()) {
                     if (!ent.getUniqueId().equals(id))continue;
                     ent.remove();

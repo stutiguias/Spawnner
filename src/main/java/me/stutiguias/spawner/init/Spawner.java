@@ -28,8 +28,6 @@ public class Spawner extends JavaPlugin {
     private final MobListener mobListener = new MobListener(this);
     
     public static List<SpawnerControl> SpawnerList;
-    
-    public static List<Integer> SpawnerTasks;
             
     private ConfigAccessor config;
     
@@ -50,7 +48,7 @@ public class Spawner extends JavaPlugin {
         }
         
         SpawnerList = new ArrayList();
-        SpawnerTasks = new ArrayList();
+        SpawnerTasks = 0;
         
         Load();
         ReloadMobs();
@@ -99,7 +97,7 @@ public class Spawner extends JavaPlugin {
     }
 
     public void Spawn(SpawnerControl spawnner) {
-        SpawnerTasks.add(Bukkit.getScheduler().scheduleSyncDelayedTask(this,new SpawnWork(this,spawnner),spawnner.getTime().intValue() * 20L));
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this,new SpawnWork(this,spawnner),spawnner.getTime().intValue() * 20L);
     }
     
     // TODO : Better Handle Reload - First Save Exist Mobs ( TODO )

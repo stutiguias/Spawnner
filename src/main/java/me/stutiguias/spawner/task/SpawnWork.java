@@ -30,15 +30,6 @@ public class SpawnWork implements Runnable {
     public void run() {
         try {
             SpawnerControl spawner = Spawnner;
-
-            for(Integer task:Spawner.SpawnerTasks) {
-                if(!Bukkit.getScheduler().isCurrentlyRunning(task)) continue;
-                if(plugin.ShowDebug) {
-                    Spawner.logger.log(Level.INFO, "Delay Spawnning {0}", spawner.getName());
-                }
-                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,new SpawnWork(plugin,spawner),1 * 20L);
-                return;
-            }
             
             for (int i = 1; i <= spawner.getQuantd().intValue(); i++) {
                 Entity ent = spawner.getLocation().getWorld().spawnEntity(spawner.getLocation(), spawner.getType());
@@ -51,6 +42,7 @@ public class SpawnWork implements Runnable {
             
             Spawner.SpawnerList.remove(Spawnner);
             Spawner.SpawnerList.add(spawner);
+            
         }catch(Exception ex){
             ex.printStackTrace();
         }

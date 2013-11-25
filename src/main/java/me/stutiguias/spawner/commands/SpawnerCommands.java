@@ -97,14 +97,14 @@ public class SpawnerCommands implements CommandExecutor {
     
     public boolean Spawners() {
 
-        if (Spawner.spawnerList.isEmpty()) {
+        if (Spawner.SpawnerList.isEmpty()) {
             SendFormatMessage("&6Has no set spawn.");
             return true;
         }
         SendFormatMessage(MsgHr);
         SendFormatMessage("&7List of Spawners");
         SendFormatMessage(MsgHr);
-        for (SpawnerControl mobs : Spawner.spawnerList) {
+        for (SpawnerControl mobs : Spawner.SpawnerList) {
             SendFormatMessage("&6" + mobs.getName());
         }
         SendFormatMessage(MsgHr);
@@ -120,7 +120,7 @@ public class SpawnerCommands implements CommandExecutor {
         
         String name = args[1];
         
-        for (SpawnerControl mbs : Spawner.spawnerList) {
+        for (SpawnerControl mbs : Spawner.SpawnerList) {
             if (mbs.getName().equals(name)) {
                 FormatMsgRed("this name is already in use.");
                 plugin.getServer().dispatchCommand(sender, "spawners");
@@ -155,7 +155,7 @@ public class SpawnerCommands implements CommandExecutor {
 
         SpawnerProfile spawnerProfile = new SpawnerProfile(plugin, new SpawnerControl(name.toLowerCase(), ((Player) sender).getLocation(), type, quantd, tempo));
         
-        Spawner.spawnerList.add(spawnerProfile.spawner);
+        Spawner.SpawnerList.add(spawnerProfile.spawner);
 
         plugin.Spawn(spawnerProfile.spawner);
         
@@ -191,10 +191,10 @@ public class SpawnerCommands implements CommandExecutor {
              FormatMsgRed("The quantity not is number.");
              return true;
          }
-         for (SpawnerControl mbs : Spawner.spawnerList) {
+         for (SpawnerControl mbs : Spawner.SpawnerList) {
              if (mbs.getName().startsWith(name)) {
                  mobs = mbs;
-                 Spawner.spawnerList.remove(mbs);
+                 Spawner.SpawnerList.remove(mbs);
                  break;
              }
          }
@@ -211,7 +211,7 @@ public class SpawnerCommands implements CommandExecutor {
          mobs.setQuantd(quantd);
          mobs.setTime(tempo);
          
-         Spawner.spawnerList.add(mobs);
+         Spawner.SpawnerList.add(mobs);
          
          plugin.Spawn(mobs);
          
@@ -238,10 +238,10 @@ public class SpawnerCommands implements CommandExecutor {
         
         String name = args[1];
 
-        for (SpawnerControl spawnerControl : Spawner.spawnerList) {
+        for (SpawnerControl spawnerControl : Spawner.SpawnerList) {
             if (!spawnerControl.getName().equalsIgnoreCase(name)) continue;
             
-            Spawner.spawnerList.remove(spawnerControl);
+            Spawner.SpawnerList.remove(spawnerControl);
 
             for (LivingEntity ent : spawnerControl.getLocation().getWorld().getLivingEntities()) {
                for (UUID id : spawnerControl.getMobs()) {

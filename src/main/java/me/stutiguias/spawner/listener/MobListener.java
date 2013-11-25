@@ -5,7 +5,7 @@
 package me.stutiguias.spawner.listener;
 
 import me.stutiguias.spawner.init.Spawner;
-import static me.stutiguias.spawner.init.Spawner.spawnerList;
+import static me.stutiguias.spawner.init.Spawner.SpawnerList;
 import me.stutiguias.spawner.model.SpawnerControl;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,8 +26,8 @@ public class MobListener implements Listener {
     
     @EventHandler
     public void MobDeath(EntityDeathEvent event) {
-        if (spawnerList.isEmpty()) return;
-        for (SpawnerControl mobs : spawnerList) {
+        if (SpawnerList.isEmpty()) return;
+        for (SpawnerControl mobs : SpawnerList) {
             if (mobs.containsMob(event.getEntity().getUniqueId())) {
                 mobs.removeMob(event.getEntity().getUniqueId());
                 if (!mobs.hasMobs()) {

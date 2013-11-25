@@ -27,8 +27,10 @@ public class Spawner extends JavaPlugin {
     
     private final MobListener mobListener = new MobListener(this);
     
-    public static List<SpawnerControl> spawnerList;
-
+    public static List<SpawnerControl> SpawnerList;
+    
+    public static List<Integer> SpawnerTasks;
+            
     private ConfigAccessor config;
     
     public boolean ShowDebug;
@@ -47,7 +49,9 @@ public class Spawner extends JavaPlugin {
             fuserdata.mkdirs();
         }
         
-        spawnerList = new ArrayList();
+        SpawnerList = new ArrayList();
+        SpawnerTasks = new ArrayList();
+        
         Load();
         ReloadMobs();
         
@@ -77,7 +81,7 @@ public class Spawner extends JavaPlugin {
         for (int i = 0; i < listOfFiles.length; i++) {
           if (listOfFiles[i].isFile()) {
               getLogger().log(Level.INFO, "Loading Spawner {0}", listOfFiles[i].getName());
-              spawnerList.add(new SpawnerProfile(this).LoadSpawnerControl(listOfFiles[i].getName()));
+              SpawnerList.add(new SpawnerProfile(this).LoadSpawnerControl(listOfFiles[i].getName()));
           }
         }
         getLogger().log(Level.INFO, "Spawns loaded with sucess.");
@@ -95,12 +99,12 @@ public class Spawner extends JavaPlugin {
     }
 
     public void Spawn(SpawnerControl spawnner) {
-        Bukkit.getScheduler().runTaskLaterAsynchronously(this,new SpawnWork(this,spawnner),spawnner.getTime().intValue() * 20L);
+        SpawnerTasks.add(Bukkit.getScheduler().scheduleSyncDelayedTask(this,new SpawnWork(this,spawnner),spawnner.getTime().intValue() * 20L));
     }
     
     // TODO : Better Handle Reload - First Save Exist Mobs ( TODO )
     private void ReloadMobs() {
-        for (SpawnerControl spawnner : spawnerList) {
+        for (SpawnerControl spawnner : SpawnerList) {
            // for (LivingEntity ent : spawnner.getLocation().getWorld().getLivingEntities()) {
                 //if (!spawnner.containsMob(ent.getUniqueId())) continue;
                 //spawnner.removeMob(ent.getUniqueId());

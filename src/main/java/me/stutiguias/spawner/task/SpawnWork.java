@@ -7,7 +7,10 @@ package me.stutiguias.spawner.task;
 import java.util.logging.Level;
 import me.stutiguias.spawner.init.Spawner;
 import me.stutiguias.spawner.model.SpawnerControl;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  *
@@ -26,26 +29,28 @@ public class SpawnWork implements Runnable {
     @Override
     public void run() {
         try {
-            SpawnerControl spanner = Spawnner;
+            SpawnerControl spawner = Spawnner;
+
+            for(Integer task:Spawner.SpawnerTasks) {
+                if(!Bukkit.getScheduler().isCurrentlyRunning(task)) continue;
+                if(plugin.ShowDebug) {
+                    Spawner.logger.log(Level.INFO, "Delay Spawnning {0}", spawner.getName());
+                }
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,new SpawnWork(plugin,spawner),1 * 20L);
+                return;
+            }
+            
+            for (int i = 1; i <= spawner.getQuantd().intValue(); i++) {
+                Entity ent = spawner.getLocation().getWorld().spawnEntity(spawner.getLocation(), spawner.getType());
+                spawner.addMob(ent.getUniqueId());
+            }
             
             if(plugin.ShowDebug) {
-                Spawner.logger.log(Level.INFO, "Spawning {0}", spanner.getName());
-                Spawner.logger.log(Level.INFO, "Qtd {0}", spanner.getQuantd().toString());
-                Spawner.logger.log(Level.INFO, "Time {0}", spanner.getTime().toString());
-                Spawner.logger.log(Level.INFO, "X Y Z {0} {1} {2}",new Object[] { spanner.getLocation().getX(), spanner.getLocation().getY(),spanner.getLocation().getZ() } );
+                Spawner.logger.log(Level.INFO, "Spawning {0}", spawner.getName());
             }
             
-            for (int i = 1; i <= spanner.getQuantd().intValue(); i++) {
-                LivingEntity ent = spanner.getLocation().getWorld().spawnCreature(spanner.getLocation(), spanner.getType());
-                spanner.addMob(ent.getUniqueId());
-            }
-            
-            if(plugin.ShowDebug) {
-                Spawner.logger.log(Level.INFO, "Mobs spawnned {0}", String.valueOf(spanner.getMobs().size()));
-            }
-            
-            Spawner.spawnerList.remove(Spawnner);
-            Spawner.spawnerList.add(spanner);
+            Spawner.SpawnerList.remove(Spawnner);
+            Spawner.SpawnerList.add(spawner);
         }catch(Exception ex){
             ex.printStackTrace();
         }

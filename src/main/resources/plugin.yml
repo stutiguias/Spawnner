@@ -1,5 +1,5 @@
 name: "TimeSpawner"
-version: 0.1
+version: 0.2
 author: "Stutiguias,TheProbleemm"
 main: "me.stutiguias.spawner.init.Spawner"
 commands:

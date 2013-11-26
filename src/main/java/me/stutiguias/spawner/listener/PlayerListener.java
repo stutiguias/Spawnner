@@ -36,7 +36,7 @@ public class PlayerListener implements Listener {
             spawnerAreaCreating.location = event.getClickedBlock().getLocation();
             spawnerAreaCreating.select = "Left";
             Spawner.SpawnerCreating.add(spawnerAreaCreating);
-            event.getPlayer().sendMessage("Left OK!");
+            event.getPlayer().sendMessage(plugin.parseColor("&6First Spot Set!"));
             event.setCancelled(true);
         }
         
@@ -45,7 +45,7 @@ public class PlayerListener implements Listener {
             spawnerAreaCreating.location = event.getClickedBlock().getLocation();
             spawnerAreaCreating.select = "Right";
             Spawner.SpawnerCreating.add(spawnerAreaCreating);
-            event.getPlayer().sendMessage("Right OK!");
+            event.getPlayer().sendMessage(plugin.parseColor("&6Second Spot Set!"));
             event.setCancelled(true);            
         }
         

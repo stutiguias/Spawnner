@@ -23,14 +23,14 @@ public class SpawnerControl  implements Serializable
   private String name;
   
   private Location locationx;
-  private Location locationy;
+  private Location locationz;
   
-  public SpawnerControl(String name, Location locationx,Location locationy, EntityType type, Integer quantd, Integer tempo)
+  public SpawnerControl(String name, Location locationx,Location locationz, EntityType type, Integer quantd, Integer tempo)
   {
     this.moblist = new HashSet();
     this.name = name;
     this.locationx = locationx;
-    this.locationy = locationy;
+    this.locationz = locationz;
     this.type = type.name();
     this.qtd = quantd;
     this.time = tempo;
@@ -60,7 +60,7 @@ public class SpawnerControl  implements Serializable
   }
   
   public Location getLocationY() {
-    return locationy;
+    return locationz;
   }
   
   public Set<UUID> getMobs() {

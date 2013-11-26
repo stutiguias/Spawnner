@@ -174,7 +174,7 @@ public class SpawnerCommands implements CommandExecutor {
         }
 
         Location locationx = null;
-        Location locationy = null;
+        Location locationz = null;
         
         for(SpawnerAreaCreating spawnerAreaCreating:Spawner.SpawnerCreating) {
             if(!spawnerAreaCreating.player.equals((Player)sender)) continue;
@@ -183,12 +183,18 @@ public class SpawnerCommands implements CommandExecutor {
                 locationx = spawnerAreaCreating.location;
             
             if(spawnerAreaCreating.select.equals("Right"))
-                locationy = spawnerAreaCreating.location;            
+                locationz = spawnerAreaCreating.location;            
         }
         
         SpawnerProfile spawnerProfile;
-        if(locationx != null && locationy != null) {
-            spawnerProfile = new SpawnerProfile(plugin, new SpawnerControl(name.toLowerCase(),locationx,locationy, type, quantd, tempo));
+        if(locationx != null && locationz != null) {
+            spawnerProfile = new SpawnerProfile(plugin, new SpawnerControl(name.toLowerCase(),locationx,locationz, type, quantd, tempo));
+            
+            for(SpawnerAreaCreating spawnerAreaCreating:Spawner.SpawnerCreating) {
+              if(spawnerAreaCreating.player.equals((Player)sender))
+                  Spawner.SpawnerCreating.remove(spawnerAreaCreating);
+            }
+            
         }else{
             spawnerProfile = new SpawnerProfile(plugin, new SpawnerControl(name.toLowerCase(), ((Player) sender).getLocation(), type, quantd, tempo));
         }

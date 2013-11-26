@@ -56,9 +56,11 @@ public class SpawnerCommands implements CommandExecutor {
             case "update":
                 if(!plugin.hasPermission(sender.getName(),"tsp.update")) return false;
                 return Update();
+            case "w":
             case "wand":
                 if(!plugin.hasPermission(sender.getName(),"tsp.wand")) return false;
                 return Wand();
+            case "ss":
             case "setspawn" :
                 if(!plugin.hasPermission(sender.getName(),"tsp.setspawn")) return false;
                 return SetSpawn();
@@ -67,9 +69,11 @@ public class SpawnerCommands implements CommandExecutor {
                 //return SpawnConfig();
                 SendFormatMessage("&6Not working on 0.1");
                 return true;
+            case "ds":
             case "delspawn":
                 if(!plugin.hasPermission(sender.getName(),"tsp.delspawn")) return false;
                 return DelSpawn();
+            case "sp":
             case "spawners":
                 if(!plugin.hasPermission(sender.getName(),"tsp.spawners")) return false;
                 return Spawners();

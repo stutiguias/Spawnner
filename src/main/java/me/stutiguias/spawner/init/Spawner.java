@@ -11,13 +11,19 @@ import java.util.logging.Logger;
 import me.stutiguias.spawner.commands.SpawnerCommands;
 import me.stutiguias.spawner.listener.MobListener;
 import me.stutiguias.spawner.listener.PlayerListener;
+import me.stutiguias.spawner.metrics.Metrics;
 import me.stutiguias.spawner.model.SpawnerAreaCreating;
 import me.stutiguias.spawner.model.SpawnerProfile;
 import me.stutiguias.spawner.task.SpawnWork;
+import me.stutiguias.updater.Updater;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Spawner extends JavaPlugin {
@@ -34,11 +40,21 @@ public class Spawner extends JavaPlugin {
     public static List<SpawnerControl> SpawnerList;
     public static List<SpawnerAreaCreating> SpawnerCreating;
     
+    public Permission permission = null;
+    public Economy economy = null;
+    
     public static Random r = new Random();  
     
     private ConfigAccessor config;
     
     public boolean ShowDebug;
+    public boolean UpdaterNotify;
+    
+    public static boolean update = false;
+    public static String name = "";
+    public static String type = "";
+    public static String version = "";
+    public static String link = "";
     
     @Override
     public void onEnable() {
@@ -65,7 +81,27 @@ public class Spawner extends JavaPlugin {
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(mobListener, this);
         pm.registerEvents(playerListener, this);
-        
+                
+        setupPermissions();
+        setupEconomy();
+        // Metrics 
+        try {
+         logger.log(Level.INFO, "{0} {1} - Sending Metrics, Thank You!", new Object[]{prefix, "[Metrics]"});
+         Metrics metrics = new Metrics(this);
+         metrics.start();
+        } catch (IOException e) {
+         logger.log(Level.WARNING, "{0} {1} !! Failed to submit the stats !! ", new Object[]{prefix, "[Metrics]"});
+        }
+       
+        if(UpdaterNotify){
+            Updater updater = new Updater(this, 49809, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, false); // Start Updater but just do a version check
+            
+            update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE; // Determine if there is an update ready for us
+            name = updater.getLatestName(); // Get the latest name
+            version = updater.getLatestGameVersion(); // Get the latest game version
+            type = updater.getLatestType(); // Get the latest game version
+            link = updater.getLatestFileLink(); // Get the latest link
+        }
     }
 
     @Override
@@ -96,14 +132,35 @@ public class Spawner extends JavaPlugin {
             config = new ConfigAccessor(this, "config.yml");
             config.setupConfig();
             FileConfiguration fc = config.getConfig();   
+                        
+            if(!fc.isSet("configversion") || fc.getInt("configversion") != 1){ 
+                config.MakeOld();
+                config.setupConfig();
+                fc = config.getConfig();
+            }
             
             ShowDebug = fc.getBoolean("ShowDebug");
+            UpdaterNotify =fc.getBoolean("UpdaterNotify");
             
         }catch(IOException ex){
             getLogger().log(Level.WARNING, "Erro Loading Config");
         }
     }
+    
+    private boolean setupPermissions() {
+        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        permission = rsp.getProvider();
+        return permission != null;
+    }
 
+    private Boolean setupEconomy() {
+        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
+        if (economyProvider != null) {
+                economy = economyProvider.getProvider();
+        }
+        return (economy != null);
+    }
+    
     public void Spawn(SpawnerControl spawnner) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(this,new SpawnWork(this,spawnner),spawnner.getTime().intValue() * 20L);
     }
@@ -128,5 +185,17 @@ public class Spawner extends JavaPlugin {
             message = message.replaceAll(String.format("&%c", color.getChar()), color.toString());
         }
         return message;
+    }
+     
+    public void Update() {
+        Updater updater = new Updater(this, 49809, this.getFile(), Updater.UpdateType.NO_VERSION_CHECK, true);
+    }
+    
+    public boolean hasPermission(String PlayerName,String Permission) {
+       return permission.has(getServer().getPlayer(PlayerName).getWorld(),PlayerName,Permission);
+    }
+    
+    public boolean hasPermission(Player player, String Permission) {
+        return permission.has(player.getWorld(), player.getName(), Permission.toLowerCase());
     }
 }

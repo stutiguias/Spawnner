@@ -5,3 +5,7 @@ main: "me.stutiguias.spawner.init.Spawner"
 commands:
   sp:
     description: "§bcommands"
+permissions:
+     tsp.update:
+        description: Allow update
+        default: op

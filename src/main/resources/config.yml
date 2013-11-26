@@ -1,2 +1,6 @@
+# don't change this
+configversion: 1
 # if true all debug msg will show on console
 ShowDebug: false
+# Enable update
+UpdaterNotify: true

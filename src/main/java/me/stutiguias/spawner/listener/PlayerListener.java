@@ -6,12 +6,13 @@ package me.stutiguias.spawner.listener;
 
 import me.stutiguias.spawner.init.Spawner;
 import me.stutiguias.spawner.model.SpawnerAreaCreating;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 /**
  *
@@ -23,6 +24,17 @@ public class PlayerListener implements Listener {
     
     public PlayerListener(Spawner plugin) {
         this.plugin = plugin;
+    }
+        
+    @EventHandler(priority= EventPriority.NORMAL)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+ 
+        if(plugin.UpdaterNotify && plugin.hasPermission(player,"tsp.update") && Spawner.update)
+        {
+          player.sendMessage(plugin.parseColor("&6An update is available: " + Spawner.name + ", a " + Spawner.type + " for " + Spawner.version + " available at " + Spawner.link));
+          player.sendMessage(plugin.parseColor("&6Type /sp update if you would like to automatically update."));
+        }
     }
     
     @EventHandler

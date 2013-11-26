@@ -17,7 +17,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -59,6 +58,9 @@ public class SpawnerCommands implements CommandExecutor {
         {
             case "reload":
                 return Reload();
+            case "update":
+                if(!plugin.hasPermission(sender.getName(),"tsp.update")) return false;
+                return Update();
             case "wand":
                 return Wand();
             case "setspawn" :
@@ -77,6 +79,11 @@ public class SpawnerCommands implements CommandExecutor {
             default:
                 return Help();
         }       
+    }
+       
+    public boolean Update() {
+        plugin.Update();
+        return true;
     }
     
     public boolean Wand() {
@@ -109,6 +116,11 @@ public class SpawnerCommands implements CommandExecutor {
         //SendFormatMessage("&6/sp spawnconf <spawnerName> <typeMob> <quantity> <time>");
         SendFormatMessage("&6/sp delspawn <spawnerName>");
         SendFormatMessage("&6/sp spawners");
+        
+        if(plugin.hasPermission(sender.getName(),"tsp.update")){
+            SendFormatMessage("&6/sp update");
+        }
+        
         SendFormatMessage("&6/sp reload");
         SendFormatMessage(MsgHr);
         

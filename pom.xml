@@ -17,16 +17,24 @@
   
     <dependencies>
 		
-	  <dependency>
-		  <groupId>org.bukkit</groupId>
-		  <artifactId>bukkit</artifactId>
-		  <version>${bukkit.version}</version>
-	  </dependency>
-
+        <dependency>
+                <groupId>org.bukkit</groupId>
+                <artifactId>bukkit</artifactId>
+                <version>${bukkit.version}</version>
+        </dependency>
+        
+        <dependency>
+          <groupId>net.milkbowl.vault</groupId>
+          <artifactId>Vault</artifactId>
+          <version>1.2.27</version>
+              <scope>system</scope>
+          <systemPath>${project.basedir}/lib/Vault.jar</systemPath>
+        </dependency>
+        
   </dependencies>
   
   <build>
-    <finalName>${project.name}.${project.version}</finalName>
+    <finalName>${project.name}</finalName>
     <sourceDirectory>${basedir}/src/main/java/</sourceDirectory>
     
     <resources>

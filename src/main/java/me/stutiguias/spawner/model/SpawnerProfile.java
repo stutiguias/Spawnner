@@ -36,17 +36,14 @@ public class SpawnerProfile {
     }
     
     public SpawnerControl LoadSpawnerControl(String Filename) {
+        
         configplayerfile = new File(Spawner.PluginPlayerDir + File.separator + Filename);
         SpawnerYML = new YamlConfiguration();
         initLoadYML();  
         Location location = null;
         Location locationx = null;
         Location locationy = null;
-        Double x;
-        Double y;
-        Double z;
-        Double pitch;
-        Double yaw;
+        Double x,y,z,pitch,yaw;
         String world;
             
         if(SpawnerYML.isSet("Location.x")) {
@@ -80,6 +77,7 @@ public class SpawnerProfile {
         Integer qtd = SpawnerYML.getInt("Qtd");
         Integer time = SpawnerYML.getInt("Time");
         String name = Filename.replace(".yml","");
+        
         if(location != null)
             return new SpawnerControl(name, location ,type ,qtd ,time );
         else

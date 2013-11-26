@@ -35,13 +35,12 @@ public class MakeEntity implements Runnable {
             double xz = spawnerControl.getLocationX().getZ();
             double yz = spawnerControl.getLocationY().getZ();
       
-            double x;
+            double x,z;
+            
             if(xx > yx)
                  x = Random(xx,yx);
             else
                  x = Random(yx,xx);    
-            
-            double z;
             
             if(yz > xz)
                z = Random(yz,xz);

@@ -124,8 +124,18 @@ public class SpawnerCommands implements CommandExecutor {
         SendFormatMessage(MsgHr);
         SendFormatMessage("&7List of Spawners");
         SendFormatMessage(MsgHr);
-        for (SpawnerControl mobs : Spawner.SpawnerList) {
-            SendFormatMessage("&6" + mobs.getName());
+        for (SpawnerControl spawnerControl : Spawner.SpawnerList) {
+            double x,y,z;
+            if(spawnerControl.getLocationX() == null) {
+                x = spawnerControl.getLocation().getX();
+                y = spawnerControl.getLocation().getY();
+                z = spawnerControl.getLocation().getZ();
+            }else{
+                x = spawnerControl.getLocationX().getX();
+                y = spawnerControl.getLocationX().getY();
+                z = spawnerControl.getLocationX().getZ();
+            }
+            SendFormatMessage("&6" + spawnerControl.getName() + " &4x:&6"+ x +" &4y:&6"+y+" &4z:&6"+z);
         }
         SendFormatMessage(MsgHr);
         return true;

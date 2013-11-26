@@ -39,9 +39,7 @@ public class MakeEntity implements Runnable {
             if(xx > yx)
                  x = Random(xx,yx);
             else
-                 x = Random(yx,xx);
-            
-            SendDebug(String.valueOf(x));         
+                 x = Random(yx,xx);    
             
             double z;
             
@@ -49,8 +47,6 @@ public class MakeEntity implements Runnable {
                z = Random(yz,xz);
             else
                z = Random(xz,yz);    
-            
-            SendDebug(String.valueOf(z));
              
             Location location = new Location(spawnerControl.getLocationX().getWorld(), x, spawnerControl.getLocationX().getY(), z);
             
@@ -66,7 +62,4 @@ public class MakeEntity implements Runnable {
         return  (int)(fraction + start);    
     }
     
-    public void SendDebug(String msg) {
-        Spawner.logger.info(msg);
-    }
 }

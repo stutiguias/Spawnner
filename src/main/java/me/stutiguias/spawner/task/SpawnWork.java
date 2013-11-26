@@ -8,7 +8,6 @@ import java.util.logging.Level;
 import me.stutiguias.spawner.init.Spawner;
 import me.stutiguias.spawner.model.SpawnerControl;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
 
 /**
  *

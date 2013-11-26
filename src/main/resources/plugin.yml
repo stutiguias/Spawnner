@@ -9,3 +9,27 @@ permissions:
      tsp.update:
         description: Allow update
         default: op
+     tsp.setspawn:
+        description: Allow setspawn
+        default: op
+     tsp.delspawn:
+        description: Allow delspawn
+        default: op       
+     tsp.spawners:
+        description: Allow spawners
+        default: op
+     tsp.reload:
+        description: Allow reload
+        default: op     
+     tsp.wand:
+        description: Allow wand
+        default: op            
+     tsp.admin:
+      description: Gives access to all TimeSpawner commands
+      children:
+        tsp.update: true
+        tsp.setspawn: true
+        tsp.delspawn: true
+        tsp.spawners: true
+        tsp.reload: true
+        tsp.wand: true

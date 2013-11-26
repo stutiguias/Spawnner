@@ -43,12 +43,6 @@ public class SpawnerCommands implements CommandExecutor {
         if (sender.getName().equalsIgnoreCase("CONSOLE")) return true;
         if (!(sender instanceof Player)) return false;
         
-        // TODO : Implement Permission
-        if (!sender.isOp()) {
-            FormatMsgRed("You do not have permission");
-            return true;
-        }
-        
         this.sender = sender;
         this.args = args;
         
@@ -57,13 +51,16 @@ public class SpawnerCommands implements CommandExecutor {
         switch(args[0].toLowerCase())
         {
             case "reload":
+                if(!plugin.hasPermission(sender.getName(),"tsp.reload")) return false;
                 return Reload();
             case "update":
                 if(!plugin.hasPermission(sender.getName(),"tsp.update")) return false;
                 return Update();
             case "wand":
+                if(!plugin.hasPermission(sender.getName(),"tsp.wand")) return false;
                 return Wand();
             case "setspawn" :
+                if(!plugin.hasPermission(sender.getName(),"tsp.setspawn")) return false;
                 return SetSpawn();
             case "spawnconf":
                 // TODO : Working on Spawconfig
@@ -71,8 +68,10 @@ public class SpawnerCommands implements CommandExecutor {
                 SendFormatMessage("&6Not working on 0.1");
                 return true;
             case "delspawn":
+                if(!plugin.hasPermission(sender.getName(),"tsp.delspawn")) return false;
                 return DelSpawn();
             case "spawners":
+                if(!plugin.hasPermission(sender.getName(),"tsp.spawners")) return false;
                 return Spawners();
             case "?":
             case "help":
@@ -111,17 +110,33 @@ public class SpawnerCommands implements CommandExecutor {
         SendFormatMessage(" &7TimeSpawner ");
         
         SendFormatMessage(MsgHr);
-        SendFormatMessage(" &7Admin ");
-        SendFormatMessage("&6/sp setspawn <spawnerName> <typeMob> <quantity> <time>");
+        
+        if(plugin.hasPermission(sender.getName(),"tsp.setspawn")){
+            SendFormatMessage("&6/sp setspawn <spawnerName> <typeMob> <quantity> <time>");
+        }
+        
+        if(plugin.hasPermission(sender.getName(),"tsp.wand")){
+            SendFormatMessage("&6/sp wand");
+        }
+        
         //SendFormatMessage("&6/sp spawnconf <spawnerName> <typeMob> <quantity> <time>");
-        SendFormatMessage("&6/sp delspawn <spawnerName>");
-        SendFormatMessage("&6/sp spawners");
+
+        if(plugin.hasPermission(sender.getName(),"tsp.delspawn")){
+            SendFormatMessage("&6/sp delspawn <spawnerName>");
+        }
+        
+        if(plugin.hasPermission(sender.getName(),"tsp.spawners")){
+            SendFormatMessage("&6/sp spawners");
+        }
         
         if(plugin.hasPermission(sender.getName(),"tsp.update")){
             SendFormatMessage("&6/sp update");
         }
         
-        SendFormatMessage("&6/sp reload");
+        if(plugin.hasPermission(sender.getName(),"tsp.reload")){
+            SendFormatMessage("&6/sp reload");
+        }
+        
         SendFormatMessage(MsgHr);
         
         return true;

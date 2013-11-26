@@ -105,7 +105,7 @@ public class SpawnerCommands implements CommandExecutor {
         
         SendFormatMessage(MsgHr);
         SendFormatMessage(" &7Admin ");
-        SendFormatMessage("&6/sp setmob <spawnerName> <typeMob> <quantity> <time>");
+        SendFormatMessage("&6/sp setspawn <spawnerName> <typeMob> <quantity> <time>");
         //SendFormatMessage("&6/sp spawnconf <spawnerName> <typeMob> <quantity> <time>");
         SendFormatMessage("&6/sp delspawn <spawnerName>");
         SendFormatMessage("&6/sp spawners");
@@ -197,6 +197,7 @@ public class SpawnerCommands implements CommandExecutor {
         }
         
         SpawnerProfile spawnerProfile;
+        String BroadcastType;
         if(locationx != null && locationz != null) {
             spawnerProfile = new SpawnerProfile(plugin, new SpawnerControl(name.toLowerCase(),locationx,locationz, type, quantd, tempo));
             
@@ -204,16 +205,17 @@ public class SpawnerCommands implements CommandExecutor {
               if(spawnerAreaCreating.player.equals((Player)sender))
                   Spawner.SpawnerCreating.remove(spawnerAreaCreating);
             }
-            
+            BroadcastType = "Area ";
         }else{
             spawnerProfile = new SpawnerProfile(plugin, new SpawnerControl(name.toLowerCase(), ((Player) sender).getLocation(), type, quantd, tempo));
+            BroadcastType = "Fixed ";
         }
         
         Spawner.SpawnerList.add(spawnerProfile.spawner);
 
         plugin.Spawn(spawnerProfile.spawner);
         
-        SendFormatMessage("&6Mob Spawner successfully added.");
+        SendFormatMessage("&6"+ BroadcastType +"mob spawner successfully added.");
         return true;
     }
     

@@ -4,24 +4,18 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 
 public class SpawnerControl  implements Serializable
 {
-  private Double z;
-  private Double y;
-  private Double x;
-  private Float pitch;
-  private Float yaw;
-  private String world;
   private Set<UUID> moblist;
   private String type;
   private Integer qtd;
   private Integer time;
   private String name;
   
+  private Location location;
   private Location locationx;
   private Location locationz;
   
@@ -40,19 +34,14 @@ public class SpawnerControl  implements Serializable
   {
     this.moblist = new HashSet();
     this.name = name;
-    this.z = Double.valueOf(location.getZ());
-    this.y = Double.valueOf(location.getY());
-    this.x = Double.valueOf(location.getX());
-    this.pitch = Float.valueOf(location.getPitch());
-    this.yaw = Float.valueOf(location.getYaw());
-    this.world = location.getWorld().getName();
+    this.location = location;
     this.type = type.name();
     this.qtd = quantd;
     this.time = tempo;
   }
 
   public Location getLocation() {
-    return new Location(Bukkit.getWorld(this.world), this.x.doubleValue(), this.y.doubleValue(), this.z.doubleValue(), this.yaw.floatValue(), this.pitch.floatValue());
+    return location;
   }
 
   public Location getLocationX() {
@@ -68,7 +57,7 @@ public class SpawnerControl  implements Serializable
   }
 
   public EntityType getType() {
-    return EntityType.fromName(this.type);
+    return EntityType.valueOf(this.type);
   }
 
   public Integer getQuantd() {
@@ -96,16 +85,11 @@ public class SpawnerControl  implements Serializable
   }
 
   public void setType(EntityType type) {
-    this.type = type.getName();
+    this.type = type.name();
   }
 
   public void setLocation(Location location) {
-    this.z = Double.valueOf(location.getZ());
-    this.y = Double.valueOf(location.getY());
-    this.x = Double.valueOf(location.getX());
-    this.pitch = Float.valueOf(location.getPitch());
-    this.yaw = Float.valueOf(location.getYaw());
-    this.world = location.getWorld().getName();
+    this.location = location;
   }
   public void cleanMobs() {
     this.moblist.clear();

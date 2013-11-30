@@ -138,12 +138,12 @@ public class SpawnerProfile {
                 SpawnerYML.set("LocationX.yaw",spawner.getLocationX().getYaw());
                 SpawnerYML.set("LocationX.world",spawner.getLocationX().getWorld().getName());
                 
-                SpawnerYML.set("LocationY.x",spawner.getLocationY().getX());		
-                SpawnerYML.set("LocationY.y",spawner.getLocationY().getY());
-                SpawnerYML.set("LocationY.z",spawner.getLocationY().getZ());
-                SpawnerYML.set("LocationY.pitch",spawner.getLocationY().getPitch());
-                SpawnerYML.set("LocationY.yaw",spawner.getLocationY().getYaw());
-                SpawnerYML.set("LocationY.world",spawner.getLocationY().getWorld().getName());
+                SpawnerYML.set("LocationY.x",spawner.getLocationZ().getX());		
+                SpawnerYML.set("LocationY.y",spawner.getLocationZ().getY());
+                SpawnerYML.set("LocationY.z",spawner.getLocationZ().getZ());
+                SpawnerYML.set("LocationY.pitch",spawner.getLocationZ().getPitch());
+                SpawnerYML.set("LocationY.yaw",spawner.getLocationZ().getYaw());
+                SpawnerYML.set("LocationY.world",spawner.getLocationZ().getWorld().getName());
              }
              
              SpawnerYML.set("Type",spawner.getType().name());
@@ -159,15 +159,31 @@ public class SpawnerProfile {
     }
 
     public void CheckConfig(SpawnerControl spawner) {
-        if (!SpawnerYML.isSet("Location.x"))        SpawnerYML.set("Location.x",spawner.getLocation().getX());
-        if (!SpawnerYML.isSet("Location.y"))        SpawnerYML.set("Location.y",spawner.getLocation().getY());
-        if (!SpawnerYML.isSet("Location.z"))        SpawnerYML.set("Location.z",spawner.getLocation().getZ());
-        if (!SpawnerYML.isSet("Location.pitch"))    SpawnerYML.set("Location.pitch",spawner.getLocation().getPitch());
-        if (!SpawnerYML.isSet("Location.yaw"))      SpawnerYML.set("Location.yaw",spawner.getLocation().getYaw());
-        if (!SpawnerYML.isSet("Location.world"))    SpawnerYML.set("Location.world",spawner.getLocation().getWorld().getName());
-        if (!SpawnerYML.isSet("Type"))              SpawnerYML.set("Type",spawner.getType().name());
-        if (!SpawnerYML.isSet("Qtd"))               SpawnerYML.set("Qtd",spawner.getQuantd());
-        if (!SpawnerYML.isSet("Time"))              SpawnerYML.set("Time",spawner.getTime());
+          if(spawner.getLocationX() == null) {
+            if (!SpawnerYML.isSet("Location.x"))        SpawnerYML.set("Location.x",spawner.getLocation().getX());
+            if (!SpawnerYML.isSet("Location.y"))        SpawnerYML.set("Location.y",spawner.getLocation().getY());
+            if (!SpawnerYML.isSet("Location.z"))        SpawnerYML.set("Location.z",spawner.getLocation().getZ());
+            if (!SpawnerYML.isSet("Location.pitch"))    SpawnerYML.set("Location.pitch",spawner.getLocation().getPitch());
+            if (!SpawnerYML.isSet("Location.yaw"))      SpawnerYML.set("Location.yaw",spawner.getLocation().getYaw());
+            if (!SpawnerYML.isSet("Location.world"))    SpawnerYML.set("Location.world",spawner.getLocation().getWorld().getName());
+            if (!SpawnerYML.isSet("Type"))              SpawnerYML.set("Type",spawner.getType().name());
+            if (!SpawnerYML.isSet("Qtd"))               SpawnerYML.set("Qtd",spawner.getQuantd());
+            if (!SpawnerYML.isSet("Time"))              SpawnerYML.set("Time",spawner.getTime());
+          }else{
+            if (!SpawnerYML.isSet("LocationX.x"))       SpawnerYML.set("LocationX.x",spawner.getLocationX().getX());		
+            if (!SpawnerYML.isSet("LocationX.y"))       SpawnerYML.set("LocationX.y",spawner.getLocationX().getY());
+            if (!SpawnerYML.isSet("LocationX.z"))       SpawnerYML.set("LocationX.z",spawner.getLocationX().getZ());
+            if (!SpawnerYML.isSet("LocationX.pitch"))   SpawnerYML.set("LocationX.pitch",spawner.getLocationX().getPitch());
+            if (!SpawnerYML.isSet("LocationX.yaw"))     SpawnerYML.set("LocationX.yaw",spawner.getLocationX().getYaw());
+            if (!SpawnerYML.isSet("LocationX.world"))   SpawnerYML.set("LocationX.world",spawner.getLocationX().getWorld().getName());
+
+            if (!SpawnerYML.isSet("LocationY.x"))       SpawnerYML.set("LocationY.x",spawner.getLocationZ().getX());		
+            if (!SpawnerYML.isSet("LocationY.y"))       SpawnerYML.set("LocationY.y",spawner.getLocationZ().getY());
+            if (!SpawnerYML.isSet("LocationY.z"))       SpawnerYML.set("LocationY.z",spawner.getLocationZ().getZ());
+            if (!SpawnerYML.isSet("LocationY.pitch"))   SpawnerYML.set("LocationY.pitch",spawner.getLocationZ().getPitch());
+            if (!SpawnerYML.isSet("LocationY.yaw"))     SpawnerYML.set("LocationY.yaw",spawner.getLocationZ().getYaw());
+            if (!SpawnerYML.isSet("LocationY.world"))   SpawnerYML.set("LocationY.world",spawner.getLocationZ().getWorld().getName());
+          }
     }
     
     public void SaveYML() {

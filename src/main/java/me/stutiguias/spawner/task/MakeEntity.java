@@ -26,14 +26,14 @@ public class MakeEntity implements Runnable {
     @Override
     public void run() {
         Entity ent;
-        if(spawnerControl.getLocationX() == null) {
+        if(spawnerControl.getLocationZ() == null || spawnerControl.getLocationX() == null) {
             ent = spawnerControl.getLocation().getWorld().spawnEntity(spawnerControl.getLocation(), spawnerControl.getType());
         }else{
             
             double xx = spawnerControl.getLocationX().getX();
-            double yx = spawnerControl.getLocationY().getX();
+            double yx = spawnerControl.getLocationZ().getX();
             double xz = spawnerControl.getLocationX().getZ();
-            double yz = spawnerControl.getLocationY().getZ();
+            double yz = spawnerControl.getLocationZ().getZ();
       
             double x,z;
             

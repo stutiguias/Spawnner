@@ -9,11 +9,11 @@ import org.bukkit.entity.EntityType;
 
 public class SpawnerControl  implements Serializable
 {
-  private Set<UUID> moblist;
+  private final Set<UUID> moblist;
   private String type;
   private Integer qtd;
   private Integer time;
-  private String name;
+  private final String name;
   
   private Location location;
   private Location locationx;
@@ -48,7 +48,7 @@ public class SpawnerControl  implements Serializable
     return locationx;
   }
   
-  public Location getLocationY() {
+  public Location getLocationZ() {
     return locationz;
   }
   

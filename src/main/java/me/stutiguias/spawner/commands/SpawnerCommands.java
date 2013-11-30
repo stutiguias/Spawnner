@@ -28,10 +28,10 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public class SpawnerCommands implements CommandExecutor {
      
-    private Spawner plugin;
+    private final Spawner plugin;
     private CommandSender sender;
     private String[] args;
-    private String MsgHr = "&e-----------------------------------------------------";
+    private final String MsgHr = "&e-----------------------------------------------------";
     
     public SpawnerCommands(Spawner plugin) {
         this.plugin = plugin;
@@ -232,10 +232,13 @@ public class SpawnerCommands implements CommandExecutor {
         if(locationx != null && locationz != null) {
             spawnerProfile = new SpawnerProfile(plugin, new SpawnerControl(name.toLowerCase(),locationx,locationz, type, quantd, tempo));
             
+            SpawnerAreaCreating tmpspawnerAreaCreating = null;
             for(SpawnerAreaCreating spawnerAreaCreating:Spawner.SpawnerCreating) {
               if(spawnerAreaCreating.player.equals((Player)sender))
-                  Spawner.SpawnerCreating.remove(spawnerAreaCreating);
+               tmpspawnerAreaCreating = spawnerAreaCreating;  
             }
+            Spawner.SpawnerCreating.remove(tmpspawnerAreaCreating);
+            
             BroadcastType = "Area ";
         }else{
             spawnerProfile = new SpawnerProfile(plugin, new SpawnerControl(name.toLowerCase(), ((Player) sender).getLocation(), type, quantd, tempo));

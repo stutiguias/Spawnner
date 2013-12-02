@@ -20,7 +20,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
  */
 public class PlayerListener implements Listener {
     
-    private Spawner plugin;
+    private final Spawner plugin;
     
     public PlayerListener(Spawner plugin) {
         this.plugin = plugin;
@@ -39,7 +39,7 @@ public class PlayerListener implements Listener {
     
     @EventHandler
     public void PlayerInteract(PlayerInteractEvent event){
-        if(!event.getItem().hasItemMeta() || !event.getItem().getItemMeta().getDisplayName().equals("TimeSpawner Wand")) return;
+        if(!event.hasItem() || !event.getItem().hasItemMeta() || !event.getItem().getItemMeta().getDisplayName().equals("TimeSpawner Wand")) return;
         
         SpawnerAreaCreating spawnerAreaCreating = new SpawnerAreaCreating();
         

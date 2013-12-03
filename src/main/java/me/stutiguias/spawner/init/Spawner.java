@@ -5,7 +5,6 @@ import java.io.IOException;
 import me.stutiguias.spawner.model.SpawnerControl;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
@@ -13,15 +12,19 @@ import java.util.logging.Logger;
 import me.stutiguias.spawner.commands.SpawnerCommands;
 import me.stutiguias.spawner.listener.MobListener;
 import me.stutiguias.spawner.listener.PlayerListener;
+import me.stutiguias.spawner.listener.SignListener;
 import me.stutiguias.spawner.metrics.Metrics;
 import me.stutiguias.spawner.model.SpawnerAreaCreating;
 import me.stutiguias.spawner.model.SpawnerProfile;
+import me.stutiguias.spawner.task.SignUpdate;
 import me.stutiguias.spawner.task.SpawnWork;
 import me.stutiguias.updater.Updater;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -38,9 +41,11 @@ public class Spawner extends JavaPlugin {
     
     private final MobListener mobListener = new MobListener(this);
     private final PlayerListener playerListener = new PlayerListener(this);
+    private final SignListener SignListener = new SignListener(this);
     
     public static List<SpawnerControl> SpawnerList;
     public static HashMap<Player,SpawnerAreaCreating> SpawnerCreating;
+    public static HashMap<SpawnerControl,Location> SpawnerSignLocation;
     
     public Permission permission = null;
     public Economy economy = null;
@@ -74,16 +79,19 @@ public class Spawner extends JavaPlugin {
         
         SpawnerList = new ArrayList();
         SpawnerCreating = new HashMap<>();
+        SpawnerSignLocation = new HashMap<>();
         
         Load();
         ReloadMobs();
+
         
         getCommand("sp").setExecutor(new SpawnerCommands(this));
         
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(mobListener, this);
         pm.registerEvents(playerListener, this);
-                
+        pm.registerEvents(SignListener,this);
+        
         setupPermissions();
         setupEconomy();
         // Metrics 
@@ -164,6 +172,7 @@ public class Spawner extends JavaPlugin {
     }
     
     public void Spawn(SpawnerControl spawnner) {
+        Bukkit.getScheduler().runTaskLater(this, new SignUpdate(this,spawnner),1 * 20L);
         Bukkit.getScheduler().scheduleSyncDelayedTask(this,new SpawnWork(this,spawnner),spawnner.getTime().intValue() * 20L);
     }
     

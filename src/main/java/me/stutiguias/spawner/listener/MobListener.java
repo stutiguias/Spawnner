@@ -17,7 +17,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
  */
 public class MobListener implements Listener {
     
-    private Spawner plugin;
+    private final Spawner plugin;
     
     public MobListener(Spawner plugin) {
         this.plugin = plugin;

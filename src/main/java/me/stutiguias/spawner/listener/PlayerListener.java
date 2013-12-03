@@ -39,7 +39,11 @@ public class PlayerListener implements Listener {
     
     @EventHandler
     public void PlayerInteract(PlayerInteractEvent event){
-        if(!event.hasItem() || !event.getItem().hasItemMeta() || !event.getItem().getItemMeta().getDisplayName().equals("TimeSpawner Wand")) return;
+        if( event.getClickedBlock() != null
+         || !event.hasItem() 
+         || !event.getItem().hasItemMeta() 
+         || !event.getItem().getItemMeta().hasDisplayName()
+         || !event.getItem().getItemMeta().getDisplayName().equals("TimeSpawner Wand")) return;
         
         Player player = event.getPlayer();
         if(!Spawner.SpawnerCreating.containsKey(player))

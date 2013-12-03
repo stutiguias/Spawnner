@@ -39,8 +39,7 @@ public class PlayerListener implements Listener {
     
     @EventHandler
     public void PlayerInteract(PlayerInteractEvent event){
-        if( event.getClickedBlock() != null
-         || !event.hasItem() 
+        if( !event.hasItem() 
          || !event.getItem().hasItemMeta() 
          || !event.getItem().getItemMeta().hasDisplayName()
          || !event.getItem().getItemMeta().getDisplayName().equals("TimeSpawner Wand")) return;

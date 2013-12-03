@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import me.stutiguias.spawner.model.SpawnerControl;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
@@ -38,7 +40,7 @@ public class Spawner extends JavaPlugin {
     private final PlayerListener playerListener = new PlayerListener(this);
     
     public static List<SpawnerControl> SpawnerList;
-    public static List<SpawnerAreaCreating> SpawnerCreating;
+    public static HashMap<Player,SpawnerAreaCreating> SpawnerCreating;
     
     public Permission permission = null;
     public Economy economy = null;
@@ -71,7 +73,7 @@ public class Spawner extends JavaPlugin {
         }
         
         SpawnerList = new ArrayList();
-        SpawnerCreating = new ArrayList();
+        SpawnerCreating = new HashMap<>();
         
         Load();
         ReloadMobs();

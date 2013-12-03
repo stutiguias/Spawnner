@@ -213,32 +213,23 @@ public class SpawnerCommands implements CommandExecutor {
             FormatMsgRed("The quantity not is number");
             return true;
         }
-
-        Location locationx = null;
-        Location locationz = null;
-        
-        for(SpawnerAreaCreating spawnerAreaCreating:Spawner.SpawnerCreating) {
-            if(!spawnerAreaCreating.player.equals((Player)sender)) continue;
             
-            if(spawnerAreaCreating.select.equals("Left"))
-                locationx = spawnerAreaCreating.location;
-            
-            if(spawnerAreaCreating.select.equals("Right"))
-                locationz = spawnerAreaCreating.location;            
-        }
-        
         SpawnerProfile spawnerProfile;
         String BroadcastType;
-        if(locationx != null && locationz != null) {
-            spawnerProfile = new SpawnerProfile(plugin, new SpawnerControl(name.toLowerCase(),locationx,locationz, type, quantd, tempo));
-            
-            SpawnerAreaCreating tmpspawnerAreaCreating = null;
-            for(SpawnerAreaCreating spawnerAreaCreating:Spawner.SpawnerCreating) {
-              if(spawnerAreaCreating.player.equals((Player)sender))
-               tmpspawnerAreaCreating = spawnerAreaCreating;  
+        
+        if(Spawner.SpawnerCreating.containsKey((Player)sender)){
+            if(Spawner.SpawnerCreating.get((Player)sender).locationLeft == null
+            || Spawner.SpawnerCreating.get((Player)sender).locationRight == null) {
+                SendFormatMessage("Need to set all points");
+                return false;
             }
-            Spawner.SpawnerCreating.remove(tmpspawnerAreaCreating);
             
+            Location locationx = Spawner.SpawnerCreating.get((Player)sender).locationLeft;
+            Location locationz = Spawner.SpawnerCreating.get((Player)sender).locationRight;
+        
+            Spawner.SpawnerCreating.remove((Player)sender);
+            
+            spawnerProfile = new SpawnerProfile(plugin, new SpawnerControl(name.toLowerCase(),locationx,locationz, type, quantd, tempo));
             BroadcastType = "Area ";
         }else{
             spawnerProfile = new SpawnerProfile(plugin, new SpawnerControl(name.toLowerCase(), ((Player) sender).getLocation(), type, quantd, tempo));

@@ -41,23 +41,19 @@ public class PlayerListener implements Listener {
     public void PlayerInteract(PlayerInteractEvent event){
         if(!event.hasItem() || !event.getItem().hasItemMeta() || !event.getItem().getItemMeta().getDisplayName().equals("TimeSpawner Wand")) return;
         
-        SpawnerAreaCreating spawnerAreaCreating = new SpawnerAreaCreating();
+        Player player = event.getPlayer();
+        if(!Spawner.SpawnerCreating.containsKey(player))
+            Spawner.SpawnerCreating.put(player, new SpawnerAreaCreating());
         
         if(event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
-            spawnerAreaCreating.player = event.getPlayer();
-            spawnerAreaCreating.location = event.getClickedBlock().getLocation();
-            spawnerAreaCreating.select = "Left";
-            Spawner.SpawnerCreating.add(spawnerAreaCreating);
-            event.getPlayer().sendMessage(plugin.parseColor("&6First Spot Set!"));
+            Spawner.SpawnerCreating.get(player).locationLeft = event.getClickedBlock().getLocation();
+            player.sendMessage(plugin.parseColor("&6First Spot Set!"));
             event.setCancelled(true);
         }
         
         if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            spawnerAreaCreating.player = event.getPlayer();
-            spawnerAreaCreating.location = event.getClickedBlock().getLocation();
-            spawnerAreaCreating.select = "Right";
-            Spawner.SpawnerCreating.add(spawnerAreaCreating);
-            event.getPlayer().sendMessage(plugin.parseColor("&6Second Spot Set!"));
+            Spawner.SpawnerCreating.get(player).locationRight = event.getClickedBlock().getLocation();
+            player.sendMessage(plugin.parseColor("&6Second Spot Set!"));
             event.setCancelled(true);            
         }
         

@@ -15,8 +15,8 @@ import org.bukkit.Bukkit;
  */
 public class SpawnWork implements Runnable {
 
-    private SpawnerControl spawnerControl;
-    private Spawner plugin;
+    private final SpawnerControl spawnerControl;
+    private final Spawner plugin;
     private MakeEntity makeEntity;
     
     public SpawnWork(Spawner plugin,SpawnerControl spawner) {
@@ -40,7 +40,7 @@ public class SpawnWork implements Runnable {
             Spawner.SpawnerList.remove(spawnerControl);
             Spawner.SpawnerList.add(makeEntity.spawnerControl);
             
-        }catch(Exception ex){
+        }catch(IllegalArgumentException ex){
             ex.printStackTrace();
         }
     }

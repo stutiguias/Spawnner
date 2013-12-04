@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package me.stutiguias.spawner.model;
+package me.stutiguias.spawner.db;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,18 +18,18 @@ import org.bukkit.configuration.file.YamlConfiguration;
  *
  * @author Daniel
  */
-public class SignProfile {
+public class SignYmlDb {
 
     Spawner plugin;
     File configsignfile;
     YamlConfiguration SpawnerYML;
 
-    public SignProfile(Spawner plugin,String name,Location location) {
+    public SignYmlDb(Spawner plugin,String name,Location location) {
         this.plugin = plugin;
         LoadSigns(name,location);
     }
     
-    public SignProfile(Spawner plugin) {
+    public SignYmlDb(Spawner plugin) {
         this.plugin = plugin;
     }
     

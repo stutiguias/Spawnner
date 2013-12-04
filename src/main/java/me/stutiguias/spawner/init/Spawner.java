@@ -15,9 +15,9 @@ import me.stutiguias.spawner.listener.MobListener;
 import me.stutiguias.spawner.listener.PlayerListener;
 import me.stutiguias.spawner.listener.SignListener;
 import me.stutiguias.spawner.metrics.Metrics;
-import me.stutiguias.spawner.model.SignProfile;
+import me.stutiguias.spawner.db.SignYmlDb;
 import me.stutiguias.spawner.model.SpawnerAreaCreating;
-import me.stutiguias.spawner.model.SpawnerProfile;
+import me.stutiguias.spawner.db.SpawnerYmlDb;
 import me.stutiguias.spawner.task.SignUpdate;
 import me.stutiguias.spawner.task.SpawnWork;
 import me.stutiguias.updater.Updater;
@@ -50,7 +50,7 @@ public class Spawner extends JavaPlugin {
     
     public static List<SpawnerControl> SpawnerList;
     public static HashMap<Player,SpawnerAreaCreating> SpawnerCreating;
-    public static HashMap<String,Location> SpawnerSignLocation;
+    public static HashMap<String,Location> SignLocation;
     
     public Permission permission = null;
     public Economy economy = null;
@@ -90,7 +90,7 @@ public class Spawner extends JavaPlugin {
         
         SpawnerList = new ArrayList();
         SpawnerCreating = new HashMap<>();
-        SpawnerSignLocation = new HashMap<>();
+        SignLocation = new HashMap<>();
         
         Load();
         ReloadMobs();
@@ -137,41 +137,10 @@ public class Spawner extends JavaPlugin {
     }
     
     private void Load(){
-        getLogger().log(Level.INFO, "Loading Spawns...");
-        
-        File folder = new File(SpawnerDir);
-        
-        File[] listOfFiles = folder.listFiles();
-        
-        for (File listOfFile : listOfFiles) {
-            if (listOfFile.isFile()) {
-                SpawnerList.add(new SpawnerProfile(this).LoadSpawnerControl(listOfFile.getName()));
-            }
-        }
-               
-        folder = new File(SignDir);
-        listOfFiles = folder.listFiles();
-        
-        for (File listOfFile : listOfFiles) {
-            if (listOfFile.isFile()) {
-                SpawnerSignLocation.put( listOfFile.getName().replace(".yml","") , new SignProfile(this).LoadSign(listOfFile.getName()));
-            }
-        }
-        
-        HashMap<String,Location> tmpSignLocation = new HashMap<>(SpawnerSignLocation);
-        
-        for(Map.Entry<String, Location> signlocation:tmpSignLocation.entrySet()) {
-            String worldname = signlocation.getValue().getWorld().getName();
-            Block block = getServer().getWorld(worldname).getBlockAt(signlocation.getValue());
-            BlockState blockState = null;
-            if(!block.isEmpty()) blockState = block.getState();
-            if(blockState == null || !(blockState instanceof Sign)){
-                SpawnerSignLocation.remove(signlocation.getKey());
-                new SignProfile(this).RemoveSpawnerControl(signlocation.getKey());
-            }
-        }
-        
-        getLogger().log(Level.INFO, "Spawns loaded with sucess.");
+        getLogger().log(Level.INFO, "Loading YML Data...");
+        LoadDataFromYML();
+        RemoveLostSign();
+        getLogger().log(Level.INFO, "...loaded with sucess.");
         
         try {
             config = new ConfigAccessor(this, "config.yml");
@@ -215,15 +184,7 @@ public class Spawner extends JavaPlugin {
     // TODO : Better Handle Reload - First Save Exist Mobs ( TODO )
     private void ReloadMobs() {
         for (SpawnerControl spawnner : SpawnerList) {
-           // for (LivingEntity ent : spawnner.getLocation().getWorld().getLivingEntities()) {
-                //if (!spawnner.containsMob(ent.getUniqueId())) continue;
-                //spawnner.removeMob(ent.getUniqueId());
-                //ent.remove();
-                //if (!spawnner.hasMobs()) {
-                    Spawn(spawnner);
-                    //break;
-                //}
-           // }
+            Spawn(spawnner);
         }
     }
     
@@ -244,5 +205,40 @@ public class Spawner extends JavaPlugin {
     
     public boolean hasPermission(Player player, String Permission) {
         return permission.has(player.getWorld(), player.getName(), Permission.toLowerCase());
+    }
+    
+    private void RemoveLostSign() {
+        HashMap<String,Location> tmpSignLocation = new HashMap<>(SignLocation);
+        
+        for(Map.Entry<String, Location> signlocation:tmpSignLocation.entrySet()) {
+            String worldname = signlocation.getValue().getWorld().getName();
+            Block block = getServer().getWorld(worldname).getBlockAt(signlocation.getValue());
+            BlockState blockState = null;
+            if(!block.isEmpty()) blockState = block.getState();
+            if(blockState == null || !(blockState instanceof Sign)){
+                SignLocation.remove(signlocation.getKey());
+                new SignYmlDb(this).RemoveSpawnerControl(signlocation.getKey());
+            }
+        }
+    }
+    
+    private void LoadDataFromYML() {
+        File folder = new File(SpawnerDir);
+        File[] listOfFiles = folder.listFiles();
+        
+        for (File listOfFile : listOfFiles) {
+            if (listOfFile.isFile()) {
+                SpawnerList.add(new SpawnerYmlDb(this).LoadSpawnerControl(listOfFile.getName()));
+            }
+        }
+               
+        folder = new File(SignDir);
+        listOfFiles = folder.listFiles();
+        
+        for (File listOfFile : listOfFiles) {
+            if (listOfFile.isFile()) {
+                SignLocation.put( listOfFile.getName().replace(".yml","") , new SignYmlDb(this).LoadSign(listOfFile.getName()));
+            }
+        }
     }
 }

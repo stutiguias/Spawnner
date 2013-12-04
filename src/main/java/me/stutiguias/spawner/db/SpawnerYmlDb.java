@@ -2,13 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package me.stutiguias.spawner.model;
+package me.stutiguias.spawner.db;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import me.stutiguias.spawner.init.Spawner;
+import me.stutiguias.spawner.model.SpawnerControl;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -19,19 +20,19 @@ import org.bukkit.entity.EntityType;
  *
  * @author Daniel
  */
-public class SpawnerProfile {
+public class SpawnerYmlDb {
 
     public SpawnerControl spawner;
     Spawner plugin;
     File configplayerfile;
     YamlConfiguration SpawnerYML;
 
-    public SpawnerProfile(Spawner plugin,SpawnerControl spawner) {
+    public SpawnerYmlDb(Spawner plugin,SpawnerControl spawner) {
         this.spawner = spawner;
         LoadSpawnerProfile(spawner, plugin);
     }
     
-    public SpawnerProfile(Spawner plugin) {
+    public SpawnerYmlDb(Spawner plugin) {
         this.plugin = plugin;
     }
     
@@ -115,13 +116,13 @@ public class SpawnerProfile {
          try {
              havetocreate = configplayerfile.createNewFile();
          } catch (IOException ex) {
-             Spawner.logger.log(Level.WARNING, "{0} Can't create the rankup user file {1}", new Object[]{plugin.prefix, ex.getMessage()});
+             Spawner.logger.log(Level.WARNING, "{0} Can't create the spawner file {1}", new Object[]{plugin.prefix, ex.getMessage()});
          }
 
          initLoadYML();
 
          if (havetocreate) {
-             Spawner.logger.log(Level.INFO, "{0} Creating profile for {1}!", new Object[]{plugin.prefix, spawner.getName() });
+             Spawner.logger.log(Level.INFO, "{0} Creating {1}!", new Object[]{plugin.prefix, spawner.getName() });
              
              if(spawner.getLocationX() == null) {
                 SpawnerYML.set("Location.x",spawner.getLocation().getX());		

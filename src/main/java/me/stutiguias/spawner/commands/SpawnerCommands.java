@@ -9,7 +9,7 @@ import java.util.UUID;
 import me.stutiguias.spawner.init.Spawner;
 import me.stutiguias.spawner.model.SpawnerAreaCreating;
 import me.stutiguias.spawner.model.SpawnerControl;
-import me.stutiguias.spawner.model.SpawnerProfile;
+import me.stutiguias.spawner.db.SpawnerYmlDb;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -214,7 +214,7 @@ public class SpawnerCommands implements CommandExecutor {
             return true;
         }
             
-        SpawnerProfile spawnerProfile;
+        SpawnerYmlDb spawnerProfile;
         String BroadcastType;
         
         if(Spawner.SpawnerCreating.containsKey((Player)sender)){
@@ -229,10 +229,10 @@ public class SpawnerCommands implements CommandExecutor {
         
             Spawner.SpawnerCreating.remove((Player)sender);
             
-            spawnerProfile = new SpawnerProfile(plugin, new SpawnerControl(name.toLowerCase(),locationx,locationz, type, quantd, tempo));
+            spawnerProfile = new SpawnerYmlDb(plugin, new SpawnerControl(name.toLowerCase(),locationx,locationz, type, quantd, tempo));
             BroadcastType = "Area ";
         }else{
-            spawnerProfile = new SpawnerProfile(plugin, new SpawnerControl(name.toLowerCase(), ((Player) sender).getLocation(), type, quantd, tempo));
+            spawnerProfile = new SpawnerYmlDb(plugin, new SpawnerControl(name.toLowerCase(), ((Player) sender).getLocation(), type, quantd, tempo));
             BroadcastType = "Fixed ";
         }
         
@@ -339,7 +339,7 @@ public class SpawnerCommands implements CommandExecutor {
             
             spawnerControl.cleanMobs();
             
-            new SpawnerProfile(plugin).RemoveSpawnerControl(name);
+            new SpawnerYmlDb(plugin).RemoveSpawnerControl(name);
             
             SendFormatMessage("&6Mob Spawner removed successfully.");
             return true;

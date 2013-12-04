@@ -8,7 +8,7 @@ package me.stutiguias.spawner.listener;
 
 import javax.jws.HandlerChain;
 import me.stutiguias.spawner.init.Spawner;
-import me.stutiguias.spawner.model.SignProfile;
+import me.stutiguias.spawner.db.SignYmlDb;
 import me.stutiguias.spawner.model.SpawnerControl;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -39,8 +39,8 @@ public class SignListener implements Listener {
             if ((block.getTypeId() == 63) || (block.getTypeId() == 68)) {
                     Sign sign = (Sign) block.getState();
                     if (sign.getLine(0).contains(ChatColor.GREEN + "[TimeSpawner]")) {
-                        new SignProfile(plugin).RemoveSpawnerControl(sign.getLine(1));
-                        Spawner.SpawnerSignLocation.remove(sign.getLine(1));
+                        new SignYmlDb(plugin).RemoveSpawnerControl(sign.getLine(1));
+                        Spawner.SignLocation.remove(sign.getLine(1));
                     }
             }
     }
@@ -64,9 +64,9 @@ public class SignListener implements Listener {
             event.setLine(0, ChatColor.GREEN + "[TimeSpawner]");
             event.setLine(2,"Q: " + spawnerControl.getQuantd() + " " + spawnerControl.getType().name());
             event.setLine(3,spawnerControl.getTime().toString());
-            if(Spawner.SpawnerSignLocation.containsKey(spawnerControl.getName())) CancelEvent(event, player, sign," Timer already use !");
-            Spawner.SpawnerSignLocation.put(spawnerControl.getName(),event.getBlock().getLocation());
-            new SignProfile(plugin, spawnerControl.getName(), event.getBlock().getLocation()).SaveYML();
+            if(Spawner.SignLocation.containsKey(spawnerControl.getName())) CancelEvent(event, player, sign," Timer already use !");
+            Spawner.SignLocation.put(spawnerControl.getName(),event.getBlock().getLocation());
+            new SignYmlDb(plugin, spawnerControl.getName(), event.getBlock().getLocation()).SaveYML();
             return;
         }
         CancelEvent(event, player, sign," You do not have permission");

@@ -31,9 +31,10 @@ public class SignUpdate implements Runnable {
     
     @Override
     public void run() {
-        if(Spawner.SpawnerSignLocation.isEmpty()) return;
+        if(Spawner.SignLocation.isEmpty()) return;
         
-        Location location = Spawner.SpawnerSignLocation.get(spawnerControl.getName());
+        Location location = Spawner.SignLocation.get(spawnerControl.getName());
+        
         if(location == null) return;
         
         String worldname = location.getWorld().getName();

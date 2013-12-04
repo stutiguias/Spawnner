@@ -11,6 +11,7 @@ import me.stutiguias.spawner.init.Spawner;
 import me.stutiguias.spawner.db.SignYmlDb;
 import me.stutiguias.spawner.model.SpawnerControl;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -36,12 +37,15 @@ public class SignListener implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
             Block block = event.getBlock();
             Player player = event.getPlayer();
-            if ((block.getTypeId() == 63) || (block.getTypeId() == 68)) {
-                    Sign sign = (Sign) block.getState();
-                    if (sign.getLine(0).contains(ChatColor.GREEN + "[TimeSpawner]")) {
-                        new SignYmlDb(plugin).RemoveSpawnerControl(sign.getLine(1));
-                        Spawner.SignLocation.remove(sign.getLine(1));
-                    }
+            if (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN) {
+                Sign sign = (Sign) block.getState();
+                if(!sign.getLine(0).contains(ChatColor.GREEN + "[TimeSpawner]")) return;
+                if(!plugin.hasPermission(player, "tsp.sign")) {
+                    event.setCancelled(true);
+                    return;
+                }
+                new SignYmlDb(plugin).RemoveSpawnerControl(sign.getLine(1));
+                Spawner.SignLocation.remove(sign.getLine(1));
             }
     }
         
@@ -59,6 +63,8 @@ public class SignListener implements Listener {
     }
                 
     public void TimeSpawner(String[] lines,Player player,Block sign,SignChangeEvent event)    {
+        if(!plugin.hasPermission(player, "tsp.sign")) CancelEvent(event, player, sign," You do not have permission");
+        
         for (SpawnerControl spawnerControl : Spawner.SpawnerList) {
             if(!spawnerControl.getName().equalsIgnoreCase(lines[1])) continue;
             event.setLine(0, ChatColor.GREEN + "[TimeSpawner]");
@@ -69,7 +75,7 @@ public class SignListener implements Listener {
             new SignYmlDb(plugin, spawnerControl.getName(), event.getBlock().getLocation()).SaveYML();
             return;
         }
-        CancelEvent(event, player, sign," You do not have permission");
+        CancelEvent(event, player, sign," Spawner not found");
     }
     
     private void CancelEvent(SignChangeEvent event,Player player,Block thisSign,String msg) {

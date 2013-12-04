@@ -24,6 +24,9 @@ permissions:
      tsp.wand:
         description: Allow wand
         default: op            
+     tsp.sign:
+        description: Allow create and break sign
+        default: op
      tsp.admin:
       description: Gives access to all TimeSpawner commands
       children:
@@ -33,3 +36,4 @@ permissions:
         tsp.spawners: true
         tsp.reload: true
         tsp.wand: true
+        tsp.sign: true

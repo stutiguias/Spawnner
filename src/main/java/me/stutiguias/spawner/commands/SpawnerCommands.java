@@ -155,6 +155,10 @@ public class SpawnerCommands implements CommandExecutor {
     
     public boolean Spawners() {
 
+        if (args.length == 2) {
+            return SpawnerShow();
+        }
+        
         if (Spawner.SpawnerList.isEmpty()) {
             SendFormatMessage("&6Has no set spawn.");
             return true;
@@ -175,6 +179,50 @@ public class SpawnerCommands implements CommandExecutor {
             }
             SendFormatMessage(String.format("&4name:&6 %s &4x:&6 %.2f &4y:&6 %.2f &4z:&6 %.2f",spawnerControl.getName(),x,y,z));
         }
+        SendFormatMessage(MsgHr);
+        return true;
+    }
+    
+    public boolean SpawnerShow() {
+                
+        SendFormatMessage(MsgHr);
+        SendFormatMessage("&7Spawner");
+        SendFormatMessage(MsgHr);
+        
+        String name = args[1];
+        
+        for (SpawnerControl spawnerControl : Spawner.SpawnerList) {
+            if(!spawnerControl.getName().equalsIgnoreCase(name)) continue;
+            double x,y,z,q = 0,w = 0,e = 0;
+            String type;
+            if(spawnerControl.getLocationX() == null) {
+                type = "Fixed";
+                x = spawnerControl.getLocation().getX();
+                y = spawnerControl.getLocation().getY();
+                z = spawnerControl.getLocation().getZ();
+            }else{
+                type = "Area";
+                x = spawnerControl.getLocationX().getX();
+                y = spawnerControl.getLocationX().getY();
+                z = spawnerControl.getLocationX().getZ();
+                
+                q = spawnerControl.getLocationZ().getX();
+                w = spawnerControl.getLocationZ().getY();
+                e = spawnerControl.getLocationZ().getZ();
+                
+            }
+            SendFormatMessage(String.format("&4name:&6 %s &4type:&6 %s  ",spawnerControl.getName(),type));
+            SendFormatMessage(String.format("&4mobtype:&6 %s &4quantity:&6 %s &4time:&6 %s  ",spawnerControl.getType(),spawnerControl.getQuantd(),spawnerControl.getTime()));
+            if(type.equalsIgnoreCase("Fixed")) { 
+                SendFormatMessage(String.format("&4&4x:&6 %.2f &4y:&6 %.2f &4z:&6 %.2f",x,y,z));
+            }else{
+                SendFormatMessage(String.format("&4&4x:&6 %.2f &4y:&6 %.2f &4z:&6 %.2f",x,y,z));
+                SendFormatMessage(String.format("&4&4x:&6 %.2f &4y:&6 %.2f &4z:&6 %.2f",q,w,e));
+            }
+            SendFormatMessage(MsgHr);
+            return true;
+        }
+        SendFormatMessage("&4Spawner not found");
         SendFormatMessage(MsgHr);
         return true;
     }

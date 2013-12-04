@@ -7,7 +7,8 @@ package me.stutiguias.spawner.task;
 import java.util.logging.Level;
 import me.stutiguias.spawner.init.Spawner;
 import me.stutiguias.spawner.model.SpawnerControl;
-import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 
 /**
  *
@@ -17,7 +18,6 @@ public class SpawnWork implements Runnable {
 
     private final SpawnerControl spawnerControl;
     private final Spawner plugin;
-    private MakeEntity makeEntity;
     
     public SpawnWork(Spawner plugin,SpawnerControl spawner) {
         this.spawnerControl = spawner;
@@ -27,22 +27,58 @@ public class SpawnWork implements Runnable {
     @Override
     public void run() {
         try {
-            makeEntity = new MakeEntity(spawnerControl);
+            Spawner.SpawnerList.remove(spawnerControl);
             
             for (int i = 1; i <= spawnerControl.getQuantd().intValue(); i++) {
-                Bukkit.getScheduler().runTask(plugin,makeEntity);
+                MakeEntity();
             }
             
             if(plugin.ShowDebug) {
                 Spawner.logger.log(Level.INFO, "Spawning {0}", spawnerControl.getName());
             }
             
-            Spawner.SpawnerList.remove(spawnerControl);
-            Spawner.SpawnerList.add(makeEntity.spawnerControl);
+            Spawner.SpawnerList.add(spawnerControl);
             
-        }catch(IllegalArgumentException ex){
+        }catch(Exception ex){
             ex.printStackTrace();
         }
     }
     
+    
+    public void MakeEntity() {
+        Entity ent;
+        if(spawnerControl.getLocationZ() == null || spawnerControl.getLocationX() == null) {
+            ent = spawnerControl.getLocation().getWorld().spawnEntity(spawnerControl.getLocation(), spawnerControl.getType());
+        }else{
+            
+            double xx = spawnerControl.getLocationX().getX();
+            double yx = spawnerControl.getLocationZ().getX();
+            double xz = spawnerControl.getLocationX().getZ();
+            double yz = spawnerControl.getLocationZ().getZ();
+      
+            double x,z;
+            
+            if(xx > yx)
+                 x = Random(xx,yx);
+            else
+                 x = Random(yx,xx);    
+            
+            if(yz > xz)
+               z = Random(yz,xz);
+            else
+               z = Random(xz,yz);    
+             
+            Location location = new Location(spawnerControl.getLocationX().getWorld(), x, spawnerControl.getLocationX().getY(), z);
+            
+            ent = location.getWorld().spawnEntity(location, spawnerControl.getType());
+        }
+        spawnerControl.addMob(ent.getUniqueId());
+    }
+    
+        
+    public double Random(double start,double end){
+        long range = (long)end - (long)start + 1;
+        long fraction = (long)(range * Spawner.r.nextDouble());
+        return  (int)(fraction + start);    
+    }
 }

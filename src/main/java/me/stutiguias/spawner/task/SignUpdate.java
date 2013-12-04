@@ -6,12 +6,10 @@
 
 package me.stutiguias.spawner.task;
 
-import java.util.Map;
 import me.stutiguias.spawner.init.Spawner;
 import me.stutiguias.spawner.model.SpawnerControl;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 

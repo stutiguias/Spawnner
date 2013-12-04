@@ -7,7 +7,6 @@ package me.stutiguias.spawner.commands;
 import java.util.Iterator;
 import java.util.UUID;
 import me.stutiguias.spawner.init.Spawner;
-import me.stutiguias.spawner.model.SpawnerAreaCreating;
 import me.stutiguias.spawner.model.SpawnerControl;
 import me.stutiguias.spawner.db.SpawnerYmlDb;
 import org.bukkit.ChatColor;

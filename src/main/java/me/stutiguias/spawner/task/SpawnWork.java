@@ -7,6 +7,7 @@ package me.stutiguias.spawner.task;
 import java.util.logging.Level;
 import me.stutiguias.spawner.init.Spawner;
 import me.stutiguias.spawner.model.SpawnerControl;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
@@ -47,8 +48,16 @@ public class SpawnWork implements Runnable {
     
     public void MakeEntity() {
         Entity ent;
+        String worldname;
         if(spawnerControl.getLocationZ() == null || spawnerControl.getLocationX() == null) {
-            ent = spawnerControl.getLocation().getWorld().spawnEntity(spawnerControl.getLocation(), spawnerControl.getType());
+            worldname = spawnerControl.getLocation().getWorld().getName();
+            
+            if(worldname == null) {
+                Spawner.logger.log(Level.WARNING, "{0} World Not found", plugin.prefix);
+                return;
+            }   
+            
+            ent = Bukkit.getWorld(worldname).spawnEntity(spawnerControl.getLocation(), spawnerControl.getType());
         }else{
             
             double xx = spawnerControl.getLocationX().getX();
@@ -70,7 +79,14 @@ public class SpawnWork implements Runnable {
              
             Location location = new Location(spawnerControl.getLocationX().getWorld(), x, spawnerControl.getLocationX().getY(), z);
             
-            ent = location.getWorld().spawnEntity(location, spawnerControl.getType());
+            worldname = location.getWorld().getName();
+            
+            if(worldname == null) {
+                Spawner.logger.log(Level.WARNING, "{0} World Not found", plugin.prefix);
+                return;
+            }                
+            
+            ent = Bukkit.getWorld(worldname).spawnEntity(location, spawnerControl.getType());
         }
         spawnerControl.addMob(ent.getUniqueId());
     }

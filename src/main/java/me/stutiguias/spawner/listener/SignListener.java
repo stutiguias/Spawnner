@@ -8,6 +8,7 @@ package me.stutiguias.spawner.listener;
 
 import javax.jws.HandlerChain;
 import me.stutiguias.spawner.init.Spawner;
+import me.stutiguias.spawner.model.SignProfile;
 import me.stutiguias.spawner.model.SpawnerControl;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -16,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
 /**
@@ -29,7 +31,20 @@ public class SignListener implements Listener {
     public SignListener(Spawner plugin) {
         this.plugin = plugin;
     }
-    
+        
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onBlockBreak(BlockBreakEvent event) {
+            Block block = event.getBlock();
+            Player player = event.getPlayer();
+            if ((block.getTypeId() == 63) || (block.getTypeId() == 68)) {
+                    Sign sign = (Sign) block.getState();
+                    if (sign.getLine(0).contains(ChatColor.GREEN + "[TimeSpawner]")) {
+                        new SignProfile(plugin).RemoveSpawnerControl(sign.getLine(1));
+                        Spawner.SpawnerSignLocation.remove(sign.getLine(1));
+                    }
+            }
+    }
+        
     @EventHandler(priority = EventPriority.NORMAL)
     public void onSignChange(SignChangeEvent event) {
         
@@ -49,15 +64,17 @@ public class SignListener implements Listener {
             event.setLine(0, ChatColor.GREEN + "[TimeSpawner]");
             event.setLine(2,"Q: " + spawnerControl.getQuantd() + " " + spawnerControl.getType().name());
             event.setLine(3,spawnerControl.getTime().toString());
-            Spawner.SpawnerSignLocation.put(spawnerControl,event.getBlock().getLocation());
+            if(Spawner.SpawnerSignLocation.containsKey(spawnerControl.getName())) CancelEvent(event, player, sign," Timer already use !");
+            Spawner.SpawnerSignLocation.put(spawnerControl.getName(),event.getBlock().getLocation());
+            new SignProfile(plugin, spawnerControl.getName(), event.getBlock().getLocation()).SaveYML();
             return;
         }
-        CancelEvent(event, player, sign);
+        CancelEvent(event, player, sign," You do not have permission");
     }
     
-    private void CancelEvent(SignChangeEvent event,Player player,Block thisSign) {
+    private void CancelEvent(SignChangeEvent event,Player player,Block thisSign,String msg) {
             event.setCancelled(true);
             thisSign.setTypeId(0);
-            player.sendMessage(plugin.prefix + " You do not have permission");
+            player.sendMessage(plugin.prefix + msg);
     }
 }

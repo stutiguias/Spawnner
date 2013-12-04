@@ -37,7 +37,7 @@ public class SpawnerProfile {
     
     public SpawnerControl LoadSpawnerControl(String Filename) {
         
-        configplayerfile = new File(Spawner.PluginPlayerDir + File.separator + Filename);
+        configplayerfile = new File(Spawner.SpawnerDir + File.separator + Filename);
         SpawnerYML = new YamlConfiguration();
         initLoadYML();  
         Location location = null;
@@ -85,7 +85,7 @@ public class SpawnerProfile {
     }
     
     public boolean RemoveSpawnerControl(String name) {
-        configplayerfile = new File(Spawner.PluginPlayerDir + File.separator + name + ".yml");
+        configplayerfile = new File(Spawner.SpawnerDir + File.separator + name + ".yml");
         return configplayerfile.delete();
     }
     
@@ -107,7 +107,7 @@ public class SpawnerProfile {
 
     private void LoadSpawnerProfile(SpawnerControl spawner, Spawner plugin) {
 
-         configplayerfile = new File(Spawner.PluginPlayerDir + File.separator + spawner.getName() + ".yml");
+         configplayerfile = new File(Spawner.SpawnerDir + File.separator + spawner.getName() + ".yml");
          SpawnerYML = new YamlConfiguration();
          
          boolean havetocreate = false;

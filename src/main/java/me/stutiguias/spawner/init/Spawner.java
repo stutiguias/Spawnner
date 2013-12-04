@@ -6,6 +6,7 @@ import me.stutiguias.spawner.model.SpawnerControl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,6 +15,7 @@ import me.stutiguias.spawner.listener.MobListener;
 import me.stutiguias.spawner.listener.PlayerListener;
 import me.stutiguias.spawner.listener.SignListener;
 import me.stutiguias.spawner.metrics.Metrics;
+import me.stutiguias.spawner.model.SignProfile;
 import me.stutiguias.spawner.model.SpawnerAreaCreating;
 import me.stutiguias.spawner.model.SpawnerProfile;
 import me.stutiguias.spawner.task.SignUpdate;
@@ -25,6 +27,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -37,7 +41,8 @@ public class Spawner extends JavaPlugin {
     public static final Logger logger = Logger.getLogger("Minecraft");
     
     public static final String PluginDir = "plugins" + File.separator + "TimeSpawner";
-    public static String PluginPlayerDir = PluginDir + File.separator + "spawners";
+    public static String SpawnerDir = PluginDir + File.separator + "spawners";
+    public static String SignDir = PluginDir + File.separator + "sign";
     
     private final MobListener mobListener = new MobListener(this);
     private final PlayerListener playerListener = new PlayerListener(this);
@@ -45,7 +50,7 @@ public class Spawner extends JavaPlugin {
     
     public static List<SpawnerControl> SpawnerList;
     public static HashMap<Player,SpawnerAreaCreating> SpawnerCreating;
-    public static HashMap<SpawnerControl,Location> SpawnerSignLocation;
+    public static HashMap<String,Location> SpawnerSignLocation;
     
     public Permission permission = null;
     public Economy economy = null;
@@ -71,10 +76,16 @@ public class Spawner extends JavaPlugin {
           dir.mkdirs();
         }
         
-        File fuserdata = new File(PluginPlayerDir);
-        if (!fuserdata.exists()) {
+        File fspawnerdir = new File(SpawnerDir);
+        if (!fspawnerdir.exists()) {
             logger.log(Level.WARNING, "{0} Spawners folder does not exist. Creating 'spawners' Folder", new Object[]{prefix});
-            fuserdata.mkdirs();
+            fspawnerdir.mkdirs();
+        }
+                
+        File fsigndir = new File(SignDir);
+        if (!fsigndir.exists()) {
+            logger.log(Level.WARNING, "{0} Spawners folder does not exist. Creating 'spawners' Folder", new Object[]{prefix});
+            fsigndir.mkdirs();
         }
         
         SpawnerList = new ArrayList();
@@ -83,7 +94,6 @@ public class Spawner extends JavaPlugin {
         
         Load();
         ReloadMobs();
-
         
         getCommand("sp").setExecutor(new SpawnerCommands(this));
         
@@ -94,6 +104,7 @@ public class Spawner extends JavaPlugin {
         
         setupPermissions();
         setupEconomy();
+        
         // Metrics 
         try {
          logger.log(Level.INFO, "{0} {1} - Sending Metrics, Thank You!", new Object[]{prefix, "[Metrics]"});
@@ -127,15 +138,39 @@ public class Spawner extends JavaPlugin {
     
     private void Load(){
         getLogger().log(Level.INFO, "Loading Spawns...");
-        File folder = new File(PluginPlayerDir);
+        
+        File folder = new File(SpawnerDir);
+        
         File[] listOfFiles = folder.listFiles();
-
-        for (int i = 0; i < listOfFiles.length; i++) {
-          if (listOfFiles[i].isFile()) {
-              getLogger().log(Level.INFO, "Loading Spawner {0}", listOfFiles[i].getName());
-              SpawnerList.add(new SpawnerProfile(this).LoadSpawnerControl(listOfFiles[i].getName()));
-          }
+        
+        for (File listOfFile : listOfFiles) {
+            if (listOfFile.isFile()) {
+                SpawnerList.add(new SpawnerProfile(this).LoadSpawnerControl(listOfFile.getName()));
+            }
         }
+               
+        folder = new File(SignDir);
+        listOfFiles = folder.listFiles();
+        
+        for (File listOfFile : listOfFiles) {
+            if (listOfFile.isFile()) {
+                SpawnerSignLocation.put( listOfFile.getName().replace(".yml","") , new SignProfile(this).LoadSign(listOfFile.getName()));
+            }
+        }
+        
+        HashMap<String,Location> tmpSignLocation = new HashMap<>(SpawnerSignLocation);
+        
+        for(Map.Entry<String, Location> signlocation:tmpSignLocation.entrySet()) {
+            String worldname = signlocation.getValue().getWorld().getName();
+            Block block = getServer().getWorld(worldname).getBlockAt(signlocation.getValue());
+            BlockState blockState = null;
+            if(!block.isEmpty()) blockState = block.getState();
+            if(blockState == null || !(blockState instanceof Sign)){
+                SpawnerSignLocation.remove(signlocation.getKey());
+                new SignProfile(this).RemoveSpawnerControl(signlocation.getKey());
+            }
+        }
+        
         getLogger().log(Level.INFO, "Spawns loaded with sucess.");
         
         try {
@@ -155,6 +190,7 @@ public class Spawner extends JavaPlugin {
         }catch(IOException ex){
             getLogger().log(Level.WARNING, "Erro Loading Config");
         }
+        
     }
     
     private boolean setupPermissions() {

@@ -77,6 +77,10 @@ public class SpawnerCommands implements CommandExecutor {
             case "spawners":
                 if(!plugin.hasPermission(sender.getName(),"tsp.spawners")) return false;
                 return Spawners();
+            case "tp":
+            case "teleport":
+                if(!plugin.hasPermission(sender.getName(),"tsp.tp")) return false;
+                return teleportToSpawn();
             case "?":
             case "help":
             default:
@@ -116,21 +120,25 @@ public class SpawnerCommands implements CommandExecutor {
         SendFormatMessage(MsgHr);
         
         if(plugin.hasPermission(sender.getName(),"tsp.setspawn")){
-            SendFormatMessage("&6/sp setspawn <spawnerName> <typeMob> <quantity> <time>");
+            SendFormatMessage("&6/sp <setspawn|ss> <spawnerName> <typeMob> <quantity> <time>");
         }
         
         if(plugin.hasPermission(sender.getName(),"tsp.wand")){
-            SendFormatMessage("&6/sp wand");
+            SendFormatMessage("&6/sp <wand|w>");
         }
         
         //SendFormatMessage("&6/sp spawnconf <spawnerName> <typeMob> <quantity> <time>");
 
         if(plugin.hasPermission(sender.getName(),"tsp.delspawn")){
-            SendFormatMessage("&6/sp delspawn <spawnerName>");
+            SendFormatMessage("&6/sp <delspawn|ds> <spawnerName>");
         }
         
         if(plugin.hasPermission(sender.getName(),"tsp.spawners")){
-            SendFormatMessage("&6/sp spawners");
+            SendFormatMessage("&6/sp <spawners|sp>");
+        }
+                
+        if(plugin.hasPermission(sender.getName(),"tsp.tp")){
+            SendFormatMessage("&6/sp <teleport|tp> <spawnName>");
         }
         
         if(plugin.hasPermission(sender.getName(),"tsp.update")){
@@ -166,9 +174,32 @@ public class SpawnerCommands implements CommandExecutor {
                 y = spawnerControl.getLocationX().getY();
                 z = spawnerControl.getLocationX().getZ();
             }
-            SendFormatMessage("&6" + spawnerControl.getName() + " &4x:&6"+ x +" &4y:&6"+y+" &4z:&6"+z);
+            SendFormatMessage(String.format("&4name:&6 %s &4x:&6 %.2f &4y:&6 %.2f &4z:&6 %.2f",spawnerControl.getName(),x,y,z));
         }
         SendFormatMessage(MsgHr);
+        return true;
+    }
+    
+    public boolean teleportToSpawn() {
+        Player player = (Player)sender;
+               
+        if (args.length < 1) {
+            FormatMsgRed("Wrong arguments on command tp");
+            return true;
+        }
+        
+        String name = args[1];
+        
+        for (SpawnerControl spawnerControl : Spawner.SpawnerList) {
+            if (spawnerControl.getName().equals(name)) {
+                if(spawnerControl.getLocation() == null)
+                    player.teleport(spawnerControl.getLocationX());
+                else
+                    player.teleport(spawnerControl.getLocation());
+                return true;
+            }
+        }       
+        FormatMsgRed("Spawn name not found");
         return true;
     }
     

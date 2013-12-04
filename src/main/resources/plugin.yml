@@ -27,6 +27,9 @@ permissions:
      tsp.sign:
         description: Allow create and break sign
         default: op
+     tsp.tp:
+        description: Teleport player to spawn name
+        default: op
      tsp.admin:
       description: Gives access to all TimeSpawner commands
       children:
@@ -37,3 +40,4 @@ permissions:
         tsp.reload: true
         tsp.wand: true
         tsp.sign: true
+        tsp.tp: true

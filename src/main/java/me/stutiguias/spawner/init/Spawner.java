@@ -59,6 +59,8 @@ public class Spawner extends JavaPlugin {
     
     private ConfigAccessor config;
     
+    public EnderConfig enderConfig;
+    
     public boolean ShowDebug;
     public boolean UpdaterNotify;
     
@@ -127,7 +129,7 @@ public class Spawner extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
+        getServer().getPluginManager().disablePlugin(this);
     }
     
     public void OnReload() {
@@ -160,6 +162,7 @@ public class Spawner extends JavaPlugin {
             getLogger().log(Level.WARNING, "Erro Loading Config");
         }
         
+        enderConfig = new EnderConfig(this);
     }
     
     private boolean setupPermissions() {

@@ -47,6 +47,7 @@
         <includes>
           <include>plugin.yml</include>
           <include>config.yml</include>
+          <include>dragon.yml</include>
         </includes>
       </resource>
 

@@ -33,6 +33,9 @@ permissions:
      tsp.reloc:
         description: Relocate all mobs back to spawn
         default: op         
+     tsp.reset:
+        description: Reset all mobspawn
+        default: op   
      tsp.dragon.exp:
         description: get xp from enderdragons
         default: true
@@ -51,3 +54,4 @@ permissions:
         tsp.sign: true
         tsp.tp: true
         tsp.reloc: true
+        tsp.reset: true

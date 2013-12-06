@@ -316,6 +316,14 @@ public class Spawner extends JavaPlugin {
         }
     }
     
+    public SpawnerControl FindSpawn(String name) {
+        for(SpawnerControl spawnerControl:Spawner.SpawnerList) {
+            if(!spawnerControl.getName().equalsIgnoreCase(name)) continue;
+            return spawnerControl;
+        }
+        return null;
+    }
+    
     public long getCurrentMilli() {
             return System.currentTimeMillis();
     }

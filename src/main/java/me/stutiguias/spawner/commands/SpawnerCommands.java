@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -86,6 +87,10 @@ public class SpawnerCommands implements CommandExecutor {
             case "reloc":
                 if(!plugin.hasPermission(sender.getName(),"tsp.reloc")) return false;
                 return Reloc();
+            case "rs":
+            case "reset":
+                if(!plugin.hasPermission(sender.getName(),"tsp.reset")) return false;
+                return Reset();                
             case "?":
             case "help":
             default:
@@ -93,6 +98,40 @@ public class SpawnerCommands implements CommandExecutor {
         }       
     }
        
+    public boolean Reset() {
+        
+        if (args.length == 2) {
+                    
+             ResetName(args[1]);
+            
+        }else{
+            
+            for(SpawnerControl spawnerControl:Spawner.SpawnerList) {
+
+                RemoveAllEntitysFromSpawn(spawnerControl.getWorld(), spawnerControl);
+                spawnerControl.cleanMobs();
+                plugin.Spawn(spawnerControl);
+            }
+            
+        }
+        return true;
+    }
+    
+    public boolean ResetName(String name) {
+        SpawnerControl spawnerControl = plugin.FindSpawn(name);
+        
+        if(spawnerControl == null) {
+            SendFormatMessage("&4Spawner not found");
+            return true;
+        }
+        
+        RemoveAllEntitysFromSpawn(spawnerControl.getWorld(), spawnerControl);
+        spawnerControl.cleanMobs();
+        plugin.Spawn(spawnerControl);
+        
+        return true;
+    }
+    
     public boolean Reloc() {
                 
         if (args.length == 2) {
@@ -108,16 +147,14 @@ public class SpawnerCommands implements CommandExecutor {
     }
     
     public boolean RelocName(String name) {
+        SpawnerControl spawnerControl = plugin.FindSpawn(name);
         
-        for (SpawnerControl spawnerControl : Spawner.SpawnerList) {
-            
-            if(!spawnerControl.getName().equalsIgnoreCase(name)) continue;
-            plugin.getServer().getScheduler().runTask(plugin, new SpawnLocation(plugin,spawnerControl, 0));
+        if(spawnerControl == null) {
+            SendFormatMessage("&4Spawner not found");
             return true;
-            
         }
         
-        SendFormatMessage("&4Spawner not found");
+        plugin.getServer().getScheduler().runTask(plugin, new SpawnLocation(plugin,spawnerControl, 0));
         return true;
     }    
         
@@ -167,8 +204,7 @@ public class SpawnerCommands implements CommandExecutor {
         }
         
         if(plugin.hasPermission(sender.getName(),"tsp.spawners")){
-            SendFormatMessage("&6/sp <spawners|sp>");
-            SendFormatMessage("&6/sp <spawners|sp> <spawnName>");
+            SendFormatMessage("&6/sp <spawners|sp> <nothing|spawnName>");
         }
                 
         if(plugin.hasPermission(sender.getName(),"tsp.tp")){
@@ -176,10 +212,13 @@ public class SpawnerCommands implements CommandExecutor {
         }
                 
         if(plugin.hasPermission(sender.getName(),"tsp.reloc")){
-            SendFormatMessage("&6/sp <reloc|rl>");
-            SendFormatMessage("&6/sp <reloc|rl> <spawnName>");
+            SendFormatMessage("&6/sp <reloc|rl> <nothing|spawnName>");
         }
-                
+                      
+        if(plugin.hasPermission(sender.getName(),"tsp.reset")){
+            SendFormatMessage("&6/sp <reset|rs> <nothing|spawnName>");
+        }  
+        
         if(plugin.hasPermission(sender.getName(),"tsp.update")){
             SendFormatMessage("&6/sp update");
         }
@@ -443,18 +482,7 @@ public class SpawnerCommands implements CommandExecutor {
             
             Spawner.SpawnerList.remove(spawnerControl);
             
-            Location location;
-            if(spawnerControl.getLocationX() != null)
-                location = spawnerControl.getLocationX();
-            else 
-                location = spawnerControl.getLocation();
-            
-            for (LivingEntity ent : location.getWorld().getLivingEntities()) {
-               for (UUID id : spawnerControl.getMobs()) {
-                    if (!ent.getUniqueId().equals(id))continue;
-                    ent.remove();
-               }
-            }
+            RemoveAllEntitysFromSpawn(spawnerControl.getWorld(), spawnerControl);
             
             spawnerControl.cleanMobs();
             
@@ -466,6 +494,15 @@ public class SpawnerCommands implements CommandExecutor {
  
         FormatMsgRed("Mob Spawner not found.");
         return true;
+    }
+    
+    public void RemoveAllEntitysFromSpawn(World world,SpawnerControl spawnerControl) {
+        for (LivingEntity ent : world.getLivingEntities()) {
+            for (UUID id : spawnerControl.getMobs()) {
+                 if (!ent.getUniqueId().equals(id))continue;
+                 ent.remove();
+            }
+        }
     }
     
     public void FormatMsgRed(String msg) {

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 
 public class SpawnerControl  implements Serializable
@@ -55,6 +56,10 @@ public class SpawnerControl  implements Serializable
   public Set<UUID> getMobs() {
     return this.moblist;
   }
+  
+  public void setMobs(Set<UUID> mobs) {
+     this.moblist.addAll(mobs);
+  }
 
   public EntityType getType() {
     return EntityType.valueOf(this.type);
@@ -98,7 +103,16 @@ public class SpawnerControl  implements Serializable
   public void setTime(Integer tempo) {
     this.time = tempo;
   }
+  
   public Integer getTime() {
     return this.time;
+  }
+  
+  public World getWorld() {
+      if(this.location == null){
+          return locationx.getWorld();
+      }else {
+          return location.getWorld();
+      }
   }
 }

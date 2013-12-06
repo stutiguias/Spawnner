@@ -66,7 +66,7 @@ public class SpawnerCommands implements CommandExecutor {
             case "spawnconf":
                 // TODO : Working on Spawconfig
                 //return SpawnConfig();
-                SendFormatMessage("&6Not working on 0.1");
+                SendFormatMessage("&6Not working");
                 return true;
             case "ds":
             case "delspawn":
@@ -134,6 +134,7 @@ public class SpawnerCommands implements CommandExecutor {
         
         if(plugin.hasPermission(sender.getName(),"tsp.spawners")){
             SendFormatMessage("&6/sp <spawners|sp>");
+            SendFormatMessage("&6/sp <spawners|sp> <spawnName>");
         }
                 
         if(plugin.hasPermission(sender.getName(),"tsp.tp")){
@@ -214,11 +215,12 @@ public class SpawnerCommands implements CommandExecutor {
             SendFormatMessage(String.format("&4name:&6 %s &4type:&6 %s  ",spawnerControl.getName(),type));
             SendFormatMessage(String.format("&4mobtype:&6 %s &4quantity:&6 %s &4time:&6 %s  ",spawnerControl.getType(),spawnerControl.getQuantd(),spawnerControl.getTime()));
             if(type.equalsIgnoreCase("Fixed")) { 
-                SendFormatMessage(String.format("&4&4x:&6 %.2f &4y:&6 %.2f &4z:&6 %.2f",x,y,z));
+                SendFormatMessage(String.format("&4x:&6 %.2f &4y:&6 %.2f &4z:&6 %.2f",x,y,z));
             }else{
-                SendFormatMessage(String.format("&4&4x:&6 %.2f &4y:&6 %.2f &4z:&6 %.2f",x,y,z));
-                SendFormatMessage(String.format("&4&4x:&6 %.2f &4y:&6 %.2f &4z:&6 %.2f",q,w,e));
+                SendFormatMessage(String.format("&4x:&6 %.2f &4y:&6 %.2f &4z:&6 %.2f",x,y,z));
+                SendFormatMessage(String.format("&4x:&6 %.2f &4y:&6 %.2f &4z:&6 %.2f",q,w,e));
             }
+            SendFormatMessage(String.format("&4How Many Alive Mobs:&6 %s ",spawnerControl.getMobs().size()));
             SendFormatMessage(MsgHr);
             return true;
         }

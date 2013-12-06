@@ -11,6 +11,8 @@ import me.stutiguias.spawner.model.SpawnerControl;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
 /**
@@ -48,10 +50,10 @@ public class SpawnLocation implements Runnable {
             
             World world = Bukkit.getWorld(worldname);
             Location location = new Location(world, x, y, z);
-                    
+
             for(LivingEntity livingEntity:world.getLivingEntities()) {
                 if(!spawner.getMobs().contains(livingEntity.getUniqueId())) continue;
-                
+
                 Location moblocation = livingEntity.getLocation();
 
                 int mx = moblocation.getBlockX();

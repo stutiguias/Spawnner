@@ -312,6 +312,7 @@ public class Spawner extends JavaPlugin {
                 }
                 
             }    
+            tmpYmlDb.RemoveSpawnerControl(spawner.getName());
         }
     }
     

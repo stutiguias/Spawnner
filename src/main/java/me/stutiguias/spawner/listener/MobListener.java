@@ -7,6 +7,7 @@ package me.stutiguias.spawner.listener;
 import java.util.ArrayList;
 import me.stutiguias.spawner.init.Spawner;
 import static me.stutiguias.spawner.init.Spawner.SpawnerList;
+import me.stutiguias.spawner.model.PlayerProfile;
 import me.stutiguias.spawner.model.SpawnerControl;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Animals;
@@ -50,14 +51,26 @@ public class MobListener implements Listener {
     @EventHandler
     public void MobDeath(EntityDeathEvent event) {
         if (SpawnerList.isEmpty()) return;
+        
         for (SpawnerControl mobs : SpawnerList) {
-            if (mobs.containsMob(event.getEntity().getUniqueId())) {
-                mobs.removeMob(event.getEntity().getUniqueId());
-                if (!mobs.hasMobs()) {
-                    plugin.Spawn(mobs);
+            if (!mobs.containsMob(event.getEntity().getUniqueId())) continue;
+                
+            if(event.getEntity().getKiller() != null){
+                PlayerProfile playerProfile = Spawner.PlayerProfiles.get(event.getEntity().getKiller().getName());
+
+                if (playerProfile != null && playerProfile.getBan()) {
+                    event.setDroppedExp(0);
                 }
-                return;
             }
+            
+            mobs.removeMob(event.getEntity().getUniqueId());
+
+            if (!mobs.hasMobs()) {
+                plugin.Spawn(mobs);
+            }
+
+            return;
         }
+        
     }
 }

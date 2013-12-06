@@ -7,7 +7,7 @@ UpdaterNotify: true
 # Pull Mobs to location if get to far away
 # this option will pull ALL mobs back 
 # if this to far away !
-EnablePulliFFarAway: true
+EnablePulliFFarAway: false
 # Warning don't use less then 30
 # in seconds
 PulliFFarAwayTime: 60

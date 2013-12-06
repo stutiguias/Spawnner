@@ -1,18 +1,18 @@
 # NOT CHANGE THIS
 configversion: 1
-# Whether or not the EnderDragon destroys blocks.
+# EnderDragon destroys blocks.
 DestroyBlocks: false
-# Whether or not the EnderDragon spawns an egg. If set to true while the portal
+# EnderDragon spawns an egg. If set to true while the portal
 # is disabled, it will drop as an item rather than being placed as a block.
 SpawnEgg: false
-# Whether or not the EnderDragon spawns a portal. If set to true while the egg
+# EnderDragon spawns a portal. If set to true while the egg
 # is disabled, the portal will spawn without an egg.
 SpawnPortal: false
-# Whether or not EnderDragon eggs teleport when hit by a player. This setting is
+# EnderDragon eggs teleport when hit by a player. This setting is
 # to help disable creative theft, especially since LogBlock doesn't log the egg
 # being teleported.
 EggsCanTeleport: false
-# Whether to drop exp to ground (as in vanilla) or give it directly to players
+# drop exp to ground (as in vanilla) or give it directly to players
 DropEXP: false
 # The time it takes for a player who has received experience from the
 # EnderDragon to be able to receive more.

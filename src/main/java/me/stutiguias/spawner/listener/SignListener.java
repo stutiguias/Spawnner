@@ -6,7 +6,6 @@
 
 package me.stutiguias.spawner.listener;
 
-import javax.jws.HandlerChain;
 import me.stutiguias.spawner.init.Spawner;
 import me.stutiguias.spawner.db.SignYmlDb;
 import me.stutiguias.spawner.model.SpawnerControl;

@@ -30,6 +30,12 @@ permissions:
      tsp.tp:
         description: Teleport player to spawn name
         default: op
+     tsp.dragon.exp:
+        description: get xp from enderdragons
+        default: true
+     tsp.dragon.unlimitedexp:
+        description: allow to get xp over and over again
+        default: false
      tsp.admin:
       description: Gives access to all TimeSpawner commands
       children:

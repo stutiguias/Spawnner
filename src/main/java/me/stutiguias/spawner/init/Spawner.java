@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.stutiguias.spawner.commands.SpawnerCommands;
@@ -18,6 +19,9 @@ import me.stutiguias.spawner.metrics.Metrics;
 import me.stutiguias.spawner.db.SignYmlDb;
 import me.stutiguias.spawner.model.SpawnerAreaCreating;
 import me.stutiguias.spawner.db.SpawnerYmlDb;
+import me.stutiguias.spawner.db.TmpYmlDb;
+import me.stutiguias.spawner.listener.EnderDragonListener;
+import me.stutiguias.spawner.model.PlayerProfile;
 import me.stutiguias.spawner.task.SignUpdate;
 import me.stutiguias.spawner.task.SpawnWork;
 import me.stutiguias.updater.Updater;
@@ -30,6 +34,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -43,14 +48,20 @@ public class Spawner extends JavaPlugin {
     public static final String PluginDir = "plugins" + File.separator + "TimeSpawner";
     public static String SpawnerDir = PluginDir + File.separator + "spawners";
     public static String SignDir = PluginDir + File.separator + "sign";
+    public static String PlayerDir = PluginDir + File.separator + "players";
+    public static String TmpDir = PluginDir + File.separator + "tmp";
     
     private final MobListener mobListener = new MobListener(this);
     private final PlayerListener playerListener = new PlayerListener(this);
     private final SignListener SignListener = new SignListener(this);
+    private final EnderDragonListener enderDragonListener = new EnderDragonListener(this);
     
     public static List<SpawnerControl> SpawnerList;
     public static HashMap<Player,SpawnerAreaCreating> SpawnerCreating;
     public static HashMap<String,Location> SignLocation;
+    public static HashMap<String,PlayerProfile> PlayerProfiles;
+    
+    private final TmpYmlDb tmpYmlDb = new TmpYmlDb(this);
     
     public Permission permission = null;
     public Economy economy = null;
@@ -80,19 +91,32 @@ public class Spawner extends JavaPlugin {
         
         File fspawnerdir = new File(SpawnerDir);
         if (!fspawnerdir.exists()) {
-            logger.log(Level.WARNING, "{0} Spawners folder does not exist. Creating 'spawners' Folder", new Object[]{prefix});
+            logger.log(Level.WARNING, "{0} Spawners folder does not exist. Creating !", new Object[]{prefix});
             fspawnerdir.mkdirs();
         }
                 
         File fsigndir = new File(SignDir);
         if (!fsigndir.exists()) {
-            logger.log(Level.WARNING, "{0} Spawners folder does not exist. Creating 'spawners' Folder", new Object[]{prefix});
+            logger.log(Level.WARNING, "{0} Signs folder does not exist. Creating !", new Object[]{prefix});
             fsigndir.mkdirs();
+        }
+                
+        File fplayerdir = new File(PlayerDir);
+        if (!fplayerdir.exists()) {
+            logger.log(Level.WARNING, "{0} Players folder does not exist. Creating !", new Object[]{prefix});
+            fplayerdir.mkdirs();
+        }
+                
+        File ftmpdir = new File(TmpDir);
+        if (!ftmpdir.exists()) {
+            logger.log(Level.WARNING, "{0} Tmp folder does not exist. Creating !", new Object[]{prefix});
+            ftmpdir.mkdirs();
         }
         
         SpawnerList = new ArrayList();
         SpawnerCreating = new HashMap<>();
         SignLocation = new HashMap<>();
+        PlayerProfiles = new HashMap<>();
         
         Load();
         ReloadMobs();
@@ -100,9 +124,11 @@ public class Spawner extends JavaPlugin {
         getCommand("sp").setExecutor(new SpawnerCommands(this));
         
         PluginManager pm = getServer().getPluginManager();
+        
         pm.registerEvents(mobListener, this);
         pm.registerEvents(playerListener, this);
         pm.registerEvents(SignListener,this);
+        pm.registerEvents(enderDragonListener, this);
         
         setupPermissions();
         setupEconomy();
@@ -129,10 +155,20 @@ public class Spawner extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        
+        for(SpawnerControl spawner:SpawnerList){
+            if(!spawner.hasMobs()) continue;
+            tmpYmlDb.Create(spawner);
+        }
+        
         getServer().getPluginManager().disablePlugin(this);
     }
     
     public void OnReload() {
+        for(SpawnerControl spawner:SpawnerList){
+            if(!spawner.hasMobs()) continue;
+            tmpYmlDb.Create(spawner);
+        }
         config.reloadConfig();
         getServer().getPluginManager().disablePlugin(this);
         getServer().getPluginManager().enablePlugin(this);
@@ -141,6 +177,7 @@ public class Spawner extends JavaPlugin {
     private void Load(){
         getLogger().log(Level.INFO, "Loading YML Data...");
         LoadDataFromYML();
+        CheckExistMobs();
         RemoveLostSign();
         getLogger().log(Level.INFO, "...loaded with sucess.");
         
@@ -187,6 +224,7 @@ public class Spawner extends JavaPlugin {
     // TODO : Better Handle Reload - First Save Exist Mobs ( TODO )
     private void ReloadMobs() {
         for (SpawnerControl spawnner : SpawnerList) {
+            if(spawnner.hasMobs()) continue;
             Spawn(spawnner);
         }
     }
@@ -243,5 +281,30 @@ public class Spawner extends JavaPlugin {
                 SignLocation.put( listOfFile.getName().replace(".yml","") , new SignYmlDb(this).LoadSign(listOfFile.getName()));
             }
         }
+    }
+    
+    public void CheckExistMobs() {
+        for(SpawnerControl spawner:SpawnerList) {
+            String worldname;
+            if(spawner.getLocation() == null)
+                worldname = spawner.getLocationX().getWorld().getName();
+            else
+                worldname = spawner.getLocation().getWorld().getName();
+            
+            for(LivingEntity entity:Bukkit.getServer().getWorld(worldname).getLivingEntities()) {
+                if(!tmpYmlDb.Exist(spawner)) continue;
+                
+                List<UUID> mobs = tmpYmlDb.LoadPlayer(spawner);
+                
+                for(UUID mob:mobs) {
+                   if(entity.getUniqueId().equals(mob)) spawner.addMob(mob);
+                }
+                
+            }    
+        }
+    }
+    
+    public long getCurrentMilli() {
+            return System.currentTimeMillis();
     }
 }

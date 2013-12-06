@@ -136,7 +136,7 @@ public class SpawnWork implements Runnable {
         
         if(nearbyPlayer == false && plugin.ShowDebug) {
             plugin.Spawn(spawnerControl);
-            Spawner.logger.log(Level.INFO, "{0} Stop spawn becouse don't find any player near ", new Object[]{ plugin.prefix });
+            Spawner.logger.log(Level.INFO, "{0} Stop spawn don't find any player near ", new Object[]{ plugin.prefix });
         }
         
         return nearbyPlayer;

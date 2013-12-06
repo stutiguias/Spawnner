@@ -6,11 +6,10 @@
 
 package me.stutiguias.spawner.listener;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import me.stutiguias.spawner.init.Spawner;
+import me.stutiguias.spawner.model.PlayerProfile;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.PortalType;
@@ -34,9 +33,9 @@ import org.bukkit.inventory.ItemStack;
  */
 public class EnderDragonListener implements Listener {
     
-    private Spawner plugin;
+    private final Spawner plugin;
     
-    public void EnderDragonListerner(Spawner plugin) {
+    public EnderDragonListener(Spawner plugin) {
         this.plugin = plugin;
     }
     
@@ -135,41 +134,31 @@ public class EnderDragonListener implements Listener {
         Location enderDragonLocation = entity.getLocation();
 
         for (Player player : players) {
+            
             Location playerLocation = player.getLocation();
 
             int distance = (int) enderDragonLocation.distance(playerLocation);
 
-            if (distance > plugin.enderConfig.expMaxDistance) {
-                continue;
-            }
+            if (distance > plugin.enderConfig.expMaxDistance) continue;
 
             String playerName = player.getName().toUpperCase().toLowerCase();
+            
+            PlayerProfile playerProfile = Spawner.PlayerProfiles.get(playerName);
+            
+            if (playerProfile.getBan()) continue;
 
-            //if (plugin.data.bannedPlayers.containsKey(playerName)) {
-            //    continue;
-            //}
+            long lastUse = playerProfile.getExpTime();
+            long Delay = plugin.enderConfig.expResetMinutes * 60000;
+            
+            if (lastUse + Delay > plugin.getCurrentMilli()) continue;
 
-            //Timestamp time = plugin.data.players.get(playerName);
-
-            //long requiredTime = new Date().getTime();
-            //requiredTime -= plugin.expResetMinutes * 60000;
-
-            //if (time != null && (time.getTime() > requiredTime)) {
-            //    continue;
-            //}
-
-            if (!plugin.hasPermission(player,"enderspawn.exp")) {
-                continue;
-            }
+            if (!plugin.hasPermission(player,"tsp.dragon.exp")) continue;
 
             player.giveExp(droppedEXP);
 
-            if (plugin.hasPermission(player, "enderspawn.unlimitedexp")) {
-                continue;
-            }
+            if (plugin.hasPermission(player, "tsp.dragon.unlimitedexp")) continue;
 
-            Timestamp now = new Timestamp(new Date().getTime());
-            //plugin.data.players.put(playerName, now);
+            playerProfile.setExpTime(plugin.getCurrentMilli());
         }
 
     }

@@ -48,6 +48,8 @@
           <include>plugin.yml</include>
           <include>config.yml</include>
           <include>dragon.yml</include>
+          <include>zombie.yml</include>
+          <include>skeleton.yml</include>
         </includes>
       </resource>
 

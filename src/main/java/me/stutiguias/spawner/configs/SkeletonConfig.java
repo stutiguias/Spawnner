@@ -15,25 +15,17 @@ import org.bukkit.configuration.file.FileConfiguration;
  *
  * @author Daniel
  */
-public class EnderConfig {
-        
+public class SkeletonConfig {
+    
     private ConfigAccessor config;
     
-    public boolean destroyBlocks;
-    public boolean spawnEgg;
-    public boolean spawnPortal;
-    public boolean teleportEgg;
-    public boolean useCustomExp;
-    public boolean dropExp;
-    public long expResetMinutes;
-    public long expMaxDistance;
-    public int customExp;
+    public boolean diebysun;
     
-    public EnderConfig (Spawner plugin) {
+    public SkeletonConfig (Spawner plugin) {
         
         try{
                     
-            config = new ConfigAccessor(plugin, "dragon.yml");
+            config = new ConfigAccessor(plugin, "skeleton.yml");
             config.setupConfig();
             FileConfiguration c = config.getConfig();   
                         
@@ -43,15 +35,7 @@ public class EnderConfig {
                 c = config.getConfig();
             }
             
-            destroyBlocks = c.getBoolean("DestroyBlocks");
-            spawnEgg = c.getBoolean("SpawnEgg");
-            spawnPortal = c.getBoolean("SpawnPortal");
-            teleportEgg = c.getBoolean("EggsCanTeleport");
-            expResetMinutes = c.getLong("EXPResetMinutes");
-            expMaxDistance = c.getLong("EXPMaxDistance");
-            useCustomExp = c.getBoolean("UseCustomEXPTotal");
-            dropExp = c.getBoolean("DropEXP");
-            customExp = c.getInt("CustomEXPTotal");
+            diebysun = c.getBoolean("DiebySun");
             
         }catch(IOException ex) {
             ex.printStackTrace();

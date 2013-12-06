@@ -1,5 +1,6 @@
 package me.stutiguias.spawner.init;
 
+import me.stutiguias.spawner.configs.EnderConfig;
 import java.io.File;
 import java.io.IOException;
 import me.stutiguias.spawner.model.SpawnerControl;
@@ -12,6 +13,8 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.stutiguias.spawner.commands.SpawnerCommands;
+import me.stutiguias.spawner.configs.SkeletonConfig;
+import me.stutiguias.spawner.configs.ZombieConfig;
 import me.stutiguias.spawner.listener.MobListener;
 import me.stutiguias.spawner.listener.PlayerListener;
 import me.stutiguias.spawner.listener.SignListener;
@@ -72,6 +75,8 @@ public class Spawner extends JavaPlugin {
     private ConfigAccessor config;
     
     public EnderConfig enderConfig;
+    public SkeletonConfig skeletonConfig;
+    public ZombieConfig zombieConfig;
     
     public boolean ShowDebug;
     public boolean UpdaterNotify;
@@ -207,6 +212,8 @@ public class Spawner extends JavaPlugin {
         }
         
         enderConfig = new EnderConfig(this);
+        skeletonConfig = new SkeletonConfig(this);
+        zombieConfig = new ZombieConfig(this);
         
         if(EnablePulliFFarAway)
         Bukkit.getScheduler().runTaskTimer(this, new SpawnLocation(this), PulliFFarAwayTime * 20, PulliFFarAwayTime * 20);
@@ -323,6 +330,14 @@ public class Spawner extends JavaPlugin {
         }
         return null;
     }
+    
+    public boolean isTimeSpawnerMob(UUID monster) {
+        for(SpawnerControl spawnerControl:Spawner.SpawnerList) {
+            if(spawnerControl.containsMob(monster)) return true;
+        }
+        return false;
+    }
+            
     
     public long getCurrentMilli() {
             return System.currentTimeMillis();

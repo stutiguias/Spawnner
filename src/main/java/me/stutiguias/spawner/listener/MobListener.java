@@ -15,9 +15,12 @@ import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
@@ -28,11 +31,15 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 public class MobListener implements Listener {
     
     private final Spawner plugin;
-    private EnderDragonListener enderDragonListener;
+    private final EnderDragonListener enderDragonListener;
+    private final SkeletonListener skeletonListener;
+    private final ZombieListener zombieListener;
     
     public MobListener(Spawner plugin) {
         this.plugin = plugin;
         enderDragonListener = new EnderDragonListener(plugin);
+        skeletonListener = new SkeletonListener(plugin);
+        zombieListener = new ZombieListener(plugin);
     }
     
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -49,6 +56,13 @@ public class MobListener implements Listener {
             entity.remove();
         }
         
+    }
+    
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onCombustEvent(EntityCombustEvent event) {
+        if(!plugin.isTimeSpawnerMob(event.getEntity().getUniqueId())) return;
+        if(event.getEntity() instanceof Skeleton) skeletonListener.onCombust(event);
+        if(event.getEntity() instanceof Zombie) zombieListener.onCombust(event);
     }
     
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

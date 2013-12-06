@@ -23,6 +23,7 @@ import me.stutiguias.spawner.db.TmpYmlDb;
 import me.stutiguias.spawner.listener.EnderDragonListener;
 import me.stutiguias.spawner.model.PlayerProfile;
 import me.stutiguias.spawner.task.SignUpdate;
+import me.stutiguias.spawner.task.SpawnLocation;
 import me.stutiguias.spawner.task.SpawnWork;
 import me.stutiguias.updater.Updater;
 import net.milkbowl.vault.economy.Economy;
@@ -74,13 +75,16 @@ public class Spawner extends JavaPlugin {
     
     public boolean ShowDebug;
     public boolean UpdaterNotify;
+    public boolean EnablePulliFFarAway;
+    public int PulliFFarAwayTime;
+    public int PulliFFarAwayLimit;
     
     public static boolean update = false;
     public static String name = "";
     public static String type = "";
     public static String version = "";
     public static String link = "";
-    
+
     @Override
     public void onEnable() {
         
@@ -186,7 +190,7 @@ public class Spawner extends JavaPlugin {
             config.setupConfig();
             FileConfiguration fc = config.getConfig();   
                         
-            if(!fc.isSet("configversion") || fc.getInt("configversion") != 1){ 
+            if(!fc.isSet("configversion") || fc.getInt("configversion") != 2){ 
                 config.MakeOld();
                 config.setupConfig();
                 fc = config.getConfig();
@@ -194,12 +198,19 @@ public class Spawner extends JavaPlugin {
             
             ShowDebug = fc.getBoolean("ShowDebug");
             UpdaterNotify =fc.getBoolean("UpdaterNotify");
+            EnablePulliFFarAway =fc.getBoolean("EnablePulliFFarAway");
+            PulliFFarAwayTime =fc.getInt("PulliFFarAwayTime");
+            PulliFFarAwayLimit = fc.getInt("PulliFFarAwayLimit");
             
         }catch(IOException ex){
             getLogger().log(Level.WARNING, "Erro Loading Config");
         }
         
         enderConfig = new EnderConfig(this);
+        
+        if(EnablePulliFFarAway)
+        Bukkit.getScheduler().runTaskTimer(this, new SpawnLocation(this), PulliFFarAwayTime * 20, PulliFFarAwayTime * 20);
+        
     }
     
     private boolean setupPermissions() {

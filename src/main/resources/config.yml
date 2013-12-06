@@ -1,6 +1,15 @@
 # don't change this
-configversion: 1
+configversion: 2
 # if true all debug msg will show on console
 ShowDebug: false
 # Enable update
 UpdaterNotify: true
+# Pull Mobs to location if get to far away
+# this option will pull ALL mobs back 
+# if this to far away !
+EnablePulliFFarAway: true
+# Warning don't use less then 30
+# in seconds
+PulliFFarAwayTime: 60
+# Distance limit - Use higher values 
+PulliFFarAwayLimit: 160

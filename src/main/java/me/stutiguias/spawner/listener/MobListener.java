@@ -11,6 +11,7 @@ import me.stutiguias.spawner.model.PlayerProfile;
 import me.stutiguias.spawner.model.SpawnerControl;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Animals;
+import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
@@ -27,9 +28,11 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 public class MobListener implements Listener {
     
     private final Spawner plugin;
+    private EnderDragonListener enderDragonListener;
     
     public MobListener(Spawner plugin) {
         this.plugin = plugin;
+        enderDragonListener = new EnderDragonListener(plugin);
     }
     
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -48,8 +51,14 @@ public class MobListener implements Listener {
         
     }
     
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void MobDeath(EntityDeathEvent event) {
+        Entity entity = event.getEntity();
+        
+        if (entity instanceof EnderDragon) {
+            enderDragonListener.onDeath(event);
+        }
+        
         if (SpawnerList.isEmpty()) return;
         
         for (SpawnerControl mobs : SpawnerList) {

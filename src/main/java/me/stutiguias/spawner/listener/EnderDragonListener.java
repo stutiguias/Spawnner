@@ -108,12 +108,11 @@ public class EnderDragonListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onEntityDeath(EntityDeathEvent event) {
+    public void onDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();
         int droppedEXP = event.getDroppedExp();
         
-        if (!(entity instanceof EnderDragon) || droppedEXP <= 0) return;
+        if (droppedEXP <= 0) return;
 
         if (plugin.enderConfig.dropExp) {
             if (plugin.enderConfig.useCustomExp) {

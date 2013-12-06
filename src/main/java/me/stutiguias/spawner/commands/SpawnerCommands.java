@@ -9,6 +9,8 @@ import java.util.UUID;
 import me.stutiguias.spawner.init.Spawner;
 import me.stutiguias.spawner.model.SpawnerControl;
 import me.stutiguias.spawner.db.SpawnerYmlDb;
+import me.stutiguias.spawner.task.SpawnLocation;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -80,6 +82,10 @@ public class SpawnerCommands implements CommandExecutor {
             case "teleport":
                 if(!plugin.hasPermission(sender.getName(),"tsp.tp")) return false;
                 return teleportToSpawn();
+            case "rl":
+            case "reloc":
+                if(!plugin.hasPermission(sender.getName(),"tsp.reloc")) return false;
+                return Reloc();
             case "?":
             case "help":
             default:
@@ -87,6 +93,34 @@ public class SpawnerCommands implements CommandExecutor {
         }       
     }
        
+    public boolean Reloc() {
+                
+        if (args.length == 2) {
+                    
+             RelocName(args[1]);
+            
+        }else{
+            
+            plugin.getServer().getScheduler().runTask(plugin, new SpawnLocation(plugin, 0));      
+            
+        }
+        return true;
+    }
+    
+    public boolean RelocName(String name) {
+        
+        for (SpawnerControl spawnerControl : Spawner.SpawnerList) {
+            
+            if(!spawnerControl.getName().equalsIgnoreCase(name)) continue;
+            plugin.getServer().getScheduler().runTask(plugin, new SpawnLocation(plugin,spawnerControl, 0));
+            return true;
+            
+        }
+        
+        SendFormatMessage("&4Spawner not found");
+        return true;
+    }    
+        
     public boolean Update() {
         plugin.Update();
         return true;
@@ -140,7 +174,12 @@ public class SpawnerCommands implements CommandExecutor {
         if(plugin.hasPermission(sender.getName(),"tsp.tp")){
             SendFormatMessage("&6/sp <teleport|tp> <spawnName>");
         }
-        
+                
+        if(plugin.hasPermission(sender.getName(),"tsp.reloc")){
+            SendFormatMessage("&6/sp <reloc|rl>");
+            SendFormatMessage("&6/sp <reloc|rl> <spawnName>");
+        }
+                
         if(plugin.hasPermission(sender.getName(),"tsp.update")){
             SendFormatMessage("&6/sp update");
         }

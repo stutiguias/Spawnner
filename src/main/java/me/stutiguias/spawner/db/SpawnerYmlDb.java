@@ -40,6 +40,9 @@ public class SpawnerYmlDb {
         
         configplayerfile = new File(Spawner.SpawnerDir + File.separator + Filename);
         SpawnerYML = new YamlConfiguration();
+        
+        if(!configplayerfile.exists()) return null;
+        
         initLoadYML();  
         Location location = null;
         Location locationx = null;

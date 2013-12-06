@@ -30,6 +30,9 @@ permissions:
      tsp.tp:
         description: Teleport player to spawn name
         default: op
+     tsp.reloc:
+        description: Relocate all mobs back to spawn
+        default: op         
      tsp.dragon.exp:
         description: get xp from enderdragons
         default: true
@@ -47,3 +50,4 @@ permissions:
         tsp.wand: true
         tsp.sign: true
         tsp.tp: true
+        tsp.reloc: true

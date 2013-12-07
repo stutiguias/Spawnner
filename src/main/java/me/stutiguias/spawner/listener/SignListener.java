@@ -43,7 +43,7 @@ public class SignListener implements Listener {
                     event.setCancelled(true);
                     return;
                 }
-                new SignYmlDb(plugin).RemoveSpawnerControl(sign.getLine(1));
+                new SignYmlDb(plugin).Remove(sign.getLine(1));
                 Spawner.SignLocation.remove(sign.getLine(1));
             }
     }
@@ -69,7 +69,14 @@ public class SignListener implements Listener {
             event.setLine(0, ChatColor.GREEN + "[TimeSpawner]");
             event.setLine(2,"Q: " + spawnerControl.getQuantd() + " " + spawnerControl.getType().name());
             event.setLine(3,spawnerControl.getTime().toString());
-            if(Spawner.SignLocation.containsKey(spawnerControl.getName())) CancelEvent(event, player, sign," Timer already use !");
+            boolean signExist = Spawner.SignLocation.containsKey(spawnerControl.getName());
+            
+            if(signExist && !plugin.signYmlDb.Exist(spawnerControl.getName())) {
+                Spawner.SignLocation.remove(spawnerControl.getName());
+            } else {
+                CancelEvent(event, player, sign," Timer already use !");
+            }
+            
             Spawner.SignLocation.put(spawnerControl.getName(),event.getBlock().getLocation());
             new SignYmlDb(plugin, spawnerControl.getName(), event.getBlock().getLocation()).SaveYML();
             return;

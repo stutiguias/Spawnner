@@ -65,6 +65,7 @@ public class Spawner extends JavaPlugin {
     public static HashMap<String,Location> SignLocation;
     public static HashMap<String,PlayerProfile> PlayerProfiles;
     
+    public final SignYmlDb signYmlDb = new SignYmlDb(this);
     private final TmpYmlDb tmpYmlDb = new TmpYmlDb(this);
     
     public Permission permission = null;
@@ -276,7 +277,7 @@ public class Spawner extends JavaPlugin {
             if(!block.isEmpty()) blockState = block.getState();
             if(blockState == null || !(blockState instanceof Sign)){
                 SignLocation.remove(signlocation.getKey());
-                new SignYmlDb(this).RemoveSpawnerControl(signlocation.getKey());
+                new SignYmlDb(this).Remove(signlocation.getKey());
             }
         }
     }

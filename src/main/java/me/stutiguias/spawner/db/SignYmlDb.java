@@ -32,6 +32,11 @@ public class SignYmlDb {
     public SignYmlDb(Spawner plugin) {
         this.plugin = plugin;
     }
+        
+    public boolean Exist(String name) {
+        configsignfile = new File(Spawner.PlayerDir + File.separator + name + ".yml");
+        return configsignfile.exists();
+    }
     
     public Location LoadSign(String Filename) {
         
@@ -51,7 +56,7 @@ public class SignYmlDb {
         return new Location(Bukkit.getWorld(world), x, y, z, yaw.floatValue(), pitch.floatValue());
     }
     
-    public boolean RemoveSpawnerControl(String name) {
+    public boolean Remove(String name) {
         configsignfile = new File(Spawner.SignDir + File.separator + name + ".yml");
         return configsignfile.delete();
     }

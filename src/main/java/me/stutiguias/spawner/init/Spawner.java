@@ -236,6 +236,7 @@ public class Spawner extends JavaPlugin {
     }
     
     public void Spawn(SpawnerControl spawnner) {
+        if(spawnner.hasMobs()) return;
         Bukkit.getScheduler().runTaskLater(this, new SignUpdate(this,spawnner),1 * 20L);
         Bukkit.getScheduler().scheduleSyncDelayedTask(this,new SpawnWork(this,spawnner),spawnner.getTime().intValue() * 20L);
     }
@@ -283,6 +284,7 @@ public class Spawner extends JavaPlugin {
     }
     
     private void LoadDataFromYML() {
+        
         File folder = new File(SpawnerDir);
         File[] listOfFiles = folder.listFiles();
         
@@ -304,12 +306,9 @@ public class Spawner extends JavaPlugin {
     
     public void CheckExistMobs() {
         for(SpawnerControl spawner:SpawnerList) {
-            String worldname;
-            if(spawner.getLocation() == null)
-                worldname = spawner.getLocationX().getWorld().getName();
-            else
-                worldname = spawner.getLocation().getWorld().getName();
             
+            String worldname = spawner.getWorld().getName();
+
             for(LivingEntity entity:Bukkit.getServer().getWorld(worldname).getLivingEntities()) {
                 if(!tmpYmlDb.Exist(spawner)) continue;
                 
@@ -320,6 +319,7 @@ public class Spawner extends JavaPlugin {
                 }
                 
             }    
+            
             tmpYmlDb.RemoveSpawnerControl(spawner.getName());
         }
     }

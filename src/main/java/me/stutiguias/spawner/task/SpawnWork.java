@@ -10,10 +10,14 @@ import me.stutiguias.spawner.init.Spawner;
 import me.stutiguias.spawner.model.SpawnerControl;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Skeleton.SkeletonType;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -68,7 +72,7 @@ public class SpawnWork implements Runnable {
             if(!isPlayerNear(world, spawnerControl.getLocation())) return false;
             
             ent = Bukkit.getWorld(worldname).spawnEntity(spawnerControl.getLocation(), spawnerControl.getType());
-            ((LivingEntity)ent).setRemoveWhenFarAway(false);
+            FixEntity((LivingEntity)ent);
         }else{
             
             double xx = spawnerControl.getLocationX().getX();
@@ -102,7 +106,7 @@ public class SpawnWork implements Runnable {
             if(!isPlayerNear(world, spawnerControl.getLocationX())) return false;
 
             ent = world.spawnEntity(location, spawnerControl.getType());
-            ((LivingEntity)ent).setRemoveWhenFarAway(false);
+            FixEntity((LivingEntity)ent);
         }
         spawnerControl.addMob(ent.getUniqueId());
         return true;
@@ -144,5 +148,15 @@ public class SpawnWork implements Runnable {
         }
         
         return nearbyPlayer;
+    }
+    
+    public void FixEntity(LivingEntity livingEntity) {
+        livingEntity.setRemoveWhenFarAway(false);
+        if(livingEntity instanceof Skeleton) equipSkeleton((Skeleton)livingEntity);
+    }
+    
+    public void equipSkeleton(Skeleton skeleton) {
+        skeleton.getEquipment().setItemInHand(new ItemStack(Material.BOW));
+        skeleton.setSkeletonType(SkeletonType.NORMAL);
     }
 }

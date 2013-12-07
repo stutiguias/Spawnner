@@ -240,8 +240,7 @@ public class Spawner extends JavaPlugin {
         Bukkit.getScheduler().runTaskLater(this, new SignUpdate(this,spawnner),1 * 20L);
         Bukkit.getScheduler().scheduleSyncDelayedTask(this,new SpawnWork(this,spawnner),spawnner.getTime().intValue() * 20L);
     }
-    
-    // TODO : Better Handle Reload - First Save Exist Mobs ( TODO )
+
     private void ReloadMobs() {
         for (SpawnerControl spawnner : SpawnerList) {
             if(spawnner.hasMobs()) continue;

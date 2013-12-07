@@ -41,18 +41,19 @@ public class SignUpdate implements Runnable {
 
         if(blockState instanceof Sign){
             Sign sign = (Sign)plugin.getServer().getWorld(worldname).getBlockAt(location).getState();
+            
             int i = Integer.parseInt(sign.getLine(3));
             i--;
             
             if(i == 0){
-                i = spawnerControl.getQuantd();
+                i = spawnerControl.getTime();
             }
             
             sign.setLine(3,String.valueOf(i));
             sign.update();
             
-            if(i !=  spawnerControl.getQuantd()){
-               Bukkit.getScheduler().runTaskLater(plugin, new SignUpdate(plugin,spawnerControl),1 * 20L);
+            if(i != spawnerControl.getTime()){
+               Bukkit.getScheduler().runTaskLater(plugin, new SignUpdate(plugin,spawnerControl),20L);
             }
         }
             

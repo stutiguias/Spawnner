@@ -52,7 +52,9 @@ public class MobListener implements Listener {
             if (entity == null || !(entity instanceof Monster ||  entity instanceof Animals)) continue;
 
             EntityDeathEvent newEvent = new EntityDeathEvent((LivingEntity) entity, new ArrayList());
-            plugin.getServer().getPluginManager().callEvent(newEvent);
+            
+            MobDeath(newEvent);
+            
             entity.remove();
         }
         
@@ -77,7 +79,8 @@ public class MobListener implements Listener {
         
         for (SpawnerControl mobs : SpawnerList) {
             if (!mobs.containsMob(event.getEntity().getUniqueId())) continue;
-                
+            mobs.removeMob(event.getEntity().getUniqueId());    
+            
             if(event.getEntity().getKiller() != null){
                 PlayerProfile playerProfile = Spawner.PlayerProfiles.get(event.getEntity().getKiller().getName());
 
@@ -85,8 +88,6 @@ public class MobListener implements Listener {
                     event.setDroppedExp(0);
                 }
             }
-            
-            mobs.removeMob(event.getEntity().getUniqueId());
 
             if (!mobs.hasMobs()) {
                 plugin.Spawn(mobs);

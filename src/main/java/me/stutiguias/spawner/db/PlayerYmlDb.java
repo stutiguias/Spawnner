@@ -6,7 +6,6 @@
 
 package me.stutiguias.spawner.db;
 
-import com.avaje.ebeaninternal.server.lib.util.NotFoundException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;

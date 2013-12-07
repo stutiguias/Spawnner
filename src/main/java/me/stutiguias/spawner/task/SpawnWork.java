@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 /**
@@ -67,6 +68,7 @@ public class SpawnWork implements Runnable {
             if(!isPlayerNear(world, spawnerControl.getLocation())) return false;
             
             ent = Bukkit.getWorld(worldname).spawnEntity(spawnerControl.getLocation(), spawnerControl.getType());
+            ((LivingEntity)ent).setRemoveWhenFarAway(false);
         }else{
             
             double xx = spawnerControl.getLocationX().getX();
@@ -100,6 +102,7 @@ public class SpawnWork implements Runnable {
             if(!isPlayerNear(world, spawnerControl.getLocationX())) return false;
 
             ent = world.spawnEntity(location, spawnerControl.getType());
+            ((LivingEntity)ent).setRemoveWhenFarAway(false);
         }
         spawnerControl.addMob(ent.getUniqueId());
         return true;

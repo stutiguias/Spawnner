@@ -8,6 +8,8 @@ package me.stutiguias.spawner.listener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import me.stutiguias.spawner.db.PlayerYmlDb;
 import me.stutiguias.spawner.init.Spawner;
 import me.stutiguias.spawner.model.PlayerProfile;
 import org.bukkit.Location;
@@ -144,7 +146,12 @@ public class EnderDragonListener implements Listener {
             
             PlayerProfile playerProfile = Spawner.PlayerProfiles.get(playerName);
             
-            if (playerProfile.getBan()) continue;
+            if(playerProfile == null) {
+                Spawner.logger.log(Level.WARNING, "Can''t find {0} to give xp", playerName);
+                continue;
+            }
+
+            if(playerProfile.getBan()) continue;
 
             long lastUse = playerProfile.getExpTime();
             long Delay = plugin.enderConfig.expResetMinutes * 60000;

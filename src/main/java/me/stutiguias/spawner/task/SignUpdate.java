@@ -40,21 +40,31 @@ public class SignUpdate implements Runnable {
         BlockState blockState = plugin.getServer().getWorld(worldname).getBlockAt(location).getState();
 
         if(blockState instanceof Sign){
+            
             Sign sign = (Sign)plugin.getServer().getWorld(worldname).getBlockAt(location).getState();
             
-            int i = Integer.parseInt(sign.getLine(3));
+            String line3 = sign.getLine(3);
+            
+            if(line3.contains("-")) {
+                line3 = spawnerControl.getTime().toString();
+            }
+            
+            int i = Integer.parseInt(line3);
             i--;
             
             if(i == 0){
-                i = spawnerControl.getTime();
+                line3 = "-";
+            }else{
+                line3 = String.valueOf(i);
             }
             
-            sign.setLine(3,String.valueOf(i));
+            sign.setLine(3,line3);
             sign.update();
             
-            if(i != spawnerControl.getTime()){
+            if(!line3.contains("-")){
                Bukkit.getScheduler().runTaskLater(plugin, new SignUpdate(plugin,spawnerControl),20L);
             }
+            
         }
             
     }

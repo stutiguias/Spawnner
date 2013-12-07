@@ -38,7 +38,7 @@ public class SignListener implements Listener {
             Player player = event.getPlayer();
             if (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN) {
                 Sign sign = (Sign) block.getState();
-                if(!sign.getLine(0).contains(ChatColor.GREEN + "[TimeSpawner]")) return;
+                if(!sign.getLine(0).contains("[TimeSpawner]")) return;
                 if(!plugin.hasPermission(player, "tsp.sign")) {
                     event.setCancelled(true);
                     return;
@@ -66,10 +66,12 @@ public class SignListener implements Listener {
         
         for (SpawnerControl spawnerControl : Spawner.SpawnerList) {
             if(!spawnerControl.getName().equalsIgnoreCase(lines[1])) continue;
+            
             event.setLine(0, ChatColor.GREEN + "[TimeSpawner]");
             event.setLine(2,"Q: " + spawnerControl.getQuantd() + " " + spawnerControl.getType().name());
-            event.setLine(3,spawnerControl.getTime().toString());
+            event.setLine(3," - ");
             boolean signExist = Spawner.SignLocation.containsKey(spawnerControl.getName());
+            
             
             if(signExist && !plugin.signYmlDb.Exist(spawnerControl.getName())) {
                 Spawner.SignLocation.remove(spawnerControl.getName());

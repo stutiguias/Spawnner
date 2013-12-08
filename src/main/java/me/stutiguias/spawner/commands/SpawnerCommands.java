@@ -99,6 +99,8 @@ public class SpawnerCommands implements CommandExecutor {
        
     public boolean Reset() {
         
+        plugin.getServer().getScheduler().cancelAllTasks();
+        
         if (args.length == 2) {
                     
              ResetName(args[1]);

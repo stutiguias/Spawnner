@@ -306,7 +306,8 @@ public class Spawner extends JavaPlugin {
     
     public void CheckExistMobs() {
         for(SpawnerControl spawner:SpawnerList) {
-            if(spawner.getWorld() == null) { 
+            
+            if(spawner == null || spawner.getWorld() == null) { 
                 getLogger().log(Level.WARNING, "Erro parsing world of spawn");
                 spawnerYmlDb.RemoveSpawnerControl(spawner.getName());
                 continue;

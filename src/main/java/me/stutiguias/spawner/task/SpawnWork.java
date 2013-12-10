@@ -72,7 +72,6 @@ public class SpawnWork implements Runnable {
             if(!isPlayerNear(world, spawnerControl.getLocation())) return false;
             
             ent = Bukkit.getWorld(worldname).spawnEntity(spawnerControl.getLocation(), spawnerControl.getType());
-            FixEntity((LivingEntity)ent);
         }else{
             
             double xx = spawnerControl.getLocationX().getX();
@@ -106,8 +105,9 @@ public class SpawnWork implements Runnable {
             if(!isPlayerNear(world, spawnerControl.getLocationX())) return false;
 
             ent = world.spawnEntity(location, spawnerControl.getType());
-            FixEntity((LivingEntity)ent);
+            
         }
+        FixEntity((LivingEntity)ent);
         spawnerControl.addMob(ent.getUniqueId());
         return true;
     }

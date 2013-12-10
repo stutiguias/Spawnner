@@ -9,7 +9,6 @@ package me.stutiguias.spawner.listener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-import me.stutiguias.spawner.db.PlayerYmlDb;
 import me.stutiguias.spawner.init.Spawner;
 import me.stutiguias.spawner.model.PlayerProfile;
 import org.bukkit.Location;

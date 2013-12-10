@@ -29,6 +29,7 @@ public class SpawnerControl  implements Serializable
     this.type = type.name();
     this.qtd = quantd;
     this.time = tempo;
+    this.location = null;
   }
   
   public SpawnerControl(String name, Location location, EntityType type, Integer quantd, Integer tempo)

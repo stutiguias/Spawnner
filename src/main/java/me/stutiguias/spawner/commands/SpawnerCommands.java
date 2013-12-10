@@ -177,9 +177,9 @@ public class SpawnerCommands implements CommandExecutor {
     }
         
     public boolean Reload() {
-        sender.sendMessage("&6Reloading!");
+        SendFormatMessage("&6Reloading!");
         plugin.OnReload();
-        sender.sendMessage("&6Reload Done!");    
+        SendFormatMessage("&6Reload Done!");    
         return true;
     }
     

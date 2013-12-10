@@ -67,6 +67,7 @@ public class Spawner extends JavaPlugin {
     
     public final SignYmlDb signYmlDb = new SignYmlDb(this);
     private final TmpYmlDb tmpYmlDb = new TmpYmlDb(this);
+    public final SpawnerYmlDb spawnerYmlDb = new SpawnerYmlDb(this);
     
     public Permission permission = null;
     public Economy economy = null;
@@ -307,7 +308,7 @@ public class Spawner extends JavaPlugin {
         for(SpawnerControl spawner:SpawnerList) {
             if(spawner.getWorld() == null) { 
                 getLogger().log(Level.WARNING, "Erro parsing world of spawn");
-                new SpawnerYmlDb(this).RemoveSpawnerControl(spawner.getName());
+                spawnerYmlDb.RemoveSpawnerControl(spawner.getName());
                 continue;
             }
             

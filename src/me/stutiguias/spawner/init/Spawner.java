@@ -133,10 +133,8 @@ public class Spawner extends JavaPlugin {
         
         if(config.DataBaseType.equalsIgnoreCase("mysql")) {
             db = new MySQLDataQueries(this,config.Host , config.Port, config.Username,config.Password,config.Database);
-            db.initTables();
         }else if(config.DataBaseType.equalsIgnoreCase("sqlite")){
             db = new SqliteDataQueries(this);
-            db.initTables();
         }
 
         getCommand("sp").setExecutor(new SpawnerCommands(this));

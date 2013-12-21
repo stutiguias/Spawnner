@@ -1,6 +1,5 @@
 package me.stutiguias.spawner.init;
 
-import me.stutiguias.spawner.configs.ConfigAccessor;
 import me.stutiguias.spawner.configs.EnderConfig;
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +16,10 @@ import me.stutiguias.spawner.commands.SpawnerCommands;
 import me.stutiguias.spawner.configs.Config;
 import me.stutiguias.spawner.configs.SkeletonConfig;
 import me.stutiguias.spawner.configs.ZombieConfig;
+import me.stutiguias.spawner.db.IDataQueries;
+import me.stutiguias.spawner.db.MySQLDataQueries;
+import me.stutiguias.spawner.db.Queries;
+import me.stutiguias.spawner.db.SqliteDataQueries;
 import me.stutiguias.spawner.listener.MobListener;
 import me.stutiguias.spawner.listener.PlayerListener;
 import me.stutiguias.spawner.listener.SignListener;
@@ -39,7 +42,6 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -76,6 +78,8 @@ public class Spawner extends JavaPlugin {
     
     public static Random r = new Random();  
      
+    public IDataQueries db;
+    
     public Config config;
     public EnderConfig enderConfig;
     public SkeletonConfig skeletonConfig;
@@ -127,6 +131,14 @@ public class Spawner extends JavaPlugin {
         Load();
         ReloadMobs();
         
+        if(config.DataBaseType.equalsIgnoreCase("mysql")) {
+            db = new MySQLDataQueries(this,config.Host , config.Port, config.Username,config.Password,config.Database);
+            db.initTables();
+        }else if(config.DataBaseType.equalsIgnoreCase("sqlite")){
+            db = new SqliteDataQueries(this);
+            db.initTables();
+        }
+
         getCommand("sp").setExecutor(new SpawnerCommands(this));
         
         PluginManager pm = getServer().getPluginManager();

@@ -27,7 +27,6 @@ public class EnderConfig {
     public long expResetMinutes;
     public long expMaxDistance;
     public int customExp;
-    public boolean DisableControlOverEnderDragon;
     
     public EnderConfig (Spawner plugin) {
         
@@ -52,7 +51,6 @@ public class EnderConfig {
             useCustomExp = c.getBoolean("UseCustomEXPTotal");
             dropExp = c.getBoolean("DropEXP");
             customExp = c.getInt("CustomEXPTotal");
-            DisableControlOverEnderDragon = c.getBoolean("DisableControlOverEnderDragon");
             
         }catch(IOException ex) {
             ex.printStackTrace();

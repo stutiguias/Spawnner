@@ -1,5 +1,16 @@
 # don't change this
-configversion: 2
+configversion: 3
+# type database
+DataBase:
+  # You need to choose if you will use SQLite or Mysql or FlatFile ( default is SQLite )
+  Type: flat
+#MySQL config if you will use mysql ( set type to mysql )
+MySQL:
+  Host: localhost
+  Username: root
+  Password: change_this
+  Port: '3306'
+  Database: minecraft
 # if true all debug msg will show on console
 ShowDebug: false
 # Enable update

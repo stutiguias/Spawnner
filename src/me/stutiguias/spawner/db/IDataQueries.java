@@ -21,4 +21,5 @@ public interface IDataQueries {
         boolean InsertSpawner(SpawnerControl area);
         List<SpawnerControl> getAreas();
         boolean Delete(SpawnerControl area);
+        boolean InsertTmpMob(String areaName,String uuid);
 }

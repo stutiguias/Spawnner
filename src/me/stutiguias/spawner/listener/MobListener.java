@@ -74,7 +74,7 @@ public class MobListener implements Listener {
     public void MobDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();
         
-        if (entity instanceof EnderDragon && !plugin.enderConfig.DisableControlOverEnderDragon) {
+        if (entity instanceof EnderDragon && !plugin.config.DisableControlOverEnderDragon) {
             enderDragonListener.onDeath(event);
         }
         

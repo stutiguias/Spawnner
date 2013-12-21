@@ -134,7 +134,7 @@ public class Spawner extends JavaPlugin {
         pm.registerEvents(mobListener, this);
         pm.registerEvents(playerListener, this);
         pm.registerEvents(SignListener,this);
-        if(!enderConfig.DisableControlOverEnderDragon) pm.registerEvents(enderDragonListener, this);
+        if(!config.DisableControlOverEnderDragon) pm.registerEvents(enderDragonListener, this);
         
         setupPermissions();
         setupEconomy();

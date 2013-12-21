@@ -109,5 +109,10 @@ public class Queries extends Util implements IDataQueries {
     public boolean Delete(SpawnerControl area) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public boolean InsertTmpMob(String areaName, String uuid) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

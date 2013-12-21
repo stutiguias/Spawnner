@@ -65,7 +65,7 @@ public class Queries extends Util implements IDataQueries {
         PreparedStatement st = null;
         ResultSet rs = null;
         try {
-                st = conn.prepareStatement("SELECT dbversion FROM YAPS_DbVersion");
+                st = conn.prepareStatement("SELECT dbversion FROM TS_Spawners");
                 rs = st.executeQuery();
                 while (rs.next()) {
                         version = rs.getInt("dbversion");

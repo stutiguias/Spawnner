@@ -61,6 +61,10 @@ public class MySQLDataQueries extends Queries {
 			Spawner.logger.log(Level.INFO, "{0} Creating table TS_Players", plugin.prefix);
 			executeRawSQL("CREATE TABLE TS_Players (id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(id), name VARCHAR(255), banned INT);");
 		}
+                if (!tableExists("TS_TmpMob")) {
+			Spawner.logger.log(Level.INFO, "{0} Creating table TS_TmpMob", plugin.prefix);
+			executeRawSQL("CREATE TABLE TS_TmpMob (id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(id), name VARCHAR(255), uuid VARCHAR(255));");
+		}
 		if (!tableExists("TS_Spawners")) {
 			Spawner.logger.log(Level.INFO, "{0} Creating table TS_Spawners", plugin.prefix);
 			executeRawSQL("CREATE TABLE TS_Spawners (id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(id), name VARCHAR(255), location VARCHAR(255), locationx VARCHAR(255), locationz VARCHAR(255), type VARCHAR(255), qtd INT, time INT );");

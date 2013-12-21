@@ -13,3 +13,5 @@ EnablePulliFFarAway: false
 PulliFFarAwayTime: 60
 # Distance limit - Use higher values 
 PulliFFarAwayLimit: 160
+# Disable control over EnderDragon
+DisableControlOverEnderDragon : false

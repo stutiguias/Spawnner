@@ -4,7 +4,7 @@
  */
 package me.stutiguias.spawner.listener;
 
-import me.stutiguias.spawner.db.PlayerYmlDb;
+import me.stutiguias.spawner.db.YAML.PlayerYmlDb;
 import me.stutiguias.spawner.init.Spawner;
 import me.stutiguias.spawner.model.PlayerProfile;
 import me.stutiguias.spawner.model.SpawnerAreaCreating;
@@ -35,7 +35,7 @@ public class PlayerListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
  
-        if(plugin.UpdaterNotify && plugin.hasPermission(player,"tsp.update") && Spawner.update)
+        if(plugin.config.UpdaterNotify && plugin.hasPermission(player,"tsp.update") && Spawner.update)
         {
           player.sendMessage(plugin.parseColor("&6An update is available: " + Spawner.name + ", a " + Spawner.type + " for " + Spawner.version + " available at " + Spawner.link));
           player.sendMessage(plugin.parseColor("&6Type /sp update if you would like to automatically update."));

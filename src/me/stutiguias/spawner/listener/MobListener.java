@@ -4,6 +4,9 @@
  */
 package me.stutiguias.spawner.listener;
 
+import me.stutiguias.spawner.listener.mobs.SkeletonListener;
+import me.stutiguias.spawner.listener.mobs.ZombieListener;
+import me.stutiguias.spawner.listener.mobs.EnderDragonListener;
 import java.util.ArrayList;
 import me.stutiguias.spawner.init.Spawner;
 import static me.stutiguias.spawner.init.Spawner.SpawnerList;
@@ -71,7 +74,7 @@ public class MobListener implements Listener {
     public void MobDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();
         
-        if (entity instanceof EnderDragon) {
+        if (entity instanceof EnderDragon && !plugin.enderConfig.DisableControlOverEnderDragon) {
             enderDragonListener.onDeath(event);
         }
         

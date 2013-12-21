@@ -7,7 +7,7 @@
 package me.stutiguias.spawner.listener;
 
 import me.stutiguias.spawner.init.Spawner;
-import me.stutiguias.spawner.db.SignYmlDb;
+import me.stutiguias.spawner.db.YAML.SignYmlDb;
 import me.stutiguias.spawner.model.SpawnerControl;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

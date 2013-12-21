@@ -38,7 +38,7 @@ public class SpawnWork implements Runnable {
         try {
             Spawner.SpawnerList.remove(spawnerControl);
             
-            if(plugin.ShowDebug) {
+            if(plugin.config.ShowDebug) {
                 Spawner.logger.log(Level.INFO, "{0} Spawning {1}",new Object[]{ plugin.prefix,spawnerControl.getName() });
             }
             
@@ -143,7 +143,7 @@ public class SpawnWork implements Runnable {
         
         if(nearbyPlayer == false) {
             plugin.Spawn(spawnerControl);
-            if(plugin.ShowDebug)
+            if(plugin.config.ShowDebug)
             Spawner.logger.log(Level.INFO, "{0} Stop spawn don't find any player near ", new Object[]{ plugin.prefix });
         }
         

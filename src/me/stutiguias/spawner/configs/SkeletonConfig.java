@@ -7,7 +7,6 @@
 package me.stutiguias.spawner.configs;
 
 import java.io.IOException;
-import me.stutiguias.spawner.init.ConfigAccessor;
 import me.stutiguias.spawner.init.Spawner;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -40,5 +39,9 @@ public class SkeletonConfig {
         }catch(IOException ex) {
             ex.printStackTrace();
         }
+    }
+    
+    public void Reload() {
+        config.reloadConfig();
     }
 }

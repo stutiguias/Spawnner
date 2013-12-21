@@ -1,5 +1,6 @@
 package me.stutiguias.spawner.init;
 
+import me.stutiguias.spawner.configs.ConfigAccessor;
 import me.stutiguias.spawner.configs.EnderConfig;
 import java.io.File;
 import java.io.IOException;
@@ -13,17 +14,18 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.stutiguias.spawner.commands.SpawnerCommands;
+import me.stutiguias.spawner.configs.Config;
 import me.stutiguias.spawner.configs.SkeletonConfig;
 import me.stutiguias.spawner.configs.ZombieConfig;
 import me.stutiguias.spawner.listener.MobListener;
 import me.stutiguias.spawner.listener.PlayerListener;
 import me.stutiguias.spawner.listener.SignListener;
 import me.stutiguias.spawner.metrics.Metrics;
-import me.stutiguias.spawner.db.SignYmlDb;
+import me.stutiguias.spawner.db.YAML.SignYmlDb;
 import me.stutiguias.spawner.model.SpawnerAreaCreating;
-import me.stutiguias.spawner.db.SpawnerYmlDb;
-import me.stutiguias.spawner.db.TmpYmlDb;
-import me.stutiguias.spawner.listener.EnderDragonListener;
+import me.stutiguias.spawner.db.YAML.SpawnerYmlDb;
+import me.stutiguias.spawner.db.YAML.TmpYmlDb;
+import me.stutiguias.spawner.listener.mobs.EnderDragonListener;
 import me.stutiguias.spawner.model.PlayerProfile;
 import me.stutiguias.spawner.task.SignUpdate;
 import me.stutiguias.spawner.task.SpawnLocation;
@@ -73,18 +75,11 @@ public class Spawner extends JavaPlugin {
     public Economy economy = null;
     
     public static Random r = new Random();  
-    
-    private ConfigAccessor config;
-    
+     
+    public Config config;
     public EnderConfig enderConfig;
     public SkeletonConfig skeletonConfig;
     public ZombieConfig zombieConfig;
-    
-    public boolean ShowDebug;
-    public boolean UpdaterNotify;
-    public boolean EnablePulliFFarAway;
-    public int PulliFFarAwayTime;
-    public int PulliFFarAwayLimit;
     
     public static boolean update = false;
     public static String name = "";
@@ -139,7 +134,7 @@ public class Spawner extends JavaPlugin {
         pm.registerEvents(mobListener, this);
         pm.registerEvents(playerListener, this);
         pm.registerEvents(SignListener,this);
-        pm.registerEvents(enderDragonListener, this);
+        if(!enderConfig.DisableControlOverEnderDragon) pm.registerEvents(enderDragonListener, this);
         
         setupPermissions();
         setupEconomy();
@@ -153,7 +148,7 @@ public class Spawner extends JavaPlugin {
          logger.log(Level.WARNING, "{0} {1} !! Failed to submit the stats !! ", new Object[]{prefix, "[Metrics]"});
         }
        
-        if(UpdaterNotify){
+        if(config.UpdaterNotify){
             Updater updater = new Updater(this, 49809, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, false); // Start Updater but just do a version check
             
             update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE; // Determine if there is an update ready for us
@@ -180,7 +175,12 @@ public class Spawner extends JavaPlugin {
             if(!spawner.hasMobs()) continue;
             tmpYmlDb.Create(spawner);
         }
-        config.reloadConfig();
+        
+        config.Reload();
+        enderConfig.Reload();
+        skeletonConfig.Reload();
+        zombieConfig.Reload();
+        
         getServer().getPluginManager().disablePlugin(this);
         getServer().getPluginManager().enablePlugin(this);
     }
@@ -192,33 +192,13 @@ public class Spawner extends JavaPlugin {
         RemoveLostSign();
         getLogger().log(Level.INFO, "...loaded with sucess.");
         
-        try {
-            config = new ConfigAccessor(this, "config.yml");
-            config.setupConfig();
-            FileConfiguration fc = config.getConfig();   
-                        
-            if(!fc.isSet("configversion") || fc.getInt("configversion") != 2){ 
-                config.MakeOld();
-                config.setupConfig();
-                fc = config.getConfig();
-            }
-            
-            ShowDebug = fc.getBoolean("ShowDebug");
-            UpdaterNotify =fc.getBoolean("UpdaterNotify");
-            EnablePulliFFarAway =fc.getBoolean("EnablePulliFFarAway");
-            PulliFFarAwayTime =fc.getInt("PulliFFarAwayTime");
-            PulliFFarAwayLimit = fc.getInt("PulliFFarAwayLimit");
-            
-        }catch(IOException ex){
-            getLogger().log(Level.WARNING, "Erro Loading Config");
-        }
-        
+        config = new Config(this);
         enderConfig = new EnderConfig(this);
         skeletonConfig = new SkeletonConfig(this);
         zombieConfig = new ZombieConfig(this);
         
-        if(EnablePulliFFarAway)
-        Bukkit.getScheduler().runTaskTimer(this, new SpawnLocation(this), PulliFFarAwayTime * 20, PulliFFarAwayTime * 20);
+        if(config.EnablePulliFFarAway)
+        Bukkit.getScheduler().runTaskTimer(this, new SpawnLocation(this), config.PulliFFarAwayTime * 20, config.PulliFFarAwayTime * 20);
         
     }
     

@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.UUID;
 import me.stutiguias.spawner.init.Spawner;
 import me.stutiguias.spawner.model.SpawnerControl;
-import me.stutiguias.spawner.db.SpawnerYmlDb;
+import me.stutiguias.spawner.db.YAML.SpawnerYmlDb;
 import me.stutiguias.spawner.task.SpawnLocation;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

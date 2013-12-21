@@ -25,7 +25,7 @@ public class SpawnLocation implements Runnable {
     
     public SpawnLocation(Spawner plugin) {
         this.plugin = plugin;
-        this.distance = plugin.PulliFFarAwayLimit;
+        this.distance = plugin.config.PulliFFarAwayLimit;
     }
            
     public SpawnLocation(Spawner plugin,int distance) {

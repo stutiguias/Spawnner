@@ -57,6 +57,7 @@ public class SpawnerYmlDb {
             pitch = SpawnerYML.getDouble("Location.pitch");
             yaw = SpawnerYML.getDouble("Location.yaw");
             world = SpawnerYML.getString("Location.world");
+            if(Bukkit.getWorld(world) == null) return null;
             location = new Location(Bukkit.getWorld(world), x, y, z, yaw.floatValue(), pitch.floatValue());
         }else{
             
@@ -66,6 +67,7 @@ public class SpawnerYmlDb {
             pitch = SpawnerYML.getDouble("LocationX.pitch");
             yaw = SpawnerYML.getDouble("LocationX.yaw");
             world = SpawnerYML.getString("LocationX.world");
+            if(Bukkit.getWorld(world) == null) return null;
             locationx = new Location(Bukkit.getWorld(world), x, y, z, yaw.floatValue(), pitch.floatValue());
 
             x = SpawnerYML.getDouble("LocationY.x");		
@@ -74,6 +76,7 @@ public class SpawnerYmlDb {
             pitch = SpawnerYML.getDouble("LocationY.pitch");
             yaw = SpawnerYML.getDouble("LocationY.yaw");
             world = SpawnerYML.getString("LocationY.world");
+            if(Bukkit.getWorld(world) == null) return null;
             locationy = new Location(Bukkit.getWorld(world), x, y, z, yaw.floatValue(), pitch.floatValue());
         }
         

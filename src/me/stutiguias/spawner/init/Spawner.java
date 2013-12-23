@@ -18,7 +18,6 @@ import me.stutiguias.spawner.configs.SkeletonConfig;
 import me.stutiguias.spawner.configs.ZombieConfig;
 import me.stutiguias.spawner.db.IDataQueries;
 import me.stutiguias.spawner.db.MySQLDataQueries;
-import me.stutiguias.spawner.db.Queries;
 import me.stutiguias.spawner.db.SqliteDataQueries;
 import me.stutiguias.spawner.listener.MobListener;
 import me.stutiguias.spawner.listener.PlayerListener;
@@ -278,18 +277,23 @@ public class Spawner extends JavaPlugin {
         File folder = new File(SpawnerDir);
         File[] listOfFiles = folder.listFiles();
         
-        for (File listOfFile : listOfFiles) {
-            if (listOfFile.isFile()) {
-                SpawnerList.add(new SpawnerYmlDb(this).LoadSpawnerControl(listOfFile.getName()));
+        for (File file : listOfFiles) {
+            if (file.isFile()) {
+                SpawnerControl spawner = new SpawnerYmlDb(this).LoadSpawnerControl(file.getName());
+                if(spawner != null) {
+                    SpawnerList.add(spawner);
+                }else{
+                    file.delete();
+                }
             }
         }
                
         folder = new File(SignDir);
         listOfFiles = folder.listFiles();
         
-        for (File listOfFile : listOfFiles) {
-            if (listOfFile.isFile()) {
-                SignLocation.put( listOfFile.getName().replace(".yml","") , new SignYmlDb(this).LoadSign(listOfFile.getName()));
+        for (File file : listOfFiles) {
+            if (file.isFile()) {
+                SignLocation.put( file.getName().replace(".yml","") , new SignYmlDb(this).LoadSign(file.getName()));
             }
         }
     }

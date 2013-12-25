@@ -2,6 +2,7 @@ name: "TimeSpawner"
 version: ${project.version}
 author: "Stutiguias,TheProbleemm"
 main: "me.stutiguias.spawner.init.Spawner"
+softdepend: [Vault,Multiverse-Core]
 commands:
   sp:
     description: "§bcommands"

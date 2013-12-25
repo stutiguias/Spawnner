@@ -1,5 +1,6 @@
 package me.stutiguias.spawner.init;
 
+import com.onarandombox.MultiverseCore.MultiverseCore;
 import me.stutiguias.spawner.configs.EnderConfig;
 import java.io.File;
 import java.io.IOException;
@@ -38,11 +39,13 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -342,5 +345,23 @@ public class Spawner extends JavaPlugin {
     
     public long getCurrentMilli() {
             return System.currentTimeMillis();
+    }
+    
+    public World getWorld(String name) {
+        World world = getServer().getWorld(name);
+        if(world == null && getMultiverseCore() != null) {
+            world = getMultiverseCore().getMVWorldManager().getMVWorld(name).getCBWorld();
+        }
+        return world;
+    }
+    
+    public MultiverseCore getMultiverseCore() {
+        Plugin plugin = getServer().getPluginManager().getPlugin("MultiverseCore");
+ 
+        if (plugin instanceof MultiverseCore) {
+            return (MultiverseCore) plugin;
+        }
+
+        return null;
     }
 }

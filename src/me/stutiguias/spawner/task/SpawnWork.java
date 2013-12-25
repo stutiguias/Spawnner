@@ -71,7 +71,7 @@ public class SpawnWork implements Runnable {
             
             if(!isPlayerNear(world, spawnerControl.getLocation())) return false;
             
-            ent = Bukkit.getWorld(worldname).spawnEntity(spawnerControl.getLocation(), spawnerControl.getType());
+            ent = plugin.getWorld(worldname).spawnEntity(spawnerControl.getLocation(), spawnerControl.getType());
         }else{
             
             double xx = spawnerControl.getLocationX().getX();
@@ -100,7 +100,7 @@ public class SpawnWork implements Runnable {
                 return false;
             }  
             
-            world = Bukkit.getWorld(worldname);
+            world = plugin.getWorld(worldname);
             
             if(!isPlayerNear(world, spawnerControl.getLocationX())) return false;
 

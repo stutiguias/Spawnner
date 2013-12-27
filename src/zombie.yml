@@ -1,4 +1,6 @@
 # NOT CHANGE THIS
-configversion: 1
+configversion: 2
 # Die by sun
 DiebySun: false
+# Custom Name
+Name: '&4TimeSpawner Zombie'

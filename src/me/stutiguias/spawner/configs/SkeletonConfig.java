@@ -19,6 +19,7 @@ public class SkeletonConfig {
     private ConfigAccessor config;
     
     public boolean diebysun;
+    public String name;
     
     public SkeletonConfig (Spawner plugin) {
         
@@ -28,13 +29,14 @@ public class SkeletonConfig {
             config.setupConfig();
             FileConfiguration c = config.getConfig();   
                         
-            if(!c.isSet("configversion") || c.getInt("configversion") != 1){ 
+            if(!c.isSet("configversion") || c.getInt("configversion") != 2){ 
                 config.MakeOld();
                 config.setupConfig();
                 c = config.getConfig();
             }
             
             diebysun = c.getBoolean("DiebySun");
+            name = c.getString("Name");
             
         }catch(IOException ex) {
             ex.printStackTrace();

@@ -18,6 +18,7 @@ import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Skeleton.SkeletonType;
+import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -153,17 +154,23 @@ public class SpawnWork implements Runnable {
     
     public void FixEntity(LivingEntity livingEntity) {
         livingEntity.setRemoveWhenFarAway(false);
-        if(livingEntity instanceof Skeleton) equipSkeleton((Skeleton)livingEntity);
-        if(livingEntity instanceof PigZombie) equipPigMan((PigZombie)livingEntity);
+        if(livingEntity instanceof Skeleton) Skeleton((Skeleton)livingEntity);
+        if(livingEntity instanceof PigZombie) PigMan((PigZombie)livingEntity);
+        if(livingEntity instanceof Zombie) Zombie((Zombie)livingEntity);
     }
     
-    public void equipSkeleton(Skeleton skeleton) {
+    public void Skeleton(Skeleton skeleton) {
         skeleton.getEquipment().setItemInHand(new ItemStack(Material.BOW));
         skeleton.setSkeletonType(SkeletonType.NORMAL);
+        skeleton.setCustomName(plugin.parseColor(plugin.skeletonConfig.name));
     }
     
-    public void equipPigMan(PigZombie pigzombie) {
+    public void PigMan(PigZombie pigzombie) {
         pigzombie.getEquipment().setItemInHand(new ItemStack(Material.GOLD_SWORD));
         if(plugin.pigZombieConfig.Aggressive) pigzombie.setAngry(true);
     }    
+    
+    public void Zombie(Zombie zombie) {
+        zombie.setCustomName(plugin.parseColor(plugin.zombieConfig.name));
+    }
 }

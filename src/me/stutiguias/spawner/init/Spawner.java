@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.stutiguias.spawner.commands.SpawnerCommands;
 import me.stutiguias.spawner.configs.Config;
+import me.stutiguias.spawner.configs.PigZombieConfig;
 import me.stutiguias.spawner.configs.SkeletonConfig;
 import me.stutiguias.spawner.configs.ZombieConfig;
 import me.stutiguias.spawner.db.IDataQueries;
@@ -86,6 +87,7 @@ public class Spawner extends JavaPlugin {
     public EnderConfig enderConfig;
     public SkeletonConfig skeletonConfig;
     public ZombieConfig zombieConfig;
+    public PigZombieConfig pigZombieConfig;
     
     public static boolean update = false;
     public static String name = "";
@@ -208,6 +210,7 @@ public class Spawner extends JavaPlugin {
         enderConfig = new EnderConfig(this);
         skeletonConfig = new SkeletonConfig(this);
         zombieConfig = new ZombieConfig(this);
+        pigZombieConfig = new PigZombieConfig(this);
         
         if(config.EnablePulliFFarAway)
         Bukkit.getScheduler().runTaskTimer(this, new SpawnLocation(this), config.PulliFFarAwayTime * 20, config.PulliFFarAwayTime * 20);

@@ -58,6 +58,7 @@
           <include>dragon.yml</include>
           <include>zombie.yml</include>
           <include>skeleton.yml</include>
+          <include>pigzombie.yml</include>
         </includes>
       </resource>
 

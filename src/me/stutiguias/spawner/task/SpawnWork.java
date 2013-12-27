@@ -14,6 +14,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Skeleton.SkeletonType;
@@ -153,10 +154,16 @@ public class SpawnWork implements Runnable {
     public void FixEntity(LivingEntity livingEntity) {
         livingEntity.setRemoveWhenFarAway(false);
         if(livingEntity instanceof Skeleton) equipSkeleton((Skeleton)livingEntity);
+        if(livingEntity instanceof PigZombie) equipPigMan((PigZombie)livingEntity);
     }
     
     public void equipSkeleton(Skeleton skeleton) {
         skeleton.getEquipment().setItemInHand(new ItemStack(Material.BOW));
         skeleton.setSkeletonType(SkeletonType.NORMAL);
     }
+    
+    public void equipPigMan(PigZombie pigzombie) {
+        pigzombie.getEquipment().setItemInHand(new ItemStack(Material.GOLD_SWORD));
+        if(plugin.pigZombieConfig.Aggressive) pigzombie.setAngry(true);
+    }    
 }

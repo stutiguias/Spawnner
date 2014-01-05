@@ -29,6 +29,7 @@ import me.stutiguias.spawner.db.YAML.SignYmlDb;
 import me.stutiguias.spawner.model.SpawnerAreaCreating;
 import me.stutiguias.spawner.db.YAML.SpawnerYmlDb;
 import me.stutiguias.spawner.db.YAML.TmpYmlDb;
+import me.stutiguias.spawner.db.YamlDataQueries;
 import me.stutiguias.spawner.listener.mobs.EnderDragonListener;
 import me.stutiguias.spawner.model.PlayerProfile;
 import me.stutiguias.spawner.task.SignUpdate;
@@ -73,7 +74,7 @@ public class Spawner extends JavaPlugin {
     public static HashMap<String,PlayerProfile> PlayerProfiles;
     
     public final SignYmlDb signYmlDb = new SignYmlDb(this);
-    private final TmpYmlDb tmpYmlDb = new TmpYmlDb(this);
+    public final TmpYmlDb tmpYmlDb = new TmpYmlDb(this);
     public final SpawnerYmlDb spawnerYmlDb = new SpawnerYmlDb(this);
     
     public Permission permission = null;
@@ -139,6 +140,8 @@ public class Spawner extends JavaPlugin {
             db = new MySQLDataQueries(this,config.Host , config.Port, config.Username,config.Password,config.Database);
         }else if(config.DataBaseType.equalsIgnoreCase("sqlite")){
             db = new SqliteDataQueries(this);
+        }else{
+            db = new YamlDataQueries(this);
         }
 
         getCommand("sp").setExecutor(new SpawnerCommands(this));
@@ -148,6 +151,7 @@ public class Spawner extends JavaPlugin {
         pm.registerEvents(mobListener, this);
         pm.registerEvents(playerListener, this);
         pm.registerEvents(SignListener,this);
+        
         if(!config.DisableControlOverEnderDragon) pm.registerEvents(enderDragonListener, this);
         
         setupPermissions();
@@ -201,7 +205,7 @@ public class Spawner extends JavaPlugin {
     
     private void Load(){
         getLogger().log(Level.INFO, "Loading YML Data...");
-        LoadDataFromYML();
+        LoadData();
         CheckExistMobs();
         RemoveLostSign();
         getLogger().log(Level.INFO, "...loaded with sucess.");
@@ -278,55 +282,36 @@ public class Spawner extends JavaPlugin {
         }
     }
     
-    private void LoadDataFromYML() {
-        
-        File folder = new File(SpawnerDir);
-        File[] listOfFiles = folder.listFiles();
-        
-        for (File file : listOfFiles) {
-            if (file.isFile()) {
-                SpawnerControl spawner = new SpawnerYmlDb(this).LoadSpawnerControl(file.getName());
-                if(spawner != null) {
-                    SpawnerList.add(spawner);
-                }else{
-                    file.delete();
-                }
-            }
-        }
-               
-        folder = new File(SignDir);
-        listOfFiles = folder.listFiles();
-        
-        for (File file : listOfFiles) {
-            if (file.isFile()) {
-                SignLocation.put( file.getName().replace(".yml","") , new SignYmlDb(this).LoadSign(file.getName()));
-            }
-        }
+    private void LoadData() {
+        SpawnerList = db.getAreas();
+        SignLocation = db.getSigns();
     }
-    
+
     public void CheckExistMobs() {
         for(SpawnerControl spawner:SpawnerList) {
             
             if(spawner == null || spawner.getWorld() == null) { 
                 getLogger().log(Level.WARNING, "Erro parsing world of spawn");
-                spawnerYmlDb.RemoveSpawnerControl(spawner.getName());
+                db.RemoveSpawnerControl(spawner.getName());
                 continue;
             }
             
             String worldname = spawner.getWorld().getName();
 
             for(LivingEntity entity:Bukkit.getServer().getWorld(worldname).getLivingEntities()) {
-                if(!tmpYmlDb.Exist(spawner)) continue;
+                List<UUID> mobs;
                 
-                List<UUID> mobs = tmpYmlDb.LoadPlayer(spawner);
+                mobs = db.LoadUUIDsTmp(spawner);
+                if(mobs == null) continue;
                 
                 for(UUID mob:mobs) {
                    if(entity.getUniqueId().equals(mob)) spawner.addMob(mob);
                 }
                 
             }    
+
+            db.RemoveSpawnerControlTmp(spawner.getName());
             
-            tmpYmlDb.RemoveSpawnerControl(spawner.getName());
         }
     }
     

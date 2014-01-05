@@ -82,6 +82,10 @@ public class SqliteDataQueries extends Queries {
 			Spawner.logger.log(Level.INFO, "{0} Creating table TS_Spawners", plugin.prefix);
 			executeRawSQL("CREATE TABLE TS_Spawners (id INTEGER PRIMARY KEY, name VARCHAR(255), location VARCHAR(255), locationx VARCHAR(255), locationz VARCHAR(255), type VARCHAR(255), qtd INTEGER, time INTEGER);");
 		}
+                if (!tableExists("TS_Signs")) {
+			Spawner.logger.log(Level.INFO, "{0} Creating table TS_Signs", plugin.prefix);
+			executeRawSQL("CREATE TABLE TS_Signs (id INTEGER PRIMARY KEY, name VARCHAR(255), location VARCHAR(255));");
+		}
                 if (!tableExists("TS_DbVersion")) {
                         Spawner.logger.log(Level.INFO, "{0} Creating table TS_DbVersion", plugin.prefix);
                         executeRawSQL("CREATE TABLE TS_DbVersion (id INTEGER PRIMARY KEY, dbversion INTEGER);");

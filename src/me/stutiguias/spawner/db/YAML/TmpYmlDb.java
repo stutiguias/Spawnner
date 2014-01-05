@@ -42,7 +42,7 @@ public class TmpYmlDb {
         return configFile.exists();
     }
     
-    public List<UUID> LoadPlayer(SpawnerControl spawner) {
+    public List<UUID> LoadUUIDs(SpawnerControl spawner) {
             
         configFile = new File(Spawner.TmpDir + File.separator + spawner.getName() + ".yml");
         SpawnerYML = new YamlConfiguration();

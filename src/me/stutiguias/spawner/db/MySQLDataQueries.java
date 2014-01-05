@@ -70,6 +70,10 @@ public class MySQLDataQueries extends Queries {
 			Spawner.logger.log(Level.INFO, "{0} Creating table TS_Spawners", plugin.prefix);
 			executeRawSQL("CREATE TABLE TS_Spawners (id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(id), name VARCHAR(255), location VARCHAR(255), locationx VARCHAR(255), locationz VARCHAR(255), type VARCHAR(255), qtd INT, time INT );");
 		}
+                if (!tableExists("TS_Signs")) {
+			Spawner.logger.log(Level.INFO, "{0} Creating table TS_Signs", plugin.prefix);
+			executeRawSQL("CREATE TABLE TS_Signs (id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(id), name VARCHAR(255), location VARCHAR(255) );");
+		}
                 if (!tableExists("TS_DbVersion")) {
                         Spawner.logger.log(Level.INFO, "{0} Creating table TS_DbVersion", plugin.prefix);
                         executeRawSQL("CREATE TABLE TS_DbVersion (id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(id), dbversion INT);");

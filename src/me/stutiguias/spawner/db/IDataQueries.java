@@ -4,9 +4,12 @@
  */
 package me.stutiguias.spawner.db;
 
+import java.util.HashMap;
 import me.stutiguias.spawner.db.connection.WALConnection;
 import java.util.List;
+import java.util.UUID;
 import me.stutiguias.spawner.model.SpawnerControl;
+import org.bukkit.Location;
 
 /**
  *
@@ -20,6 +23,10 @@ public interface IDataQueries {
         
         boolean InsertSpawner(SpawnerControl area);
         List<SpawnerControl> getAreas();
+        HashMap<String,Location> getSigns();
+        List<UUID> LoadUUIDsTmp(SpawnerControl spawner);
+        boolean RemoveSpawnerControl(String name);
+        boolean RemoveSpawnerControlTmp(String name);
         boolean Delete(SpawnerControl area);
         boolean InsertTmpMob(String areaName,String uuid);
 }

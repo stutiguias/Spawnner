@@ -162,7 +162,7 @@ public class SpawnWork implements Runnable {
     public void Skeleton(Skeleton skeleton) {
         skeleton.getEquipment().setItemInHand(new ItemStack(Material.BOW));
         skeleton.setSkeletonType(SkeletonType.NORMAL);
-        skeleton.setCustomName(plugin.parseColor(plugin.skeletonConfig.name));
+        if(!plugin.config.DisableCustomName) skeleton.setCustomName(plugin.parseColor(plugin.skeletonConfig.name));
     }
     
     public void PigMan(PigZombie pigzombie) {
@@ -171,6 +171,6 @@ public class SpawnWork implements Runnable {
     }    
     
     public void Zombie(Zombie zombie) {
-        zombie.setCustomName(plugin.parseColor(plugin.zombieConfig.name));
+       if(!plugin.config.DisableCustomName) zombie.setCustomName(plugin.parseColor(plugin.zombieConfig.name));
     }
 }

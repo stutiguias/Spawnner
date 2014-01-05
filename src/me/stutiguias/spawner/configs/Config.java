@@ -25,6 +25,7 @@ public class Config {
     public int PulliFFarAwayTime;
     public int PulliFFarAwayLimit;
     public boolean DisableControlOverEnderDragon;
+    public boolean DisableCustomName;
     
     public String DataBaseType;
     public String Host;
@@ -52,6 +53,7 @@ public class Config {
             PulliFFarAwayTime =fc.getInt("PulliFFarAwayTime");
             PulliFFarAwayLimit = fc.getInt("PulliFFarAwayLimit");
             DisableControlOverEnderDragon = fc.getBoolean("DisableControlOverEnderDragon");
+            DisableCustomName = fc.getBoolean("DisableCustomName");
             
             DataBaseType = fc.getString("DataBase.Type");
             Host  = fc.getString("MySQL.Host");

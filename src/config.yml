@@ -26,3 +26,5 @@ PulliFFarAwayTime: 60
 PulliFFarAwayLimit: 160
 # Disable control over EnderDragon
 DisableControlOverEnderDragon : false
+# Disable the custom name for each mob
+DisableCustomName : false

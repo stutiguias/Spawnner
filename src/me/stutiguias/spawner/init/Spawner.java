@@ -33,6 +33,7 @@ import me.stutiguias.spawner.db.YamlDataQueries;
 import me.stutiguias.spawner.listener.mobs.EnderDragonListener;
 import me.stutiguias.spawner.model.PlayerProfile;
 import me.stutiguias.spawner.task.SignUpdate;
+import me.stutiguias.spawner.task.SpawnCheck;
 import me.stutiguias.spawner.task.SpawnLocation;
 import me.stutiguias.spawner.task.SpawnWork;
 import me.stutiguias.updater.Updater;
@@ -45,6 +46,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -135,6 +137,10 @@ public class Spawner extends JavaPlugin {
         
         Load();
         ReloadMobs();
+        
+        if(config.UseTaskCheckMobAlive) {
+            Bukkit.getScheduler().runTaskTimer(this,new SpawnCheck(this),1800 * 20L,1800 * 20L);
+        }
         
         if(config.DataBaseType.equalsIgnoreCase("mysql")) {
             db = new MySQLDataQueries(this,config.Host , config.Port, config.Username,config.Password,config.Database);

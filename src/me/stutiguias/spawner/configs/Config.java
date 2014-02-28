@@ -26,6 +26,7 @@ public class Config {
     public int PulliFFarAwayLimit;
     public boolean DisableControlOverEnderDragon;
     public boolean DisableCustomName;
+    public boolean UseTaskCheckMobAlive;
     
     public String DataBaseType;
     public String Host;
@@ -41,7 +42,7 @@ public class Config {
             config.setupConfig();
             FileConfiguration fc = config.getConfig();   
                         
-            if(!fc.isSet("configversion") || fc.getInt("configversion") != 3){ 
+            if(!fc.isSet("configversion") || fc.getInt("configversion") != 4){ 
                 config.MakeOld();
                 config.setupConfig();
                 fc = config.getConfig();
@@ -54,6 +55,7 @@ public class Config {
             PulliFFarAwayLimit = fc.getInt("PulliFFarAwayLimit");
             DisableControlOverEnderDragon = fc.getBoolean("DisableControlOverEnderDragon");
             DisableCustomName = fc.getBoolean("DisableCustomName");
+            UseTaskCheckMobAlive = fc.getBoolean("UseTaskCheckMobAlive");
             
             DataBaseType = fc.getString("DataBase.Type");
             Host  = fc.getString("MySQL.Host");

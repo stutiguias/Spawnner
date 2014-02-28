@@ -1,5 +1,5 @@
 # don't change this
-configversion: 3
+configversion: 4
 # type database
 DataBase:
   # You need to choose if you will use SQLite or Mysql or FlatFile ( default is SQLite )
@@ -28,3 +28,9 @@ PulliFFarAwayLimit: 160
 DisableControlOverEnderDragon : false
 # Disable the custom name for each mob
 DisableCustomName : false
+# Use task Check MobAlive
+# Use this if you have problem 
+# About Mobs Stop spawnning
+# Its done 30m in 30m
+# ( Develop Stage )
+UseTaskCheckMobAlive : false

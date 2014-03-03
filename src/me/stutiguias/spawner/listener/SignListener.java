@@ -75,7 +75,7 @@ public class SignListener implements Listener {
             
             if(signExist && !plugin.signYmlDb.Exist(spawnerControl.getName())) {
                 Spawner.SignLocation.remove(spawnerControl.getName());
-            } else {
+            } else if(signExist) {
                 CancelEvent(event, player, sign," Timer already use !");
             }
             

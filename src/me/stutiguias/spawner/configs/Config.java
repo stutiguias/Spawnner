@@ -27,6 +27,7 @@ public class Config {
     public boolean DisableControlOverEnderDragon;
     public boolean DisableCustomName;
     public boolean UseTaskCheckMobAlive;
+    public int UseTaskCheckMobAliveSeconds;
     
     public String DataBaseType;
     public String Host;
@@ -56,6 +57,7 @@ public class Config {
             DisableControlOverEnderDragon = fc.getBoolean("DisableControlOverEnderDragon");
             DisableCustomName = fc.getBoolean("DisableCustomName");
             UseTaskCheckMobAlive = fc.getBoolean("UseTaskCheckMobAlive");
+            UseTaskCheckMobAliveSeconds = fc.getInt("UseTaskCheckMobAliveSeconds");
             
             DataBaseType = fc.getString("DataBase.Type");
             Host  = fc.getString("MySQL.Host");

@@ -34,3 +34,6 @@ DisableCustomName : false
 # Its done 30m in 30m
 # ( Develop Stage )
 UseTaskCheckMobAlive : false
+# Seconds with the UseTaskCheckMobAlive
+# is done ( Don't lower to much )
+UseTaskCheckMobAliveSeconds : 1800

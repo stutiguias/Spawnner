@@ -46,7 +46,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -135,21 +134,15 @@ public class Spawner extends JavaPlugin {
         SignLocation = new HashMap<>();
         PlayerProfiles = new HashMap<>();
         
+
+         
         Load();
         ReloadMobs();
         
         if(config.UseTaskCheckMobAlive) {
-            Bukkit.getScheduler().runTaskTimer(this,new SpawnCheck(this),1800 * 20L,1800 * 20L);
+            Bukkit.getScheduler().runTaskTimer(this,new SpawnCheck(this),config.UseTaskCheckMobAliveSeconds * 20L,config.UseTaskCheckMobAliveSeconds * 20L);
         }
-        
-        if(config.DataBaseType.equalsIgnoreCase("mysql")) {
-            db = new MySQLDataQueries(this,config.Host , config.Port, config.Username,config.Password,config.Database);
-        }else if(config.DataBaseType.equalsIgnoreCase("sqlite")){
-            db = new SqliteDataQueries(this);
-        }else{
-            db = new YamlDataQueries(this);
-        }
-
+    
         getCommand("sp").setExecutor(new SpawnerCommands(this));
         
         PluginManager pm = getServer().getPluginManager();
@@ -210,18 +203,28 @@ public class Spawner extends JavaPlugin {
     }
     
     private void Load(){
-        getLogger().log(Level.INFO, "Loading YML Data...");
-        LoadData();
-        CheckExistMobs();
-        RemoveLostSign();
-        getLogger().log(Level.INFO, "...loaded with sucess.");
-        
+
         config = new Config(this);
         enderConfig = new EnderConfig(this);
         skeletonConfig = new SkeletonConfig(this);
         zombieConfig = new ZombieConfig(this);
         pigZombieConfig = new PigZombieConfig(this);
         
+        if(config.DataBaseType.equalsIgnoreCase("mysql")) {
+            db = new MySQLDataQueries(this,config.Host , config.Port, config.Username,config.Password,config.Database);
+        }else if(config.DataBaseType.equalsIgnoreCase("sqlite")){
+            db = new SqliteDataQueries(this);
+        }else{
+            db = new YamlDataQueries(this);
+        }
+        
+        getLogger().log(Level.INFO, "Loading YML Data...");
+        LoadData();
+        CheckExistMobs();
+        RemoveLostSign();
+        getLogger().log(Level.INFO, "...loaded with sucess.");        
+        
+
         if(config.EnablePulliFFarAway)
         Bukkit.getScheduler().runTaskTimer(this, new SpawnLocation(this), config.PulliFFarAwayTime * 20, config.PulliFFarAwayTime * 20);
         

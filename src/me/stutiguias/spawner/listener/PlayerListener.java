@@ -54,7 +54,7 @@ public class PlayerListener implements Listener {
         Spawner.PlayerProfiles.remove(event.getPlayer().getName());
     }
     
-    @EventHandler
+    @EventHandler(priority= EventPriority.NORMAL)
     public void PlayerInteract(PlayerInteractEvent event){
         if( !event.hasItem() 
          || !event.getItem().hasItemMeta() 

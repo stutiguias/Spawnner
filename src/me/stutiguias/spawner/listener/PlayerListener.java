@@ -34,12 +34,6 @@ public class PlayerListener implements Listener {
     @EventHandler(priority= EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
- 
-        if(plugin.config.UpdaterNotify && plugin.hasPermission(player,"tsp.update") && Spawner.update)
-        {
-          player.sendMessage(plugin.parseColor("&6An update is available: " + Spawner.name + ", a " + Spawner.type + " for " + Spawner.version + " available at " + Spawner.link));
-          player.sendMessage(plugin.parseColor("&6Type /sp update if you would like to automatically update."));
-        }
         
         if(!playerYmlDb.Exist(player.getName()))
         {

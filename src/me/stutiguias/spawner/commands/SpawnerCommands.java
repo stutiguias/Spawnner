@@ -54,9 +54,6 @@ public class SpawnerCommands implements CommandExecutor {
             case "reload":
                 if(!plugin.hasPermission(sender.getName(),"tsp.reload")) return false;
                 return Reload();
-            case "update":
-                if(!plugin.hasPermission(sender.getName(),"tsp.update")) return false;
-                return Update();
             case "w":
             case "wand":
                 if(!plugin.hasPermission(sender.getName(),"tsp.wand")) return false;
@@ -158,11 +155,7 @@ public class SpawnerCommands implements CommandExecutor {
         plugin.getServer().getScheduler().runTask(plugin, new SpawnLocation(plugin,spawnerControl, 0));
         return true;
     }    
-        
-    public boolean Update() {
-        plugin.Update();
-        return true;
-    }
+
     
     public boolean Wand() {
         Player player = (Player)sender;
@@ -219,10 +212,6 @@ public class SpawnerCommands implements CommandExecutor {
         if(plugin.hasPermission(sender.getName(),"tsp.reset")){
             SendFormatMessage("&6/sp <reset|rs> <nothing|spawnName>");
         }  
-        
-        if(plugin.hasPermission(sender.getName(),"tsp.update")){
-            SendFormatMessage("&6/sp update");
-        }
         
         if(plugin.hasPermission(sender.getName(),"tsp.reload")){
             SendFormatMessage("&6/sp reload");

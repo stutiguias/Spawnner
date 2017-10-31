@@ -1,9 +1,7 @@
 package me.stutiguias.spawner.init;
 
-import com.onarandombox.MultiverseCore.MultiverseCore;
 import me.stutiguias.spawner.configs.EnderConfig;
 import java.io.File;
-import java.io.IOException;
 import me.stutiguias.spawner.model.SpawnerControl;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +22,6 @@ import me.stutiguias.spawner.db.SqliteDataQueries;
 import me.stutiguias.spawner.listener.MobListener;
 import me.stutiguias.spawner.listener.PlayerListener;
 import me.stutiguias.spawner.listener.SignListener;
-import me.stutiguias.spawner.metrics.Metrics;
 import me.stutiguias.spawner.db.YAML.SignYmlDb;
 import me.stutiguias.spawner.model.SpawnerAreaCreating;
 import me.stutiguias.spawner.db.YAML.SpawnerYmlDb;
@@ -36,7 +33,6 @@ import me.stutiguias.spawner.task.SignUpdate;
 import me.stutiguias.spawner.task.SpawnCheck;
 import me.stutiguias.spawner.task.SpawnLocation;
 import me.stutiguias.spawner.task.SpawnWork;
-import me.stutiguias.updater.Updater;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -90,15 +86,11 @@ public class Spawner extends JavaPlugin {
     public SkeletonConfig skeletonConfig;
     public ZombieConfig zombieConfig;
     public PigZombieConfig pigZombieConfig;
-    
-    public static boolean update = false;
-    public static String name = "";
-    public static String type = "";
-    public static String version = "";
-    public static String link = "";
+
 
     @Override
     public void onEnable() {
+        logger.log(Level.INFO, "{0} initializing....", prefix);
         
         File dir = getDataFolder();
         if (!dir.exists()) {
@@ -155,25 +147,7 @@ public class Spawner extends JavaPlugin {
         
         setupPermissions();
         setupEconomy();
-        
-        // Metrics 
-        try {
-         logger.log(Level.INFO, "{0} {1} - Sending Metrics, Thank You!", new Object[]{prefix, "[Metrics]"});
-         Metrics metrics = new Metrics(this);
-         metrics.start();
-        } catch (IOException e) {
-         logger.log(Level.WARNING, "{0} {1} !! Failed to submit the stats !! ", new Object[]{prefix, "[Metrics]"});
-        }
-       
-        if(config.UpdaterNotify){
-            Updater updater = new Updater(this, 49809, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, false); // Start Updater but just do a version check
-            
-            update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE; // Determine if there is an update ready for us
-            name = updater.getLatestName(); // Get the latest name
-            version = updater.getLatestGameVersion(); // Get the latest game version
-            type = updater.getLatestType(); // Get the latest game version
-            link = updater.getLatestFileLink(); // Get the latest link
-        }
+        logger.log(Level.INFO, "{0} done.", prefix);
     }
 
     @Override
@@ -264,10 +238,6 @@ public class Spawner extends JavaPlugin {
         return message;
     }
      
-    public void Update() {
-        Updater updater = new Updater(this, 49809, this.getFile(), Updater.UpdateType.NO_VERSION_CHECK, true);
-    }
-    
     public boolean hasPermission(String PlayerName,String Permission) {
        return permission.has(getServer().getPlayer(PlayerName).getWorld(),PlayerName,Permission);
     }
@@ -345,20 +315,7 @@ public class Spawner extends JavaPlugin {
     }
     
     public World getWorld(String name) {
-        World world = getServer().getWorld(name);
-        if(world == null && getMultiverseCore() != null) {
-            world = getMultiverseCore().getMVWorldManager().getMVWorld(name).getCBWorld();
-        }
-        return world;
+        return getServer().getWorld(name);
     }
-    
-    public MultiverseCore getMultiverseCore() {
-        Plugin plugin = getServer().getPluginManager().getPlugin("MultiverseCore");
- 
-        if (plugin instanceof MultiverseCore) {
-            return (MultiverseCore) plugin;
-        }
 
-        return null;
-    }
 }

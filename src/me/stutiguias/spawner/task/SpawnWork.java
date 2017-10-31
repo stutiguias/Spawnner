@@ -44,7 +44,7 @@ public class SpawnWork implements Runnable {
                 Spawner.logger.log(Level.INFO, "{0} Spawning {1}",new Object[]{ plugin.prefix,spawnerControl.getName() });
             }
             
-            for (int i = 1; i <= spawnerControl.getQuantd().intValue(); i++) {
+            for (int i = 1; i <= spawnerControl.getQuantd(); i++) {
                 if(!MakeEntity()) break;
             }
 
@@ -93,7 +93,7 @@ public class SpawnWork implements Runnable {
             else
                z = Random(xz,yz);    
              
-            Location location = new Location(spawnerControl.getLocationX().getWorld(), x, spawnerControl.getLocationX().getY(), z);
+            Location location = new Location(spawnerControl.getLocationX().getWorld(), x, spawnerControl.getLocationX().getY() + 1, z);
             
             worldname = location.getWorld().getName();
                                
@@ -160,13 +160,12 @@ public class SpawnWork implements Runnable {
     }
     
     public void Skeleton(Skeleton skeleton) {
-        skeleton.getEquipment().setItemInHand(new ItemStack(Material.BOW));
-        skeleton.setSkeletonType(SkeletonType.NORMAL);
+        skeleton.getEquipment().setItemInMainHand(new ItemStack(Material.BOW));
         if(!plugin.config.DisableCustomName) skeleton.setCustomName(plugin.parseColor(plugin.skeletonConfig.name));
     }
     
     public void PigMan(PigZombie pigzombie) {
-        pigzombie.getEquipment().setItemInHand(new ItemStack(Material.GOLD_SWORD));
+        pigzombie.getEquipment().setItemInMainHand(new ItemStack(Material.GOLD_SWORD));
         if(plugin.pigZombieConfig.Aggressive) pigzombie.setAngry(true);
     }    
     

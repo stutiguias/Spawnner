@@ -1,18 +1,25 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>me.stutiguias</groupId>
-  <artifactId>Spawnner</artifactId>
-  <version>0.6</version>
-  <name>TimeSpawnner</name>
+  <artifactId>TimeSpawnner</artifactId>
+  <version>0.7</version>
+  <name>TimeSpawnner-${project.version}</name>
   <description>TimeSpawnner</description>
-  
+  <packaging>jar</packaging>
+    
   <repositories>
     <!-- Bukkit -->
     <repository>
-      <id>bukkit-repo</id>
-      <url>http://repo.bukkit.org/content/groups/public/</url>
+      <id>spigot-repo</id>
+      <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
     </repository>
-
+    
+    <!-- vault -->
+    <repository>
+            <id>vault-repo</id>
+            <url>http://nexus.hc.to/content/repositories/pub_releases</url>
+    </repository>
+  
   </repositories>
   
     <dependencies>
@@ -20,26 +27,16 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>LATEST</version>
-            <type>jar</type>
-            <scope>compile</scope>
+            <version>1.12.2-R0.1-SNAPSHOT</version>
         </dependency>
         
         <dependency>
-          <groupId>net.milkbowl.vault</groupId>
-          <artifactId>Vault</artifactId>
-          <version>1.2.27</version>
-              <scope>system</scope>
-          <systemPath>${project.basedir}/lib/Vault.jar</systemPath>
+            <groupId>net.milkbowl.vault</groupId>
+            <artifactId>Vault</artifactId>
+            <version>1.5.6</version>
+            <type>jar</type>
+            <scope>compile</scope>
         </dependency>
- 
-        <dependency>
-          <groupId>com.onarandombox.MultiverseCore</groupId>
-          <artifactId>Vault</artifactId>
-          <version>2.5</version>
-              <scope>system</scope>
-          <systemPath>${project.basedir}/lib/Multiverse-Core-2.5.jar</systemPath>
-        </dependency>   
                     
   </dependencies>
   

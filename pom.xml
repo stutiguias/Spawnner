@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>me.stutiguias</groupId>
   <artifactId>TimeSpawnner</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
   <name>TimeSpawnner-${project.version}</name>
   <description>TimeSpawnner</description>
   <packaging>jar</packaging>

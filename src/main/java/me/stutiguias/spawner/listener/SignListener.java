@@ -63,7 +63,10 @@ public class SignListener implements Listener {
     }
                 
     public void TimeSpawner(String[] lines,Player player,Block sign,SignChangeEvent event)    {
-        if(!plugin.hasPermission(player, "tsp.sign")) CancelEvent(event, player, sign," You do not have permission");
+        if(!plugin.hasPermission(player, "tsp.sign")) {
+            CancelEvent(event, player, sign," You do not have permission");
+            return;
+        }
         
         for (SpawnerControl spawnerControl : Spawner.SpawnerList) {
             if(!spawnerControl.getName().equalsIgnoreCase(lines[1])) continue;
@@ -78,6 +81,7 @@ public class SignListener implements Listener {
                 Spawner.SignLocation.remove(spawnerControl.getName());
             } else if(signExist) {
                 CancelEvent(event, player, sign," Timer already use !");
+                return;
             }
             
             Spawner.SignLocation.put(spawnerControl.getName(),event.getBlock().getLocation());

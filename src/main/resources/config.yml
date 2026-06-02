@@ -37,3 +37,20 @@ UseTaskCheckMobAlive : false
 # Seconds with the UseTaskCheckMobAlive
 # is done ( Don't lower to much )
 UseTaskCheckMobAliveSeconds : 1800
+# Economy options using Vault
+Economy:
+  # Allow players to buy spawners with /sp buyspawn
+  EnableBuySpawners: true
+  BuySpawner:
+    # Used when the mob type does not have a custom price
+    DefaultPrice: 1000.0
+    # Extra cost multiplied by the quantity argument
+    QuantityMultiplier: 0.0
+    # Extra cost multiplied by the time argument
+    TimeMultiplier: 0.0
+    # Optional per-mob base prices. Entity names follow Bukkit EntityType names.
+    Prices:
+      ZOMBIE: 1000.0
+      SKELETON: 1200.0
+      ZOMBIFIED_PIGLIN: 1500.0
+      ENDER_DRAGON: 50000.0

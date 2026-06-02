@@ -10,6 +10,7 @@ import me.stutiguias.spawner.init.Spawner;
 import me.stutiguias.spawner.model.SpawnerControl;
 import me.stutiguias.spawner.db.YAML.SpawnerYmlDb;
 import me.stutiguias.spawner.task.SpawnLocation;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -61,7 +62,11 @@ public class SpawnerCommands implements CommandExecutor {
             case "ss":
             case "setspawn" :
                 if(!plugin.hasPermission(sender.getName(),"tsp.setspawn")) return false;
-                return SetSpawn();
+                return SetSpawn(false);
+            case "bs":
+            case "buyspawn":
+                if(!plugin.hasPermission(sender.getName(),"tsp.buyspawn")) return false;
+                return SetSpawn(true);
             case "spawnconf":
                 // TODO : Working on Spawconfig
                 //return SpawnConfig();
@@ -69,23 +74,18 @@ public class SpawnerCommands implements CommandExecutor {
                 return true;
             case "ds":
             case "delspawn":
-                if(!plugin.hasPermission(sender.getName(),"tsp.delspawn")) return false;
                 return DelSpawn();
             case "sp":
             case "spawners":
-                if(!plugin.hasPermission(sender.getName(),"tsp.spawners")) return false;
                 return Spawners();
             case "tp":
             case "teleport":
-                if(!plugin.hasPermission(sender.getName(),"tsp.tp")) return false;
                 return teleportToSpawn();
             case "rl":
             case "reloc":
-                if(!plugin.hasPermission(sender.getName(),"tsp.reloc")) return false;
                 return Reloc();
             case "rs":
             case "reset":
-                if(!plugin.hasPermission(sender.getName(),"tsp.reset")) return false;
                 return Reset();                
             case "?":
             case "help":
@@ -95,14 +95,22 @@ public class SpawnerCommands implements CommandExecutor {
     }
        
     public boolean Reset() {
-        
-        plugin.getServer().getScheduler().cancelTasks(plugin);
-        
         if (args.length == 2) {
-                    
-             ResetName(args[1]);
+             String resetName = args[1];
+             SpawnerControl target = plugin.FindSpawn(resetName);
+             if(!CanManageSpawner(target, "tsp.reset")) return true;
+
+             plugin.getServer().getScheduler().cancelTasks(plugin);
+             ResetName(resetName);
+
+             for(SpawnerControl spawnerControl:Spawner.SpawnerList) {
+                 if(spawnerControl.getName().equalsIgnoreCase(resetName) || spawnerControl.hasMobs()) continue;
+                 plugin.Spawn(spawnerControl);
+             }
             
         }else{
+            if(!HasPermission("tsp.reset")) return false;
+            plugin.getServer().getScheduler().cancelTasks(plugin);
             
             for(SpawnerControl spawnerControl:Spawner.SpawnerList) {
 
@@ -112,6 +120,8 @@ public class SpawnerCommands implements CommandExecutor {
             }
             
         }
+
+        plugin.ScheduleConfiguredTasks();
         return true;
     }
     
@@ -133,10 +143,12 @@ public class SpawnerCommands implements CommandExecutor {
     public boolean Reloc() {
                 
         if (args.length == 2) {
-                    
+             SpawnerControl target = plugin.FindSpawn(args[1]);
+             if(!CanManageSpawner(target, "tsp.reloc")) return true;
              RelocName(args[1]);
             
         }else{
+            if(!HasPermission("tsp.reloc")) return false;
             
             plugin.getServer().getScheduler().runTask(plugin, new SpawnLocation(plugin, 0));      
             
@@ -185,6 +197,10 @@ public class SpawnerCommands implements CommandExecutor {
         
         if(plugin.hasPermission(sender.getName(),"tsp.setspawn")){
             SendFormatMessage("&6/sp <setspawn|ss> <spawnerName> <typeMob> <quantity> <time>");
+        }
+
+        if(plugin.hasPermission(sender.getName(),"tsp.buyspawn")){
+            SendFormatMessage("&6/sp <buyspawn|bs> <spawnerName> <typeMob> <quantity> <time>");
         }
         
         if(plugin.hasPermission(sender.getName(),"tsp.wand")){
@@ -235,7 +251,9 @@ public class SpawnerCommands implements CommandExecutor {
         SendFormatMessage(MsgHr);
         SendFormatMessage("&7List of Spawners");
         SendFormatMessage(MsgHr);
+        boolean found = false;
         for (SpawnerControl spawnerControl : Spawner.SpawnerList) {
+            if(!CanViewSpawner(spawnerControl)) continue;
             double x,y,z;
             if(spawnerControl.getLocationX() == null) {
                 x = spawnerControl.getLocation().getX();
@@ -247,6 +265,10 @@ public class SpawnerCommands implements CommandExecutor {
                 z = spawnerControl.getLocationX().getZ();
             }
             SendFormatMessage(String.format("&4name:&6 %s &4x:&6 %.2f &4y:&6 %.2f &4z:&6 %.2f",spawnerControl.getName(),x,y,z));
+            found = true;
+        }
+        if(!found) {
+            SendFormatMessage("&6Has no set spawn.");
         }
         SendFormatMessage(MsgHr);
         return true;
@@ -262,6 +284,10 @@ public class SpawnerCommands implements CommandExecutor {
         
         for (SpawnerControl spawnerControl : Spawner.SpawnerList) {
             if(!spawnerControl.getName().equalsIgnoreCase(name)) continue;
+            if(!CanViewSpawner(spawnerControl)) {
+                FormatMsgRed("You can only view spawners that you bought.");
+                return true;
+            }
             double x,y,z,q = 0,w = 0,e = 0;
             String type;
             if(spawnerControl.getLocationX() == null) {
@@ -281,6 +307,9 @@ public class SpawnerCommands implements CommandExecutor {
                 
             }
             SendFormatMessage(String.format("&4name:&6 %s &4type:&6 %s  ",spawnerControl.getName(),type));
+            if(spawnerControl.hasOwner()) {
+                SendFormatMessage(String.format("&4owner:&6 %s", spawnerControl.getOwnerName()));
+            }
             SendFormatMessage(String.format("&4mobtype:&6 %s &4quantity:&6 %s &4time:&6 %s  ",spawnerControl.getType(),spawnerControl.getQuantd(),spawnerControl.getTime()));
             if(type.equalsIgnoreCase("Fixed")) { 
                 SendFormatMessage(String.format("&4x:&6 %.2f &4y:&6 %.2f &4z:&6 %.2f",x,y,z));
@@ -300,7 +329,7 @@ public class SpawnerCommands implements CommandExecutor {
     public boolean teleportToSpawn() {
         Player player = (Player)sender;
                
-        if (args.length < 1) {
+        if (args.length < 2) {
             FormatMsgRed("Wrong arguments on command tp");
             return true;
         }
@@ -309,6 +338,7 @@ public class SpawnerCommands implements CommandExecutor {
         
         for (SpawnerControl spawnerControl : Spawner.SpawnerList) {
             if (spawnerControl.getName().equals(name)) {
+                if(!CanManageSpawner(spawnerControl, "tsp.tp")) return true;
                 if(spawnerControl.getLocation() == null)
                     player.teleport(spawnerControl.getLocationX());
                 else
@@ -320,10 +350,10 @@ public class SpawnerCommands implements CommandExecutor {
         return true;
     }
     
-    public boolean SetSpawn() {
+    public boolean SetSpawn(boolean chargePlayer) {
 
         if (args.length < 5) {
-            FormatMsgRed("Wrong arguments on command setspawn");
+            FormatMsgRed("Wrong arguments on command " + args[0]);
             return true;
         }
         
@@ -361,28 +391,47 @@ public class SpawnerCommands implements CommandExecutor {
             FormatMsgRed("The quantity not is number");
             return true;
         }
-            
-        SpawnerYmlDb spawnerProfile;
+
+        if(quantd <= 0) {
+            FormatMsgRed("The quantity must be greater than zero");
+            return true;
+        }
+
+        if(tempo <= 0) {
+            FormatMsgRed("The time must be greater than zero");
+            return true;
+        }
+
+        Player player = (Player)sender;
+        SpawnerControl newSpawner;
         String BroadcastType;
         
-        if(Spawner.SpawnerCreating.containsKey((Player)sender)){
-            if(Spawner.SpawnerCreating.get((Player)sender).locationLeft == null
-            || Spawner.SpawnerCreating.get((Player)sender).locationRight == null) {
+        if(Spawner.SpawnerCreating.containsKey(player)){
+            if(Spawner.SpawnerCreating.get(player).locationLeft == null
+            || Spawner.SpawnerCreating.get(player).locationRight == null) {
                 SendFormatMessage("Need to set all points");
                 return false;
             }
             
-            Location locationx = Spawner.SpawnerCreating.get((Player)sender).locationLeft;
-            Location locationz = Spawner.SpawnerCreating.get((Player)sender).locationRight;
-        
-            Spawner.SpawnerCreating.remove((Player)sender);
-            
-            spawnerProfile = new SpawnerYmlDb(plugin, new SpawnerControl(name.toLowerCase(),locationx,locationz, type, quantd, tempo));
+            Location locationx = Spawner.SpawnerCreating.get(player).locationLeft;
+            Location locationz = Spawner.SpawnerCreating.get(player).locationRight;
+
+            newSpawner = NewSpawnerControl(name.toLowerCase(), locationx, locationz, type, quantd, tempo, chargePlayer);
             BroadcastType = "Area ";
         }else{
-            spawnerProfile = new SpawnerYmlDb(plugin, new SpawnerControl(name.toLowerCase(), ((Player) sender).getLocation(), type, quantd, tempo));
+            newSpawner = NewSpawnerControl(name.toLowerCase(), player.getLocation(), type, quantd, tempo, chargePlayer);
             BroadcastType = "Fixed ";
         }
+
+        if(chargePlayer && !ChargeSpawnerPurchase(player, type, quantd, tempo)) {
+            return true;
+        }
+
+        if(Spawner.SpawnerCreating.containsKey(player)) {
+            Spawner.SpawnerCreating.remove(player);
+        }
+
+        SpawnerYmlDb spawnerProfile = new SpawnerYmlDb(plugin, newSpawner);
         
         Spawner.SpawnerList.add(spawnerProfile.spawner);
 
@@ -390,6 +439,65 @@ public class SpawnerCommands implements CommandExecutor {
         
         SendFormatMessage("&6"+ BroadcastType +"mob spawner successfully added.");
         return true;
+    }
+
+    private SpawnerControl NewSpawnerControl(String name, Location locationx, Location locationz, EntityType type, Integer quantd, Integer tempo, boolean withOwner) {
+        if(withOwner) {
+            Player player = (Player)sender;
+            return new SpawnerControl(name, locationx, locationz, type, quantd, tempo, player.getUniqueId(), player.getName());
+        }
+        return new SpawnerControl(name, locationx, locationz, type, quantd, tempo);
+    }
+
+    private SpawnerControl NewSpawnerControl(String name, Location location, EntityType type, Integer quantd, Integer tempo, boolean withOwner) {
+        if(withOwner) {
+            Player player = (Player)sender;
+            return new SpawnerControl(name, location, type, quantd, tempo, player.getUniqueId(), player.getName());
+        }
+        return new SpawnerControl(name, location, type, quantd, tempo);
+    }
+
+    private boolean ChargeSpawnerPurchase(Player player, EntityType type, int quantity, int time) {
+        if(!plugin.config.EnableBuySpawners) {
+            FormatMsgRed("Buying spawners is disabled.");
+            return false;
+        }
+
+        if(plugin.economy == null) {
+            FormatMsgRed("Economy is not available.");
+            return false;
+        }
+
+        double price = GetSpawnerPrice(type, quantity, time);
+
+        if(price <= 0) {
+            SendFormatMessage("&6This spawner is free.");
+            return true;
+        }
+
+        if(!plugin.economy.has(player, price)) {
+            FormatMsgRed("You need " + plugin.economy.format(price) + " to buy this spawner.");
+            return false;
+        }
+
+        EconomyResponse response = plugin.economy.withdrawPlayer(player, price);
+        if(!response.transactionSuccess()) {
+            FormatMsgRed("Could not charge you: " + response.errorMessage);
+            return false;
+        }
+
+        SendFormatMessage("&6Paid &e" + plugin.economy.format(price) + "&6 for this spawner.");
+        return true;
+    }
+
+    private double GetSpawnerPrice(EntityType type, int quantity, int time) {
+        double basePrice = plugin.config.BuySpawnerDefaultPrice;
+        if(plugin.config.BuySpawnerPrices.containsKey(type.name())) {
+            basePrice = plugin.config.BuySpawnerPrices.get(type.name());
+        }
+        return basePrice
+                + (quantity * plugin.config.BuySpawnerQuantityMultiplier)
+                + (time * plugin.config.BuySpawnerTimeMultiplier);
     }
     
     public boolean SpawnConfig() {
@@ -469,6 +577,7 @@ public class SpawnerCommands implements CommandExecutor {
 
         for (SpawnerControl spawnerControl : Spawner.SpawnerList) {
             if (!spawnerControl.getName().equalsIgnoreCase(name)) continue;
+            if(!CanManageSpawner(spawnerControl, "tsp.delspawn")) return true;
             
             Spawner.SpawnerList.remove(spawnerControl);
             
@@ -484,6 +593,32 @@ public class SpawnerCommands implements CommandExecutor {
  
         FormatMsgRed("Mob Spawner not found.");
         return true;
+    }
+
+    private boolean CanViewSpawner(SpawnerControl spawnerControl) {
+        return HasPermission("tsp.spawners") || IsOwner(spawnerControl);
+    }
+
+    private boolean CanManageSpawner(SpawnerControl spawnerControl, String permission) {
+        if(spawnerControl == null) {
+            SendFormatMessage("&4Spawner not found");
+            return false;
+        }
+
+        if(HasPermission(permission) || IsOwner(spawnerControl)) {
+            return true;
+        }
+
+        FormatMsgRed("You can only manage spawners that you bought.");
+        return false;
+    }
+
+    private boolean HasPermission(String permission) {
+        return plugin.hasPermission((Player)sender, permission);
+    }
+
+    private boolean IsOwner(SpawnerControl spawnerControl) {
+        return spawnerControl != null && spawnerControl.isOwner(((Player)sender).getUniqueId());
     }
     
     public void RemoveAllEntitysFromSpawn(World world,SpawnerControl spawnerControl) {

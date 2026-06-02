@@ -7,8 +7,11 @@
 package me.stutiguias.spawner.configs;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import me.stutiguias.spawner.init.Spawner;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**
@@ -27,7 +30,12 @@ public class Config {
     public boolean DisableControlOverEnderDragon;
     public boolean DisableCustomName;
     public boolean UseTaskCheckMobAlive;
+    public boolean EnableBuySpawners;
     public int UseTaskCheckMobAliveSeconds;
+    public double BuySpawnerDefaultPrice;
+    public double BuySpawnerQuantityMultiplier;
+    public double BuySpawnerTimeMultiplier;
+    public Map<String, Double> BuySpawnerPrices;
     
     public String DataBaseType;
     public String Host;
@@ -38,6 +46,7 @@ public class Config {
     
     public Config (Spawner plugin) {
         
+       BuySpawnerPrices = new HashMap<>();
        try {
             config = new ConfigAccessor(plugin, "config.yml");
             config.setupConfig();
@@ -58,6 +67,16 @@ public class Config {
             DisableCustomName = fc.getBoolean("DisableCustomName");
             UseTaskCheckMobAlive = fc.getBoolean("UseTaskCheckMobAlive");
             UseTaskCheckMobAliveSeconds = fc.getInt("UseTaskCheckMobAliveSeconds");
+            EnableBuySpawners = fc.getBoolean("Economy.EnableBuySpawners");
+            BuySpawnerDefaultPrice = fc.getDouble("Economy.BuySpawner.DefaultPrice");
+            BuySpawnerQuantityMultiplier = fc.getDouble("Economy.BuySpawner.QuantityMultiplier");
+            BuySpawnerTimeMultiplier = fc.getDouble("Economy.BuySpawner.TimeMultiplier");
+            ConfigurationSection prices = fc.getConfigurationSection("Economy.BuySpawner.Prices");
+            if(prices != null) {
+                for(String key:prices.getKeys(false)) {
+                    BuySpawnerPrices.put(key.toUpperCase(), prices.getDouble(key));
+                }
+            }
             
             DataBaseType = fc.getString("DataBase.Type");
             Host  = fc.getString("MySQL.Host");

@@ -15,6 +15,9 @@ permissions:
      tsp.setspawn:
         description: Allow setspawn
         default: op
+     tsp.buyspawn:
+        description: Allow buying spawners
+        default: true
      tsp.delspawn:
         description: Allow delspawn
         default: op       
@@ -50,6 +53,7 @@ permissions:
       children:
         tsp.update: true
         tsp.setspawn: true
+        tsp.buyspawn: true
         tsp.delspawn: true
         tsp.spawners: true
         tsp.reload: true

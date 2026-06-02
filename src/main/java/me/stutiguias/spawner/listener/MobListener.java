@@ -53,7 +53,7 @@ public class MobListener implements Listener {
         for (Entity entity : entities) {
             if (entity == null || !(entity instanceof Monster ||  entity instanceof Animals)) continue;
 
-            handleTrackedMobDeath(entity, null);
+            if (!handleTrackedMobDeath(entity, null)) continue;
 
             entity.remove();
         }
@@ -79,8 +79,8 @@ public class MobListener implements Listener {
 
     }
 
-    private void handleTrackedMobDeath(Entity entity, EntityDeathEvent event) {
-        if (SpawnerList.isEmpty()) return;
+    private boolean handleTrackedMobDeath(Entity entity, EntityDeathEvent event) {
+        if (SpawnerList.isEmpty()) return false;
 
         for (SpawnerControl mobs : SpawnerList) {
             if (!mobs.containsMob(entity.getUniqueId())) continue;
@@ -98,7 +98,9 @@ public class MobListener implements Listener {
                 plugin.Spawn(mobs);
             }
 
-            return;
+            return true;
         }
+
+        return false;
     }
 }

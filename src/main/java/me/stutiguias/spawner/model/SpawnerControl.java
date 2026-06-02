@@ -19,8 +19,15 @@ public class SpawnerControl  implements Serializable
   private Location location;
   private Location locationx;
   private Location locationz;
+  private UUID ownerUuid;
+  private String ownerName;
   
   public SpawnerControl(String name, Location locationx,Location locationz, EntityType type, Integer quantd, Integer tempo)
+  {
+    this(name, locationx, locationz, type, quantd, tempo, null, null);
+  }
+
+  public SpawnerControl(String name, Location locationx,Location locationz, EntityType type, Integer quantd, Integer tempo, UUID ownerUuid, String ownerName)
   {
     this.moblist = new HashSet();
     this.name = name;
@@ -30,9 +37,16 @@ public class SpawnerControl  implements Serializable
     this.qtd = quantd;
     this.time = tempo;
     this.location = null;
+    this.ownerUuid = ownerUuid;
+    this.ownerName = ownerName;
   }
   
   public SpawnerControl(String name, Location location, EntityType type, Integer quantd, Integer tempo)
+  {
+    this(name, location, type, quantd, tempo, null, null);
+  }
+
+  public SpawnerControl(String name, Location location, EntityType type, Integer quantd, Integer tempo, UUID ownerUuid, String ownerName)
   {
     this.moblist = new HashSet();
     this.name = name;
@@ -40,6 +54,8 @@ public class SpawnerControl  implements Serializable
     this.type = type.name();
     this.qtd = quantd;
     this.time = tempo;
+    this.ownerUuid = ownerUuid;
+    this.ownerName = ownerName;
   }
 
   public Location getLocation() {
@@ -92,6 +108,22 @@ public class SpawnerControl  implements Serializable
 
   public String getName() {
     return this.name;
+  }
+
+  public UUID getOwnerUuid() {
+    return ownerUuid;
+  }
+
+  public String getOwnerName() {
+    return ownerName;
+  }
+
+  public boolean hasOwner() {
+    return ownerUuid != null;
+  }
+
+  public boolean isOwner(UUID playerUuid) {
+    return ownerUuid != null && ownerUuid.equals(playerUuid);
   }
 
   public void setQuantd(Integer quantd) {

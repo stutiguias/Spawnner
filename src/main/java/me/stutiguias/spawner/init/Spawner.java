@@ -5,6 +5,7 @@ import java.io.File;
 import me.stutiguias.spawner.model.SpawnerControl;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -130,10 +131,7 @@ public class Spawner extends JavaPlugin {
          
         Load();
         ReloadMobs();
-        
-        if(config.UseTaskCheckMobAlive) {
-            Bukkit.getScheduler().runTaskTimer(this,new SpawnCheck(this),config.UseTaskCheckMobAliveSeconds * 20L,config.UseTaskCheckMobAliveSeconds * 20L);
-        }
+        ScheduleConfiguredTasks();
     
         getCommand("sp").setExecutor(new SpawnerCommands(this));
         
@@ -157,8 +155,6 @@ public class Spawner extends JavaPlugin {
             if(!spawner.hasMobs()) continue;
             tmpYmlDb.Create(spawner);
         }
-        
-        getServer().getPluginManager().disablePlugin(this);
     }
     
     public void OnReload() {
@@ -166,14 +162,11 @@ public class Spawner extends JavaPlugin {
             if(!spawner.hasMobs()) continue;
             tmpYmlDb.Create(spawner);
         }
-        
-        config.Reload();
-        enderConfig.Reload();
-        skeletonConfig.Reload();
-        zombieConfig.Reload();
-        
-        getServer().getPluginManager().disablePlugin(this);
-        getServer().getPluginManager().enablePlugin(this);
+
+        getServer().getScheduler().cancelTasks(this);
+        Load();
+        ReloadMobs();
+        ScheduleConfiguredTasks();
     }
     
     private void Load(){
@@ -199,9 +192,16 @@ public class Spawner extends JavaPlugin {
         getLogger().log(Level.INFO, "...loaded with sucess.");        
         
 
-        if(config.EnablePulliFFarAway)
-        Bukkit.getScheduler().runTaskTimer(this, new SpawnLocation(this), config.PulliFFarAwayTime * 20, config.PulliFFarAwayTime * 20);
-        
+    }
+
+    public void ScheduleConfiguredTasks() {
+        if(config.UseTaskCheckMobAlive) {
+            Bukkit.getScheduler().runTaskTimer(this,new SpawnCheck(this),config.UseTaskCheckMobAliveSeconds * 20L,config.UseTaskCheckMobAliveSeconds * 20L);
+        }
+
+        if(config.EnablePulliFFarAway) {
+            Bukkit.getScheduler().runTaskTimer(this, new SpawnLocation(this), config.PulliFFarAwayTime * 20L, config.PulliFFarAwayTime * 20L);
+        }
     }
     
     private boolean setupPermissions() {
@@ -267,11 +267,20 @@ public class Spawner extends JavaPlugin {
     }
 
     public void CheckExistMobs() {
-        for(SpawnerControl spawner:SpawnerList) {
+        Iterator<SpawnerControl> iterator = SpawnerList.iterator();
+        while(iterator.hasNext()) {
+            SpawnerControl spawner = iterator.next();
             
-            if(spawner == null || spawner.getWorld() == null) { 
+            if(spawner == null) {
+                getLogger().log(Level.WARNING, "Erro parsing spawn");
+                iterator.remove();
+                continue;
+            }
+
+            if(spawner.getWorld() == null) {
                 getLogger().log(Level.WARNING, "Erro parsing world of spawn");
                 db.RemoveSpawnerControl(spawner.getName());
+                iterator.remove();
                 continue;
             }
             

@@ -7,6 +7,7 @@ package me.stutiguias.spawner.db.YAML;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.UUID;
 import java.util.logging.Level;
 import me.stutiguias.spawner.init.Spawner;
 import me.stutiguias.spawner.model.SpawnerControl;
@@ -83,11 +84,22 @@ public class SpawnerYmlDb {
         Integer qtd = SpawnerYML.getInt("Qtd");
         Integer time = SpawnerYML.getInt("Time");
         String name = Filename.replace(".yml","");
+        UUID ownerUuid = null;
+        String ownerName = null;
+
+        if(SpawnerYML.isSet("Owner.UUID")) {
+            try {
+                ownerUuid = UUID.fromString(SpawnerYML.getString("Owner.UUID"));
+                ownerName = SpawnerYML.getString("Owner.Name");
+            } catch (IllegalArgumentException ex) {
+                Spawner.logger.log(Level.WARNING, "{0} Invalid owner UUID on {1}", new Object[]{plugin.prefix, Filename});
+            }
+        }
         
         if(location != null)
-            return new SpawnerControl(name, location ,type ,qtd ,time );
+            return new SpawnerControl(name, location ,type ,qtd ,time, ownerUuid, ownerName);
         else
-            return new SpawnerControl(name, locationx,locationy ,type ,qtd ,time );
+            return new SpawnerControl(name, locationx,locationy ,type ,qtd ,time, ownerUuid, ownerName);
     }
     
     public boolean RemoveSpawnerControl(String name) {
@@ -155,6 +167,7 @@ public class SpawnerYmlDb {
              SpawnerYML.set("Type",spawner.getType().name());
              SpawnerYML.set("Qtd",spawner.getQuantd());
              SpawnerYML.set("Time",spawner.getTime());
+             SaveOwner(spawner);
          } else {
              CheckConfig(spawner);
          }
@@ -190,6 +203,14 @@ public class SpawnerYmlDb {
             if (!SpawnerYML.isSet("LocationY.yaw"))     SpawnerYML.set("LocationY.yaw",spawner.getLocationZ().getYaw());
             if (!SpawnerYML.isSet("LocationY.world"))   SpawnerYML.set("LocationY.world",spawner.getLocationZ().getWorld().getName());
           }
+
+          SaveOwner(spawner);
+    }
+
+    private void SaveOwner(SpawnerControl spawner) {
+        if(!spawner.hasOwner()) return;
+        SpawnerYML.set("Owner.UUID", spawner.getOwnerUuid().toString());
+        SpawnerYML.set("Owner.Name", spawner.getOwnerName());
     }
     
     public void SaveYML() {

@@ -42,10 +42,22 @@ public class SignUpdate implements Runnable {
         if(blockState instanceof Sign){
             
             Sign sign = (Sign)plugin.getServer().getWorld(worldname).getBlockAt(location).getState();
+
+            if(!spawnerControl.isEnabled()) {
+                sign.setLine(3,"OFF");
+                sign.update();
+                return;
+            }
+
+            if(spawnerControl.hasMobs()) {
+                sign.setLine(3,"-");
+                sign.update();
+                return;
+            }
             
             String line3 = sign.getLine(3);
             
-            if(line3.contains("-")) {
+            if(line3.contains("-") || line3.equalsIgnoreCase("OFF")) {
                 line3 = spawnerControl.getTime().toString();
             }
             

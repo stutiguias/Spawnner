@@ -33,6 +33,7 @@ public class SpawnCheck implements Runnable {
         for (SpawnerControl spawnerControl:Spawner.SpawnerList) {
             
             Set<UUID> mobsAlive = new HashSet<>();
+            if(!spawnerControl.isEnabled()) continue;
             if(!spawnerControl.hasMobs()) continue;
             
             for(Entity entity:spawnerControl.getWorld().getEntities()) {

@@ -1,0 +1,119 @@
+<h2 id="w-color-blue-what-is-it-color"><span style="color: #0000ff;">What is it?</span></h2>
+<p>TimeSpawner lets server staff create mob spawners with a custom mob type, amount, location, and timer.</p>
+<p>Example: you can spawn 15 zombies at a fixed location every 60 seconds. The next timer only starts after the previously spawned mobs are gone.</p>
+
+<h2 id="w-color-blue-features-color"><span style="color: #0000ff;">Features</span></h2>
+<ul>
+<li>Set fixed mob spawns with mob type, amount, and time.</li>
+<li>Set random area spawns with mob type, amount, and time.</li>
+<li>Editable YAML spawner files.</li>
+<li>Does not spawn mobs when no player is nearby.</li>
+<li>Keeps track of spawned mobs across restart/shutdown.</li>
+<li>Auto-pull or manually pull mobs back if they get too far away.</li>
+<li>Global settings and per-mob settings.</li>
+<li>Vault economy support for player-purchased spawners.</li>
+<li>Owner management for purchased spawners.</li>
+<li>Enable or disable individual spawners.</li>
+<li>Timer signs for spawners.</li>
+</ul>
+
+<h2 id="w-color-blue-planned-color"><span style="color: #0000ff;">Planned</span></h2>
+<ul>
+<li>Add more than one mob type per spawn.</li>
+<li>Add command to force spawn.</li>
+<li>Add timer for player XP from spawners.</li>
+<li>Add monster drop XP.</li>
+<li>Add custom config to each mob.</li>
+<li>Add spawn around a configurable range from online players.</li>
+</ul>
+
+<h2 id="w-color-blue-randomly-area-spawn-color"><span style="color: #0000ff;">Random Area Spawn</span></h2>
+<ol>
+<li>Use command <strong>/sp wand</strong> with your hands free to receive the TimeSpawner wand.</li>
+<li>Left click the first block.</li>
+<li>Right click the second block.</li>
+<li>Use command <strong>/sp setspawn &lt;spawnerName&gt; &lt;typeMob&gt; &lt;quantity&gt; &lt;time&gt;</strong>.</li>
+</ol>
+<p>Done. Mobs will now spawn randomly inside that area.</p>
+
+<h2 id="w-color-blue-timer-sign-color"><span style="color: #0000ff;">Timer Sign</span></h2>
+<p>Only one sign is allowed for each spawner.</p>
+<p>Create a sign with:<br />
+Line 1: [TimeSpawner]<br />
+Line 2: &lt;spawner_name&gt;</p>
+<p>The quantity and mob type will show on line 3. The timer will show on line 4. Disabled spawners show <strong>OFF</strong>.</p>
+
+<h2 id="w-color-blue-commands-color"><span style="color: #0000ff;">Commands</span></h2>
+<p>
+<strong>/sp &lt;wand|w&gt;</strong> - Gives a stick used to set an area spawn.<br />
+<strong>/sp &lt;setspawn|ss&gt; &lt;spawnerName&gt; &lt;typeMob&gt; &lt;quantity&gt; &lt;time&gt;</strong> - Creates a spawner.<br />
+<strong>/sp &lt;buyspawn|bs&gt; &lt;spawnerName&gt; &lt;typeMob&gt; &lt;quantity&gt; &lt;time&gt;</strong> - Buys and creates an owned spawner.<br />
+<strong>/sp &lt;delspawn|ds&gt; &lt;spawnerName&gt;</strong> - Deletes a spawner.<br />
+<strong>/sp &lt;spawners|sp&gt; [spawnName]</strong> - Lists spawners or shows one spawner.<br />
+<strong>/sp &lt;reloc|rl&gt; [spawnName]</strong> - Pulls mobs back to their spawner.<br />
+<strong>/sp &lt;reset|rs&gt; [spawnName]</strong> - Removes tracked mobs and resets spawner timers.<br />
+<strong>/sp tp &lt;spawnName&gt;</strong> - Teleports to a spawner.<br />
+<strong>/sp disable &lt;spawnerName&gt;</strong> - Disables a spawner.<br />
+<strong>/sp enable &lt;spawnerName&gt;</strong> - Enables a spawner.<br />
+<strong>/sp reload</strong> - Reloads the plugin.<br />
+<strong>/sp &lt;help|?|nothing&gt;</strong> - Shows command help.
+</p>
+<ul>
+<li>Obs: <span style="color: #ff0000;">Do not use symbols in spawner names.</span></li>
+</ul>
+
+<h2 id="w-color-blue-owner-management-color"><span style="color: #0000ff;">Owner Management Commands</span></h2>
+<p>Players can use these commands on their own purchased spawners:</p>
+<ul>
+<li>/sp spawners</li>
+<li>/sp spawners &lt;name&gt;</li>
+<li>/sp tp &lt;name&gt;</li>
+<li>/sp reset &lt;name&gt;</li>
+<li>/sp reloc &lt;name&gt;</li>
+<li>/sp delspawn &lt;name&gt;</li>
+<li>/sp disable &lt;name&gt;</li>
+<li>/sp enable &lt;name&gt;</li>
+</ul>
+
+<h2 id="w-color-blue-permissions-color"><span style="color: #0000ff;">Permissions</span></h2>
+<ul>
+<li>tsp.admin - Gives access to all TimeSpawner commands.</li>
+<li>tsp.setspawn - Allows creating admin spawners.</li>
+<li>tsp.buyspawn - Allows buying spawners. Default: true.</li>
+<li>tsp.delspawn - Allows deleting spawners.</li>
+<li>tsp.spawners - Allows viewing spawners.</li>
+<li>tsp.reload - Allows reloading the plugin.</li>
+<li>tsp.wand - Allows using the area selection wand.</li>
+<li>tsp.sign - Allows creating and breaking TimeSpawner signs.</li>
+<li>tsp.tp - Allows teleporting to spawners.</li>
+<li>tsp.reloc - Allows relocating mobs back to spawners.</li>
+<li>tsp.reset - Allows resetting spawners.</li>
+<li>tsp.disable - Allows disabling spawners.</li>
+<li>tsp.enable - Allows enabling spawners.</li>
+<li>tsp.dragon.exp - Allows XP from Ender Dragon spawners. Default: true.</li>
+<li>tsp.dragon.unlimitedexp - Allows repeated Ender Dragon XP. Default: false.</li>
+</ul>
+
+<h2 id="w-color-blue-configuration-notes-color"><span style="color: #0000ff;">Configuration Notes</span></h2>
+<ul>
+<li>Economy.EnableBuySpawners controls whether players can buy spawners.</li>
+<li>Economy.BuySpawner controls default price, quantity/time multipliers, and per-mob prices.</li>
+<li>DisableSpawner.RemoveMobs controls whether disabling a spawner removes currently tracked mobs.</li>
+<li>Spawner YAML files include Enabled: true|false.</li>
+</ul>
+
+<h2 id="w-color-red-requirement-color"><span style="color: #ff0000;">Requirements</span></h2>
+<ul>
+<li>Java 8 or newer.</li>
+<li>Spigot/Paper compatible with the configured server API.</li>
+<li>Vault is required for economy features.</li>
+</ul>
+
+<h2 id="w-color-blue-setup-color"><span style="color: #0000ff;">Setup</span></h2>
+<p>Put the TimeSpawner jar file in your /plugins/ folder and restart the server. Config files will appear in /plugins/TimeSpawner/.</p>
+
+<h2 id="w-color-blue-video-tutorial-color"><span style="color: #0000ff;">Video Tutorial</span></h2>
+<p>One video tutorial. LINK: <iframe allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/-OQwoFh4o7c?wmode=transparent" height="358" width="638"></iframe></p>
+
+<h3 id="w-color-red-lag-warning-color"><span style="color: #ff0000;">Lag Warning</span></h3>
+<p>Spawning too many mobs may lag your server. The safe amount depends on your server performance.</p>

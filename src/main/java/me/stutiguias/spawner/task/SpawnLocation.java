@@ -43,6 +43,7 @@ public class SpawnLocation implements Runnable {
     public void run() {
 
         if(spawnerControl != null) {
+            if(!spawnerControl.isEnabled()) return;
             Reloc(spawnerControl);
             return;
         }
@@ -50,6 +51,7 @@ public class SpawnLocation implements Runnable {
         if(Spawner.SpawnerList.isEmpty()) return;
         
         for(SpawnerControl spawner:Spawner.SpawnerList) {
+            if(!spawner.isEnabled()) continue;
             Reloc(spawner);
         }
     }

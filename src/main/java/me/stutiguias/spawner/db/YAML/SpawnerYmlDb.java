@@ -83,6 +83,7 @@ public class SpawnerYmlDb {
         org.bukkit.entity.EntityType type = SpawnerControl.parseEntityType(SpawnerYML.getString("Type"));
         Integer qtd = SpawnerYML.getInt("Qtd");
         Integer time = SpawnerYML.getInt("Time");
+        boolean enabled = !SpawnerYML.isSet("Enabled") || SpawnerYML.getBoolean("Enabled");
         String name = Filename.replace(".yml","");
         UUID ownerUuid = null;
         String ownerName = null;
@@ -97,9 +98,9 @@ public class SpawnerYmlDb {
         }
         
         if(location != null)
-            return new SpawnerControl(name, location ,type ,qtd ,time, ownerUuid, ownerName);
+            return new SpawnerControl(name, location ,type ,qtd ,time, ownerUuid, ownerName, enabled);
         else
-            return new SpawnerControl(name, locationx,locationy ,type ,qtd ,time, ownerUuid, ownerName);
+            return new SpawnerControl(name, locationx,locationy ,type ,qtd ,time, ownerUuid, ownerName, enabled);
     }
     
     public boolean RemoveSpawnerControl(String name) {
@@ -167,6 +168,7 @@ public class SpawnerYmlDb {
              SpawnerYML.set("Type",spawner.getType().name());
              SpawnerYML.set("Qtd",spawner.getQuantd());
              SpawnerYML.set("Time",spawner.getTime());
+             SpawnerYML.set("Enabled",spawner.isEnabled());
              SaveOwner(spawner);
          } else {
              CheckConfig(spawner);
@@ -204,7 +206,19 @@ public class SpawnerYmlDb {
             if (!SpawnerYML.isSet("LocationY.world"))   SpawnerYML.set("LocationY.world",spawner.getLocationZ().getWorld().getName());
           }
 
+          if (!SpawnerYML.isSet("Enabled"))             SpawnerYML.set("Enabled",spawner.isEnabled());
           SaveOwner(spawner);
+    }
+
+    public void SaveSpawnerState(SpawnerControl spawner) {
+        configplayerfile = new File(Spawner.SpawnerDir + File.separator + spawner.getName() + ".yml");
+        SpawnerYML = new YamlConfiguration();
+
+        if(!configplayerfile.exists()) return;
+
+        initLoadYML();
+        SpawnerYML.set("Enabled", spawner.isEnabled());
+        SaveYML();
     }
 
     private void SaveOwner(SpawnerControl spawner) {

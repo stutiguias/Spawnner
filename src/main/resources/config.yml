@@ -1,5 +1,5 @@
 # don't change this
-configversion: 4
+configversion: 5
 # type database
 DataBase:
   # You need to choose if you will use SQLite or Mysql or FlatFile ( default is SQLite )
@@ -28,6 +28,10 @@ PulliFFarAwayLimit: 160
 DisableControlOverEnderDragon : false
 # Disable the custom name for each mob
 DisableCustomName : false
+# Disable spawner behavior
+DisableSpawner:
+  # Remove tracked mobs when a spawner is disabled
+  RemoveMobs: true
 # Use task Check MobAlive
 # Use this if you have problem 
 # About Mobs Stop spawnning

@@ -219,6 +219,7 @@ public class Spawner extends JavaPlugin {
     }
     
     public void Spawn(SpawnerControl spawnner) {
+        if(!spawnner.isEnabled()) return;
         if(spawnner.hasMobs()) return;
         Bukkit.getScheduler().runTaskLater(this, new SignUpdate(this,spawnner),1 * 20L);
         Bukkit.getScheduler().runTaskLater(this, new SpawnWork(this,spawnner),spawnner.getTime().intValue() * 20L);
@@ -226,6 +227,7 @@ public class Spawner extends JavaPlugin {
 
     private void ReloadMobs() {
         for (SpawnerControl spawnner : SpawnerList) {
+            if(!spawnner.isEnabled()) continue;
             if(spawnner.hasMobs()) continue;
             Spawn(spawnner);
         }

@@ -21,6 +21,7 @@ public class SpawnerControl  implements Serializable
   private Location locationz;
   private UUID ownerUuid;
   private String ownerName;
+  private boolean enabled;
   
   public SpawnerControl(String name, Location locationx,Location locationz, EntityType type, Integer quantd, Integer tempo)
   {
@@ -28,6 +29,11 @@ public class SpawnerControl  implements Serializable
   }
 
   public SpawnerControl(String name, Location locationx,Location locationz, EntityType type, Integer quantd, Integer tempo, UUID ownerUuid, String ownerName)
+  {
+    this(name, locationx, locationz, type, quantd, tempo, ownerUuid, ownerName, true);
+  }
+
+  public SpawnerControl(String name, Location locationx,Location locationz, EntityType type, Integer quantd, Integer tempo, UUID ownerUuid, String ownerName, boolean enabled)
   {
     this.moblist = new HashSet();
     this.name = name;
@@ -39,6 +45,7 @@ public class SpawnerControl  implements Serializable
     this.location = null;
     this.ownerUuid = ownerUuid;
     this.ownerName = ownerName;
+    this.enabled = enabled;
   }
   
   public SpawnerControl(String name, Location location, EntityType type, Integer quantd, Integer tempo)
@@ -48,6 +55,11 @@ public class SpawnerControl  implements Serializable
 
   public SpawnerControl(String name, Location location, EntityType type, Integer quantd, Integer tempo, UUID ownerUuid, String ownerName)
   {
+    this(name, location, type, quantd, tempo, ownerUuid, ownerName, true);
+  }
+
+  public SpawnerControl(String name, Location location, EntityType type, Integer quantd, Integer tempo, UUID ownerUuid, String ownerName, boolean enabled)
+  {
     this.moblist = new HashSet();
     this.name = name;
     this.location = location;
@@ -56,6 +68,7 @@ public class SpawnerControl  implements Serializable
     this.time = tempo;
     this.ownerUuid = ownerUuid;
     this.ownerName = ownerName;
+    this.enabled = enabled;
   }
 
   public Location getLocation() {
@@ -124,6 +137,14 @@ public class SpawnerControl  implements Serializable
 
   public boolean isOwner(UUID playerUuid) {
     return ownerUuid != null && ownerUuid.equals(playerUuid);
+  }
+
+  public boolean isEnabled() {
+    return enabled;
+  }
+
+  public void setEnabled(boolean enabled) {
+    this.enabled = enabled;
   }
 
   public void setQuantd(Integer quantd) {

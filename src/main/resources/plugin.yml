@@ -42,6 +42,12 @@ permissions:
      tsp.reset:
         description: Reset all mobspawn
         default: op   
+     tsp.disable:
+        description: Disable a spawner
+        default: op
+     tsp.enable:
+        description: Enable a spawner
+        default: op
      tsp.dragon.exp:
         description: get xp from enderdragons
         default: true
@@ -62,3 +68,5 @@ permissions:
         tsp.tp: true
         tsp.reloc: true
         tsp.reset: true
+        tsp.disable: true
+        tsp.enable: true

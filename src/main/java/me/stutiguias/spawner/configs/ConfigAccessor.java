@@ -10,6 +10,7 @@ package me.stutiguias.spawner.configs;
  */
 import java.io.*;
 import java.util.logging.Level;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -101,6 +102,46 @@ public class ConfigAccessor {
     public boolean MakeOld() {
         File file = new File(plugin.getDataFolder(),fileName + "_old");
         file.delete();
-        return configFile.renameTo(new File(plugin.getDataFolder(),fileName + "_old"));
+        boolean renamed = configFile.renameTo(file);
+        fileConfiguration = null;
+        return renamed;
+    }
+
+    public void UpgradeFromOld() throws IOException {
+        File oldFile = new File(plugin.getDataFolder(),fileName + "_old");
+        oldFile.delete();
+
+        if(configFile.exists() && !configFile.renameTo(oldFile)) {
+            throw new IOException("Could not rename old config file");
+        }
+
+        configFile = new File(plugin.getDataFolder(), fileName);
+        configFile.createNewFile();
+        copy(plugin.getResource(fileName), configFile);
+
+        YamlConfiguration oldConfig = YamlConfiguration.loadConfiguration(oldFile);
+        YamlConfiguration newConfig = YamlConfiguration.loadConfiguration(configFile);
+
+        copyOldValues(oldConfig, newConfig, "");
+        newConfig.save(configFile);
+        fileConfiguration = null;
+        reloadConfig();
+    }
+
+    private void copyOldValues(ConfigurationSection oldConfig, ConfigurationSection newConfig, String parentPath) {
+        for(String key:oldConfig.getKeys(false)) {
+            String path = parentPath.isEmpty() ? key : parentPath + "." + key;
+
+            if(path.equalsIgnoreCase("configversion")) continue;
+
+            if(oldConfig.isConfigurationSection(key)) {
+                if(!newConfig.isConfigurationSection(key)) {
+                    newConfig.createSection(key);
+                }
+                copyOldValues(oldConfig.getConfigurationSection(key), newConfig.getConfigurationSection(key), path);
+            } else {
+                newConfig.set(key, oldConfig.get(key));
+            }
+        }
     }
 }

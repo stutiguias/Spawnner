@@ -9,6 +9,7 @@ import java.util.UUID;
 import me.stutiguias.spawner.init.Spawner;
 import me.stutiguias.spawner.model.SpawnerControl;
 import me.stutiguias.spawner.db.YAML.SpawnerYmlDb;
+import me.stutiguias.spawner.task.SignUpdate;
 import me.stutiguias.spawner.task.SpawnLocation;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.ChatColor;
@@ -86,7 +87,11 @@ public class SpawnerCommands implements CommandExecutor {
                 return Reloc();
             case "rs":
             case "reset":
-                return Reset();                
+                return Reset();
+            case "disable":
+                return SetSpawnerEnabled(false);
+            case "enable":
+                return SetSpawnerEnabled(true);
             case "?":
             case "help":
             default:
@@ -116,7 +121,7 @@ public class SpawnerCommands implements CommandExecutor {
 
                 RemoveAllEntitysFromSpawn(spawnerControl.getWorld(), spawnerControl);
                 spawnerControl.cleanMobs();
-                plugin.Spawn(spawnerControl);
+                if(spawnerControl.isEnabled()) plugin.Spawn(spawnerControl);
             }
             
         }
@@ -135,7 +140,7 @@ public class SpawnerCommands implements CommandExecutor {
         
         RemoveAllEntitysFromSpawn(spawnerControl.getWorld(), spawnerControl);
         spawnerControl.cleanMobs();
-        plugin.Spawn(spawnerControl);
+        if(spawnerControl.isEnabled()) plugin.Spawn(spawnerControl);
         
         return true;
     }
@@ -232,6 +237,14 @@ public class SpawnerCommands implements CommandExecutor {
         if(plugin.hasPermission(sender.getName(),"tsp.reload")){
             SendFormatMessage("&6/sp reload");
         }
+
+        if(plugin.hasPermission(sender.getName(),"tsp.disable")){
+            SendFormatMessage("&6/sp disable <spawnerName>");
+        }
+
+        if(plugin.hasPermission(sender.getName(),"tsp.enable")){
+            SendFormatMessage("&6/sp enable <spawnerName>");
+        }
         
         SendFormatMessage(MsgHr);
         
@@ -264,7 +277,7 @@ public class SpawnerCommands implements CommandExecutor {
                 y = spawnerControl.getLocationX().getY();
                 z = spawnerControl.getLocationX().getZ();
             }
-            SendFormatMessage(String.format("&4name:&6 %s &4x:&6 %.2f &4y:&6 %.2f &4z:&6 %.2f",spawnerControl.getName(),x,y,z));
+            SendFormatMessage(String.format("&4name:&6 %s &4status:&6 %s &4x:&6 %.2f &4y:&6 %.2f &4z:&6 %.2f",spawnerControl.getName(),GetSpawnerStatus(spawnerControl),x,y,z));
             found = true;
         }
         if(!found) {
@@ -307,6 +320,7 @@ public class SpawnerCommands implements CommandExecutor {
                 
             }
             SendFormatMessage(String.format("&4name:&6 %s &4type:&6 %s  ",spawnerControl.getName(),type));
+            SendFormatMessage(String.format("&4status:&6 %s", GetSpawnerStatus(spawnerControl)));
             if(spawnerControl.hasOwner()) {
                 SendFormatMessage(String.format("&4owner:&6 %s", spawnerControl.getOwnerName()));
             }
@@ -347,6 +361,39 @@ public class SpawnerCommands implements CommandExecutor {
             }
         }       
         FormatMsgRed("Spawn name not found");
+        return true;
+    }
+
+    public boolean SetSpawnerEnabled(boolean enabled) {
+        if (args.length < 2) {
+            FormatMsgRed("Wrong arguments on command " + args[0]);
+            return true;
+        }
+
+        SpawnerControl spawnerControl = plugin.FindSpawn(args[1]);
+        if(!CanManageSpawner(spawnerControl, enabled ? "tsp.enable" : "tsp.disable")) return true;
+
+        if(spawnerControl.isEnabled() == enabled) {
+            SendFormatMessage(enabled ? "&6Spawner already enabled." : "&6Spawner already disabled.");
+            return true;
+        }
+
+        spawnerControl.setEnabled(enabled);
+        new SpawnerYmlDb(plugin).SaveSpawnerState(spawnerControl);
+
+        if(enabled) {
+            SendFormatMessage("&6Spawner enabled.");
+            plugin.getServer().getScheduler().runTask(plugin, new SignUpdate(plugin, spawnerControl));
+            if(!spawnerControl.hasMobs()) plugin.Spawn(spawnerControl);
+        } else {
+            if(plugin.config.DisableSpawnerRemoveMobs) {
+                RemoveAllEntitysFromSpawn(spawnerControl.getWorld(), spawnerControl);
+                spawnerControl.cleanMobs();
+            }
+            plugin.getServer().getScheduler().runTask(plugin, new SignUpdate(plugin, spawnerControl));
+            SendFormatMessage("&6Spawner disabled.");
+        }
+
         return true;
     }
     
@@ -619,6 +666,10 @@ public class SpawnerCommands implements CommandExecutor {
 
     private boolean IsOwner(SpawnerControl spawnerControl) {
         return spawnerControl != null && spawnerControl.isOwner(((Player)sender).getUniqueId());
+    }
+
+    private String GetSpawnerStatus(SpawnerControl spawnerControl) {
+        return spawnerControl.isEnabled() ? "enabled" : "disabled";
     }
     
     public void RemoveAllEntitysFromSpawn(World world,SpawnerControl spawnerControl) {

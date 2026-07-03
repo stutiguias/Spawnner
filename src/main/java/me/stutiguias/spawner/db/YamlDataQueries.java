@@ -63,6 +63,7 @@ public class YamlDataQueries extends Util implements IDataQueries {
             if (file.isFile()) {
                 SpawnerControl spawner = new SpawnerYmlDb(plugin).LoadSpawnerControl(file.getName());
                 if(spawner != null) {
+                    new SpawnerYmlDb(plugin, spawner);
                     spawnerControls.add(spawner);
                 }else{
                     file.delete();

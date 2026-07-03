@@ -29,6 +29,7 @@ public class Config {
     public int PulliFFarAwayLimit;
     public boolean DisableControlOverEnderDragon;
     public boolean DisableCustomName;
+    public boolean DisableSpawnerRemoveMobs;
     public boolean UseTaskCheckMobAlive;
     public boolean EnableBuySpawners;
     public int UseTaskCheckMobAliveSeconds;
@@ -52,9 +53,8 @@ public class Config {
             config.setupConfig();
             FileConfiguration fc = config.getConfig();   
                         
-            if(!fc.isSet("configversion") || fc.getInt("configversion") != 4){ 
-                config.MakeOld();
-                config.setupConfig();
+            if(!fc.isSet("configversion") || fc.getInt("configversion") != 5){ 
+                config.UpgradeFromOld();
                 fc = config.getConfig();
             }
             
@@ -65,6 +65,7 @@ public class Config {
             PulliFFarAwayLimit = fc.getInt("PulliFFarAwayLimit");
             DisableControlOverEnderDragon = fc.getBoolean("DisableControlOverEnderDragon");
             DisableCustomName = fc.getBoolean("DisableCustomName");
+            DisableSpawnerRemoveMobs = !fc.isSet("DisableSpawner.RemoveMobs") || fc.getBoolean("DisableSpawner.RemoveMobs");
             UseTaskCheckMobAlive = fc.getBoolean("UseTaskCheckMobAlive");
             UseTaskCheckMobAliveSeconds = fc.getInt("UseTaskCheckMobAliveSeconds");
             EnableBuySpawners = fc.getBoolean("Economy.EnableBuySpawners");

@@ -37,6 +37,7 @@ public class SpawnWork implements Runnable {
     @Override
     public void run() {
         try {
+            if(!spawnerControl.isEnabled()) return;
             Spawner.SpawnerList.remove(spawnerControl);
             
             if(plugin.config.ShowDebug) {

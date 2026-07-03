@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>me.stutiguias</groupId>
   <artifactId>TimeSpawnner</artifactId>
-  <version>1.1</version>
+  <version>1.2</version>
   <name>TimeSpawnner-${project.version}</name>
   <description>TimeSpawnner</description>
   <packaging>jar</packaging>
@@ -105,7 +105,7 @@
   </build>
   <properties>
     <maven.compiler.release>8</maven.compiler.release>
-    <spigot.api.version>26.1.2-R0.1-SNAPSHOT</spigot.api.version>
+    <spigot.api.version>26.2-R0.1-SNAPSHOT</spigot.api.version>
     <vault.api.version>1.7.1</vault.api.version>
     <plugins.deploy.dir>F:/Spigot/plugins</plugins.deploy.dir>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
